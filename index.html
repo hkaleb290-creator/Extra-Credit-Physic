@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physics 1 Study Guide</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER / NAV ===== -->
+  <header>
+    <div class="container header-inner">
+      <div class="logo">⚛️ Phys 1 Study Guide</div>
+      <nav>
+        <ul>
+          <li><a href="#topics">Topics</a></li>
+          <li><a href="#formulas">Formulas</a></li>
+          <li><a href="#quiz">Quiz</a></li>
+          <li><a href="#resources">Resources</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container hero-content">
+      <h1>Physics 1 Study Guide</h1>
+      <p>Master the fundamentals of Newtonian mechanics, energy, momentum, and waves — all in one place.</p>
+      <a href="#topics" class="btn">Start Studying →</a>
+    </div>
+  </section>
+
+  <!-- ===== TOPICS ===== -->
+  <section id="topics" class="section">
+    <div class="container">
+      <h2 class="section-title">Core Topics</h2>
+
+      <!-- Kinematics -->
+      <div class="topic-card" id="kinematics">
+        <div class="topic-header" onclick="toggleTopic('kinematics-body')">
+          <h3>📐 Kinematics</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="topic-body" id="kinematics-body">
+          <p>Kinematics describes the motion of objects <em>without</em> referring to the forces that cause motion.</p>
+          <h4>Key Concepts</h4>
+          <ul>
+            <li><strong>Displacement (Δx)</strong> — change in position (vector)</li>
+            <li><strong>Velocity (v)</strong> — rate of change of displacement; avg = Δx / Δt</li>
+            <li><strong>Acceleration (a)</strong> — rate of change of velocity; avg = Δv / Δt</li>
+          </ul>
+          <h4>Kinematic Equations (constant acceleration)</h4>
+          <div class="formula-list">
+            <div class="formula">v = v₀ + at</div>
+            <div class="formula">x = x₀ + v₀t + ½at²</div>
+            <div class="formula">v² = v₀² + 2aΔx</div>
+            <div class="formula">x = x₀ + ½(v₀ + v)t</div>
+          </div>
+          <p class="tip">💡 <strong>Tip:</strong> In free fall, use <em>a = g = 9.8 m/s²</em> (downward).</p>
+        </div>
+      </div>
+
+      <!-- Newton's Laws -->
+      <div class="topic-card" id="newtons-laws">
+        <div class="topic-header" onclick="toggleTopic('newtons-laws-body')">
+          <h3>🔭 Newton's Laws of Motion</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="topic-body" id="newtons-laws-body">
+          <p>Newton's three laws form the foundation of classical mechanics.</p>
+          <div class="law-block">
+            <h4>1st Law — Law of Inertia</h4>
+            <p>An object at rest stays at rest, and an object in motion stays in motion at constant velocity, unless acted upon by a net external force.</p>
+          </div>
+          <div class="law-block">
+            <h4>2nd Law — F = ma</h4>
+            <p>The net force on an object equals its mass times its acceleration.</p>
+            <div class="formula">ΣF = ma</div>
+          </div>
+          <div class="law-block">
+            <h4>3rd Law — Action &amp; Reaction</h4>
+            <p>For every action force, there is an equal and opposite reaction force.</p>
+            <div class="formula">F₁₂ = −F₂₁</div>
+          </div>
+          <h4>Common Forces</h4>
+          <ul>
+            <li><strong>Weight:</strong> W = mg</li>
+            <li><strong>Normal Force (N):</strong> perpendicular to the surface</li>
+            <li><strong>Friction:</strong> f = μN  (kinetic: μₖ, static: μₛ ≥ μₖ)</li>
+            <li><strong>Tension (T):</strong> force transmitted through a rope/string</li>
+          </ul>
+          <p class="tip">💡 <strong>Tip:</strong> Always draw a Free-Body Diagram (FBD) before writing equations.</p>
+        </div>
+      </div>
+
+      <!-- Work, Energy, Power -->
+      <div class="topic-card" id="energy">
+        <div class="topic-header" onclick="toggleTopic('energy-body')">
+          <h3>⚡ Work, Energy &amp; Power</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="topic-body" id="energy-body">
+          <h4>Work</h4>
+          <div class="formula">W = F · d · cos θ</div>
+          <p>Work is done only when a force has a component parallel to displacement.</p>
+          <h4>Kinetic Energy</h4>
+          <div class="formula">KE = ½mv²</div>
+          <h4>Gravitational Potential Energy</h4>
+          <div class="formula">PE = mgh</div>
+          <h4>Work–Energy Theorem</h4>
+          <div class="formula">W_net = ΔKE</div>
+          <h4>Conservation of Mechanical Energy</h4>
+          <div class="formula">KE₁ + PE₁ = KE₂ + PE₂  (no friction)</div>
+          <h4>Power</h4>
+          <div class="formula">P = W / t = Fv</div>
+          <p class="tip">💡 <strong>Tip:</strong> If friction is present, include the work done by friction (negative) on the energy side.</p>
+        </div>
+      </div>
+
+      <!-- Momentum -->
+      <div class="topic-card" id="momentum">
+        <div class="topic-header" onclick="toggleTopic('momentum-body')">
+          <h3>🎱 Momentum &amp; Impulse</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="topic-body" id="momentum-body">
+          <h4>Momentum</h4>
+          <div class="formula">p = mv</div>
+          <h4>Impulse–Momentum Theorem</h4>
+          <div class="formula">J = FΔt = Δp</div>
+          <h4>Conservation of Momentum</h4>
+          <p>In the absence of external forces, the total momentum of a system is conserved.</p>
+          <div class="formula">p₁ + p₂ = p₁' + p₂'</div>
+          <h4>Types of Collisions</h4>
+          <ul>
+            <li><strong>Elastic:</strong> both momentum and KE are conserved</li>
+            <li><strong>Inelastic:</strong> momentum conserved; KE lost</li>
+            <li><strong>Perfectly Inelastic:</strong> objects stick together after collision</li>
+          </ul>
+          <p class="tip">💡 <strong>Tip:</strong> In perfectly inelastic collisions use: m₁v₁ + m₂v₂ = (m₁ + m₂)v'</p>
+        </div>
+      </div>
+
+      <!-- Circular Motion & Gravity -->
+      <div class="topic-card" id="circular">
+        <div class="topic-header" onclick="toggleTopic('circular-body')">
+          <h3>🌍 Circular Motion &amp; Gravitation</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="topic-body" id="circular-body">
+          <h4>Uniform Circular Motion</h4>
+          <div class="formula">ac = v² / r</div>
+          <div class="formula">Fc = mac = mv² / r</div>
+          <h4>Period &amp; Frequency</h4>
+          <div class="formula">T = 2πr / v</div>
+          <div class="formula">f = 1 / T</div>
+          <h4>Newton's Law of Universal Gravitation</h4>
+          <div class="formula">F = G · m₁m₂ / r²</div>
+          <p>G = 6.674 × 10⁻¹¹ N·m²/kg²</p>
+          <p class="tip">💡 <strong>Tip:</strong> Centripetal force is always directed toward the center of the circle.</p>
+        </div>
+      </div>
+
+      <!-- Waves & Sound -->
+      <div class="topic-card" id="waves">
+        <div class="topic-header" onclick="toggleTopic('waves-body')">
+          <h3>〰️ Waves &amp; Sound</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="topic-body" id="waves-body">
+          <h4>Wave Properties</h4>
+          <ul>
+            <li><strong>Wavelength (λ)</strong> — distance between two identical points on a wave</li>
+            <li><strong>Frequency (f)</strong> — number of cycles per second (Hz)</li>
+            <li><strong>Amplitude (A)</strong> — maximum displacement from equilibrium</li>
+          </ul>
+          <h4>Wave Speed</h4>
+          <div class="formula">v = fλ</div>
+          <h4>Period</h4>
+          <div class="formula">T = 1 / f</div>
+          <h4>Transverse vs. Longitudinal</h4>
+          <ul>
+            <li><strong>Transverse:</strong> oscillation ⊥ propagation (light, water waves)</li>
+            <li><strong>Longitudinal:</strong> oscillation ∥ propagation (sound waves)</li>
+          </ul>
+          <p>Speed of sound in air ≈ 343 m/s at 20 °C</p>
+          <p class="tip">💡 <strong>Tip:</strong> Higher frequency = higher pitch; larger amplitude = louder sound.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== QUICK FORMULA REFERENCE ===== -->
+  <section id="formulas" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Quick Formula Reference</h2>
+      <div class="formula-grid">
+        <div class="formula-card">
+          <div class="formula-cat">Kinematics</div>
+          <code>v = v₀ + at</code>
+          <code>x = v₀t + ½at²</code>
+          <code>v² = v₀² + 2aΔx</code>
+        </div>
+        <div class="formula-card">
+          <div class="formula-cat">Forces</div>
+          <code>ΣF = ma</code>
+          <code>W = mg</code>
+          <code>f = μN</code>
+        </div>
+        <div class="formula-card">
+          <div class="formula-cat">Energy</div>
+          <code>KE = ½mv²</code>
+          <code>PE = mgh</code>
+          <code>W = Fd cosθ</code>
+          <code>P = W/t</code>
+        </div>
+        <div class="formula-card">
+          <div class="formula-cat">Momentum</div>
+          <code>p = mv</code>
+          <code>J = FΔt = Δp</code>
+          <code>m₁v₁ + m₂v₂ = const.</code>
+        </div>
+        <div class="formula-card">
+          <div class="formula-cat">Circular Motion</div>
+          <code>ac = v²/r</code>
+          <code>Fc = mv²/r</code>
+          <code>T = 2πr/v</code>
+        </div>
+        <div class="formula-card">
+          <div class="formula-cat">Waves</div>
+          <code>v = fλ</code>
+          <code>T = 1/f</code>
+          <code>v_sound ≈ 343 m/s</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUIZ ===== -->
+  <section id="quiz" class="section">
+    <div class="container">
+      <h2 class="section-title">Practice Quiz</h2>
+      <p class="section-sub">Test your Physics 1 knowledge! Select an answer, then click <em>Check Answer</em>.</p>
+
+      <div id="quiz-container">
+        <!-- Questions injected by JS -->
+      </div>
+
+      <div class="quiz-controls">
+        <button class="btn" id="prev-btn" onclick="prevQuestion()" disabled>← Prev</button>
+        <span id="quiz-progress">Question 1 / 10</span>
+        <button class="btn" id="next-btn" onclick="nextQuestion()">Next →</button>
+      </div>
+
+      <div id="quiz-result" class="quiz-result hidden">
+        <h3>Quiz Complete! 🎉</h3>
+        <p id="score-text"></p>
+        <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESOURCES ===== -->
+  <section id="resources" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Additional Resources</h2>
+      <div class="resource-grid">
+        <a class="resource-card" href="https://www.khanacademy.org/science/physics" target="_blank" rel="noopener noreferrer">
+          <div class="resource-icon">📚</div>
+          <div class="resource-name">Khan Academy — Physics</div>
+          <div class="resource-desc">Free video lessons and practice problems covering all of Physics 1.</div>
+        </a>
+        <a class="resource-card" href="https://openstax.org/books/university-physics-volume-1/pages/1-introduction" target="_blank" rel="noopener noreferrer">
+          <div class="resource-icon">📖</div>
+          <div class="resource-name">OpenStax University Physics Vol. 1</div>
+          <div class="resource-desc">Free, peer-reviewed textbook covering mechanics, waves, and thermodynamics.</div>
+        </a>
+        <a class="resource-card" href="https://phet.colorado.edu/en/simulations/filter?subjects=physics" target="_blank" rel="noopener noreferrer">
+          <div class="resource-icon">🔬</div>
+          <div class="resource-name">PhET Interactive Simulations</div>
+          <div class="resource-desc">Run virtual physics experiments in your browser — forces, energy, waves, and more.</div>
+        </a>
+        <a class="resource-card" href="https://www.physicsclassroom.com/" target="_blank" rel="noopener noreferrer">
+          <div class="resource-icon">🏫</div>
+          <div class="resource-name">The Physics Classroom</div>
+          <div class="resource-desc">Concept lessons, multimedia studios, and worked examples for Physics 1 students.</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container">
+      <p>⚛️ Physics 1 Study Guide &mdash; Made for extra credit &amp; academic success</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
