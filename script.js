@@ -1100,7 +1100,7 @@ function displayWeakTopics() {
     let html = topicData.length === 0 ? '<p>Complete some quizzes first to identify focus areas</p>' : '<div class="weak-topics-grid">';
     
     topicData.forEach(topic => {
-        const recommendation = topic.mastery < 40 ? '[URGENT] Focus here' : topic.mastery < 60 ? '[IMPROVE] Practice more' : '[MAINTAIN] Keep it up';
+        const recommendation = topic.mastery < 40 ? '🚨 Focus here' : topic.mastery < 60 ? '📈 Practice more' : '✅ Keep it up';
         html += `
             <div class="weak-topic-card">
                 <h4>${topic.name.toUpperCase()}</h4>

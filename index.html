@@ -15,7 +15,7 @@
             <h1 class="logo">Physics Study Hub</h1>
             <div class="nav-controls">
                 <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode" title="Dark mode">🌙</button>
-                                <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode" title="Dark mode">[THEME]</button>
+                                <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode" title="Dark mode">🌙</button>
                 <ul class="nav-menu">
                     <li><a href="#" onclick="showSection('notes')" class="nav-link">Notes</a></li>
                     <li><a href="#" onclick="showSection('flashcards')" class="nav-link">Flashcards</a></li>
@@ -45,7 +45,7 @@
         <!-- Notes Section -->
         <section id="notes" class="section">
             <div class="section-header">
-                <h2>[NOTES] Study Notes</h2>
+                <h2>📚 Study Notes</h2>
                 <p>Review key concepts and topics from physics</p>
             </div>
             <div class="notes-container">
@@ -63,7 +63,7 @@
         <!-- Flashcards Section -->
         <section id="flashcards" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[CARDS] Flashcards</h2>
+                <h2>🃏 Flashcards</h2>
                 <p>Study with interactive flashcards</p>
             </div>
             <div class="flashcards-container">
@@ -90,7 +90,7 @@
         <!-- Study Timer Section -->
         <section id="timer" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[TIMER] Study Timer</h2>
+                <h2>⏱️ Study Timer</h2>
                 <p>Pomodoro-style focused study sessions</p>
             </div>
             <div class="timer-container">
@@ -101,7 +101,7 @@
                 <div class="timer-controls">
                     <button onclick="startTimer()" class="btn btn-primary" id="btn-start">[ > ] Start</button>
                     <button onclick="pauseTimer()" class="btn btn-warning" id="btn-pause" style="display:none;">[ || ] Pause</button>
-                    <button onclick="resetTimer()" class="btn btn-secondary">[ R ] Reset</button>
+                    <button onclick="resetTimer()" class="btn btn-secondary">↻ Reset</button>
                 </div>
                 <div class="timer-presets">
                     <button onclick="setTimer(25)" class="timer-preset">25 min</button>
@@ -110,7 +110,7 @@
                     <button onclick="setTimer(90)" class="timer-preset">90 min</button>
                 </div>
                 <div class="timer-stats">
-                    <p>Today's focus: <span id="today-focus">0</span> min | Session streak: <span id="streak-count">0</span> days [FIRE]</p>
+                    <p>Today's focus: <span id="today-focus">0</span> min | Session streak: <span id="streak-count">0</span> days 🔥</p>
                 </div>
             </div>
         </section>
@@ -118,7 +118,7 @@
         <!-- Quiz Section -->
         <section id="quiz" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[QUIZ] Quiz Mode</h2>
+                <h2>❓ Quiz Mode</h2>
                 <p>Test your knowledge with quizzes</p>
             </div>
             <div class="quiz-container">
@@ -139,7 +139,7 @@
         <!-- Problems Section -->
         <section id="problems" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[PROBLEMS] Practice Problems</h2>
+                <h2>📝 Practice Problems</h2>
                 <p>Work through problem solutions</p>
             </div>
             <div class="problems-container">
@@ -156,7 +156,7 @@
         <!-- Resources Section -->
         <section id="resources" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[RESOURCES] Study Resources</h2>
+                <h2>📄 Study Resources</h2>
                 <p>Use compressed PDFs for faster loading and GitHub-safe file sizes</p>
             </div>
             <div class="resources-grid">
@@ -181,7 +181,7 @@
         <!-- Formula Sheet Section -->
         <section id="formulas" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[FORMULAS] Formula Sheet</h2>
+                <h2>📐 Formula Sheet</h2>
                 <p>Quick reference for all important physics equations</p>
             </div>
             <div class="formulas-container">
@@ -233,7 +233,7 @@
         <!-- Topic Mastery Section -->
         <section id="mastery" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[MASTERY] Topic Mastery</h2>
+                <h2>🎯 Topic Mastery</h2>
                 <p>Your proficiency in each physics topic</p>
             </div>
             <div id="topic-mastery-display"></div>
@@ -242,7 +242,7 @@
         <!-- Weekly Goals Section -->
         <section id="goals" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[GOALS] Weekly Goals</h2>
+                <h2>🏆 Weekly Goals</h2>
                 <p>Track your progress toward this week's study targets</p>
             </div>
             <div id="weekly-goals-display"></div>
@@ -251,7 +251,7 @@
         <!-- Study History Section -->
         <section id="history" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[HISTORY] Study History</h2>
+                <h2>📅 Study History</h2>
                 <p>Recent study sessions and activities</p>
             </div>
             <div id="study-history-display"></div>
@@ -260,7 +260,7 @@
         <!-- Study Tips Section -->
         <section id="tips" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[TIPS] Study Tips & Insights</h2>
+                <h2>💡 Study Tips & Insights</h2>
                 <p>Daily motivation and learning strategies</p>
             </div>
             <div id="study-tips-display"></div>
@@ -268,19 +268,19 @@
                 <h3>Pro Study Strategies</h3>
                 <div class="strategy-grid">
                     <div class="strategy-card">
-                        <h4>[BRAIN] Spaced Repetition</h4>
+                        <h4>🧠 Spaced Repetition</h4>
                         <p>Review material at increasing intervals for better long-term retention</p>
                     </div>
                     <div class="strategy-card">
-                        <h4>[PEN] Active Recall</h4>
+                        <h4>✍️ Active Recall</h4>
                         <p>Test yourself frequently instead of just re-reading notes</p>
                     </div>
                     <div class="strategy-card">
-                        <h4>[EDUCATION] Interleaving</h4>
+                        <h4>🎓 Interleaving</h4>
                         <p>Mix different topics and problem types during study sessions</p>
                     </div>
                     <div class="strategy-card">
-                        <h4>[PEOPLE] Teaching</h4>
+                        <h4>🤝 Teaching</h4>
                         <p>Explain concepts to others to deepen your understanding</p>
                     </div>
                 </div>
@@ -290,7 +290,7 @@
         <!-- Leaderboard Section -->
         <section id="leaderboard" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[LEADERBOARD] Leaderboard</h2>
+                <h2>🏅 Leaderboard</h2>
                 <p>Top performers and your ranking</p>
             </div>
             <div class="leaderboard-controls">
@@ -303,30 +303,30 @@
         <!-- Team/Credits Section -->
         <section id="credits" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[TEAM] Meet the Team</h2>
+                <h2>👥 Meet the Team</h2>
                 <p>Physics Study Hub is built by passionate students</p>
             </div>
             <div class="team-grid">
                 <div class="team-member">
-                    <div class="member-icon">[DEV]</div>
+                    <div class="member-icon">👨‍💻</div>
                     <h3>Kaleb Harris</h3>
                     <p class="role">Project Lead & Full Stack Developer</p>
                     <p class="contribution">Architecture, UI/UX design, dark mode, timer system, and GitHub Pages deployment</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-icon">[CONTENT]</div>
+                    <div class="member-icon">📚</div>
                     <h3>Kyle Mccrackin</h3>
                     <p class="role">Content & Quiz Designer</p>
                     <p class="contribution">Physics content curation, quiz question development, and problem set creation</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-icon">[DESIGN]</div>
+                    <div class="member-icon">🎨</div>
                     <h3>Tyler Rankins</h3>
                     <p class="role">UI/UX & Visual Design</p>
                     <p class="contribution">Design system, color palette, animations, and responsive layout optimization</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-icon">[BUILD]</div>
+                    <div class="member-icon">🔧</div>
                     <h3>Luke Prez</h3>
                     <p class="role">Backend & Feature Engineering</p>
                     <p class="contribution">Achievements system, progress tracking, localStorage optimization, and keyboard shortcuts</p>
@@ -364,7 +364,7 @@
         <!-- Performance Dashboard Section -->
         <section id="dashboard" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[ANALYTICS] Performance Dashboard</h2>
+                <h2>📈 Performance Dashboard</h2>
                 <p>Visual insights into your study patterns and progress trends</p>
             </div>
             <div class="dashboard-grid">
@@ -390,7 +390,7 @@
         <!-- Practice Exams Section -->
         <section id="exams" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[EXAM] Practice Exams</h2>
+                <h2>🧪 Practice Exams</h2>
                 <p>Full practice tests with all topics mixed - perfect for finals prep</p>
             </div>
             <div class="exams-container">
@@ -415,7 +415,7 @@
         <!-- Focus Areas (Weak Topics) Section -->
         <section id="weakpoints" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[FOCUS] Your Focus Areas</h2>
+                <h2>🎯 Your Focus Areas</h2>
                 <p>Topics that need more practice based on your performance</p>
             </div>
             <div id="weak-topics-display"></div>
@@ -424,7 +424,7 @@
         <!-- Custom Quiz Builder Section -->
         <section id="customize" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[BUILD] Build Your Own Quiz</h2>
+                <h2>🛠️ Build Your Own Quiz</h2>
                 <p>Create personalized quizzes from available questions</p>
             </div>
             <div class="builder-container">
@@ -454,7 +454,7 @@
         <!-- Spaced Repetition Recommendations -->
         <section id="spacing" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[REPEAT] Spaced Repetition Queue</h2>
+                <h2>🔁 Spaced Repetition Queue</h2>
                 <p>Cards due for review today based on optimal spacing</p>
             </div>
             <div id="spaced-repetition-display"></div>
@@ -463,7 +463,7 @@
         <!-- Progress Section -->
         <section id="progress" class="section" style="display: none;">
             <div class="section-header">
-                <h2>[PROGRESS] Your Progress</h2>
+                <h2>📊 Your Progress</h2>
                 <p>Track your learning journey and achievements</p>
             </div>
 
@@ -471,7 +471,7 @@
             <div class="stats-dashboard">
                 <div class="stat-card highlight">
                     <div class="stat-icon">📈</div>
-                                        <div class="stat-icon">[STATS]</div>
+                                        <div class="stat-icon">📈</div>
                     <div class="stat-info">
                         <div class="stat-label">Study Efficiency</div>
                         <div class="stat-number" id="efficiency-score">0%</div>
@@ -486,7 +486,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🎯</div>
-                                        <div class="stat-icon">[TARGET]</div>
+                                        <div class="stat-icon">🎯</div>
                     <div class="stat-info">
                         <div class="stat-label">Average Quiz Score</div>
                         <div class="stat-number" id="avg-score">N/A</div>
@@ -494,7 +494,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">📚</div>
-                                        <div class="stat-icon">[LIBRARY]</div>
+                                        <div class="stat-icon">📚</div>
                     <div class="stat-info">
                         <div class="stat-label">Topics Mastered</div>
                         <div class="stat-number" id="mastered-topics">0/5</div>
@@ -535,7 +535,7 @@
 
             <div class="daily-challenge">
                 <h3>🎯 Daily Challenge</h3>
-                                <h3>[DAILY] Daily Challenge</h3>
+                                <h3>🎯 Daily Challenge</h3>
                 <div id="challenge-content">
                     <p id="challenge-text">Complete a quiz on any topic!</p>
                     <button onclick="completeChallenge()" class="btn btn-primary">Mark Complete</button>
@@ -544,11 +544,11 @@
 
             <div class="achievements-section">
                 <h3>🏆 Achievements</h3>
-                                <h3>[ACHIEVEMENTS] Achievements</h3>
+                                <h3>🏆 Achievements</h3>
                 <div id="achievements-list" class="achievements-grid">
                     <div class="achievement" data-achievement="first-quiz">
                         <div class="achievement-icon">🎯</div>
-                                                <div class="achievement-icon">[STAR]</div>
+                                                <div class="achievement-icon">🎯</div>
                         <div class="achievement-text">
                             <strong>Quiz Master</strong>
                             <p>Complete first quiz</p>
@@ -563,7 +563,7 @@
                     </div>
                     <div class="achievement" data-achievement="study-streak">
                         <div class="achievement-icon">🔥</div>
-                                                <div class="achievement-icon">[FIRE]</div>
+                                                <div class="achievement-icon">🔥</div>
                         <div class="achievement-text">
                             <strong>On Fire</strong>
                             <p>3 day study streak</p>
@@ -578,7 +578,7 @@
                     </div>
                     <div class="achievement" data-achievement="problem-solver">
                         <div class="achievement-icon">💡</div>
-                                                <div class="achievement-icon">[IDEA]</div>
+                                                <div class="achievement-icon">💡</div>
                         <div class="achievement-text">
                             <strong>Problem Solver</strong>
                             <p>Solve 20 problems</p>
