@@ -20,6 +20,54 @@
     --shadow: 0 24px 56px rgba(3, 20, 31, 0.24);
 }
 
+body.dark-mode {
+    --surface: #1a2332;
+    --surface-soft: #0f192a;
+    --text: #e4f1ff;
+    --muted: #9cb3cc;
+}
+
+body.dark-mode .section {
+    background: linear-gradient(155deg, #1a2332, #0f192a);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.dark-mode .notes-content,
+body.dark-mode .problems-content,
+body.dark-mode #quiz-content {
+    background: #0f192a;
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.dark-mode .note-btn,
+body.dark-mode .problem-btn {
+    background: #0d1620;
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #d8eefa;
+}
+
+body.dark-mode .quiz-option {
+    background: #0f192a;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e4f1ff;
+}
+
+body.dark-mode .problem-item {
+    background: #0d1620;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e4f1ff;
+}
+
+body.dark-mode .progress-stat {
+    background: #0d1620;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .resource-card {
+    background: #0d1620;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
 body {
     font-family: 'Sora', 'Segoe UI', sans-serif;
     color: var(--text);
@@ -48,6 +96,31 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+}
+
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark-mode-btn {
+    border: none;
+    background: rgba(255, 255, 255, 0.14);
+    color: #f4fbff;
+    font-size: 1.1rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.dark-mode-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+body.dark-mode .dark-mode-btn::after {
+    content: "☀️";
 }
 
 .logo {
@@ -470,4 +543,167 @@ main {
     .flashcard {
         height: 280px;
     }
+}
+
+/* Timer Section */
+.timer-container {
+    text-align: center;
+}
+
+.timer-display {
+    background: linear-gradient(135deg, var(--brand), #0f5172);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.timer-time {
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-family: 'Space Grotesk', monospace;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.timer-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.timer-presets {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.timer-preset {
+    padding: 0.6rem 1rem;
+    background: #f7fcff;
+    border: 1px solid #d5e6f0;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.timer-preset:hover {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+}
+
+.timer-stats {
+    color: var(--muted);
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+/* Achievements Section */
+.achievements-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #d7e4ec;
+}
+
+.achievements-section h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #17364d;
+    margin-bottom: 1rem;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.achievement {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f7fcff;
+    border: 2px solid #d5e6f0;
+    border-radius: 12px;
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
+.achievement.unlocked {
+    opacity: 1;
+    border-color: var(--accent);
+    background: #fffbf0;
+}
+
+.achievement-icon {
+    font-size: 2rem;
+}
+
+.achievement-text strong {
+    display: block;
+    color: #17364d;
+    font-size: 0.95rem;
+}
+
+.achievement-text p {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin: 0.2rem 0 0;
+}
+
+/* Shortcuts Section */
+.shortcuts-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #d7e4ec;
+}
+
+.shortcuts-section h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #17364d;
+    margin-bottom: 1rem;
+}
+
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.shortcut {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem;
+    background: #f7fcff;
+    border-radius: 10px;
+    border: 1px solid #d5e6f0;
+}
+
+kbd {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    background: #e8f1f8;
+    border: 1px solid #c5d9e6;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #17364d;
+}
+
+.shortcut span {
+    color: var(--muted);
 }

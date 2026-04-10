@@ -13,14 +13,18 @@
     <nav class="navbar">
         <div class="nav-container">
             <h1 class="logo">Physics Study Hub</h1>
-            <ul class="nav-menu">
-                <li><a href="#" onclick="showSection('notes')" class="nav-link">Notes</a></li>
-                <li><a href="#" onclick="showSection('flashcards')" class="nav-link">Flashcards</a></li>
-                <li><a href="#" onclick="showSection('quiz')" class="nav-link">Quiz</a></li>
-                <li><a href="#" onclick="showSection('problems')" class="nav-link">Problems</a></li>
-                <li><a href="#" onclick="showSection('resources')" class="nav-link">Resources</a></li>
-                <li><a href="#" onclick="showSection('progress')" class="nav-link">Progress</a></li>
-            </ul>
+            <div class="nav-controls">
+                <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode" title="Dark mode">🌙</button>
+                <ul class="nav-menu">
+                    <li><a href="#" onclick="showSection('notes')" class="nav-link">Notes</a></li>
+                    <li><a href="#" onclick="showSection('flashcards')" class="nav-link">Flashcards</a></li>
+                    <li><a href="#" onclick="showSection('timer')" class="nav-link">Timer</a></li>
+                    <li><a href="#" onclick="showSection('quiz')" class="nav-link">Quiz</a></li>
+                    <li><a href="#" onclick="showSection('problems')" class="nav-link">Problems</a></li>
+                    <li><a href="#" onclick="showSection('resources')" class="nav-link">Resources</a></li>
+                    <li><a href="#" onclick="showSection('progress')" class="nav-link">Progress</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -65,6 +69,34 @@
                     <button onclick="markCard('hard')" class="btn btn-hard">Hard</button>
                     <button onclick="markCard('medium')" class="btn btn-medium">Medium</button>
                     <button onclick="markCard('easy')" class="btn btn-easy">Easy</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Study Timer Section -->
+        <section id="timer" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>⏱️ Study Timer</h2>
+                <p>Pomodoro-style focused study sessions</p>
+            </div>
+            <div class="timer-container">
+                <div class="timer-display">
+                    <div class="timer-time" id="timer-time">25:00</div>
+                    <div class="timer-label" id="timer-label">Focus Time</div>
+                </div>
+                <div class="timer-controls">
+                    <button onclick="startTimer()" class="btn btn-primary" id="btn-start">▶ Start</button>
+                    <button onclick="pauseTimer()" class="btn btn-warning" id="btn-pause" style="display:none;">⏸ Pause</button>
+                    <button onclick="resetTimer()" class="btn btn-secondary">↻ Reset</button>
+                </div>
+                <div class="timer-presets">
+                    <button onclick="setTimer(25)" class="timer-preset">25 min</button>
+                    <button onclick="setTimer(5)" class="timer-preset">5 min</button>
+                    <button onclick="setTimer(45)" class="timer-preset">45 min</button>
+                    <button onclick="setTimer(90)" class="timer-preset">90 min</button>
+                </div>
+                <div class="timer-stats">
+                    <p>Today's focus: <span id="today-focus">0</span> min | Session streak: <span id="streak-count">0</span> days 🔥</p>
                 </div>
             </div>
         </section>
@@ -136,7 +168,7 @@
         <section id="progress" class="section" style="display: none;">
             <div class="section-header">
                 <h2>📊 Your Progress</h2>
-                <p>Track your learning journey</p>
+                <p>Track your learning journey and achievements</p>
             </div>
             <div class="progress-container">
                 <div class="progress-stat">
@@ -167,8 +199,58 @@
                         <div class="progress-fill" style="width: 0%"></div>
                     </div>
                 </div>
-                <button onclick="resetProgress()" class="btn btn-danger">Reset Progress</button>
             </div>
+
+            <div class="achievements-section">
+                <h3>🏆 Achievements</h3>
+                <div id="achievements-list" class="achievements-grid">
+                    <div class="achievement" data-achievement="first-quiz">
+                        <div class="achievement-icon">🎯</div>
+                        <div class="achievement-text">
+                            <strong>Quiz Master</strong>
+                            <p>Complete first quiz</p>
+                        </div>
+                    </div>
+                    <div class="achievement" data-achievement="perfect-score">
+                        <div class="achievement-icon">⭐</div>
+                        <div class="achievement-text">
+                            <strong>Perfect Score</strong>
+                            <p>Score 100% on quiz</p>
+                        </div>
+                    </div>
+                    <div class="achievement" data-achievement="study-streak">
+                        <div class="achievement-icon">🔥</div>
+                        <div class="achievement-text">
+                            <strong>On Fire</strong>
+                            <p>3 day study streak</p>
+                        </div>
+                    </div>
+                    <div class="achievement" data-achievement="card-master">
+                        <div class="achievement-icon">🃏</div>
+                        <div class="achievement-text">
+                            <strong>Card Master</strong>
+                            <p>Study 50 flashcards</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shortcuts-section">
+                <h3>⌨️ Keyboard Shortcuts</h3>
+                <div class="shortcuts-grid">
+                    <div class="shortcut">
+                        <kbd>←</kbd> <kbd>→</kbd> <span>Navigate flashcards</span>
+                    </div>
+                    <div class="shortcut">
+                        <kbd>Space</kbd> <span>Flip flashcard</span>
+                    </div>
+                    <div class="shortcut">
+                        <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <span>Select quiz answer</span>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="resetProgress()" class="btn btn-danger">Reset All Progress</button>
         </section>
     </main>
 

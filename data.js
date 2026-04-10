@@ -148,10 +148,51 @@ const physicsData = {
         {
             front: "What is impulse?",
             back: "Impulse = F·Δt - the change in momentum from a force applied over time"
+        },
+        {
+            front: "State Newton's First Law",
+            back: "An object at rest stays at rest, and an object in motion stays in motion unless acted upon by an external force."
+        },
+        {
+            front: "What is the SI unit of force?",
+            back: "Newton (N), defined as 1 kg·m/s²"
+        },
+        {
+            front: "Define friction force",
+            back: "f = μN - resistance to motion between surfaces; μ is coefficient of friction"
+        },
+        {
+            front: "What is work in physics?",
+            back: "W = F·d·cos(θ) - force applied times distance moved in direction of force (Joules)"
+        },
+        {
+            front: "Define momentum",
+            back: "p = mv - mass times velocity; a vector quantity measured in kg·m/s"
+        },
+        {
+            front: "What is the period of a wave?",
+            back: "T = 1/f - the time required for one complete oscillation"
+        },
+        {
+            front: "What is the relationship between period and frequency?",
+            back: "T = 1/f or f = 1/T; they are inverse relationships"
+        },
+        {
+            front: "Define amplitude",
+            back: "The maximum displacement of a wave from its equilibrium position"
+        },
+        {
+            front: "What is terminal velocity?",
+            back: "The maximum velocity reached by a falling object when air resistance equals gravitational force"
+        },
+        {
+            front: "What does elastic collision mean?",
+            back: "A collision where both momentum and kinetic energy are conserved"
         }
     ],
 
     quiz: [
+        // Kinematics - Easy
         {
             question: "An object travels 10 m east, then 5 m west. What is its displacement?",
             options: ["5 m east", "15 m", "5 m west", "Cannot be determined"],
@@ -165,11 +206,36 @@ const physicsData = {
             difficulty: "easy"
         },
         {
-            question: "What is the kinetic energy of a 2 kg object moving at 5 m/s?",
-            options: ["10 J", "25 J", "50 J", "100 J"],
+            question: "What is the difference between speed and velocity?",
+            options: [
+                "Speed is faster",
+                "Velocity has direction, speed does not",
+                "There is no difference",
+                "Speed is measured in m/s, velocity in km/h"
+            ],
             correct: 1,
+            difficulty: "easy"
+        },
+        {
+            question: "A runner covers 100 m in 10 seconds at constant speed. What is the speed?",
+            options: ["10 m/s", "100 m/s", "1 m/s", "0.1 m/s"],
+            correct: 0,
+            difficulty: "easy"
+        },
+        // Kinematics - Medium
+        {
+            question: "An object starts from rest and accelerates at 3 m/s² for 4 seconds. How far does it travel?",
+            options: ["12 m", "24 m", "36 m", "48 m"],
+            correct: 2,
             difficulty: "medium"
         },
+        {
+            question: "What is the final velocity after falling for 3 seconds from rest? (g = 10 m/s²)",
+            options: ["30 m/s", "15 m/s", "45 m/s", "90 m/s"],
+            correct: 0,
+            difficulty: "medium"
+        },
+        // Forces - Easy
         {
             question: "Newton's Third Law states:",
             options: [
@@ -182,11 +248,117 @@ const physicsData = {
             difficulty: "easy"
         },
         {
+            question: "What does F = ma represent?",
+            options: [
+                "Newton's First Law",
+                "Newton's Second Law",
+                "Newton's Third Law",
+                "Conservation of Energy"
+            ],
+            correct: 1,
+            difficulty: "easy"
+        },
+        {
+            question: "A 10 kg object experiences no net force. What is its acceleration?",
+            options: ["10 m/s²", "1 m/s²", "0 m/s²", "100 m/s²"],
+            correct: 2,
+            difficulty: "easy"
+        },
+        {
+            question: "What is the SI unit of force?",
+            options: ["kg", "Newton", "Joule", "Watt"],
+            correct: 1,
+            difficulty: "easy"
+        },
+        // Forces - Medium
+        {
+            question: "A 5 kg object is pushed with a 50 N force. Friction is 10 N. What is the acceleration?",
+            options: ["8 m/s²", "10 m/s²", "2 m/s²", "12 m/s²"],
+            correct: 0,
+            difficulty: "medium"
+        },
+        {
+            question: "A 20 N force acts on an object for 5 seconds, changing its velocity. This demonstrates:",
+            options: ["First Law", "Second Law", "Third Law", "Conservation"],
+            correct: 1,
+            difficulty: "medium"
+        },
+        // Energy - Easy
+        {
+            question: "What is the kinetic energy of a 2 kg object moving at 5 m/s?",
+            options: ["10 J", "25 J", "50 J", "100 J"],
+            correct: 1,
+            difficulty: "easy"
+        },
+        {
+            question: "A 3 kg ball is at height 4 m. Find its potential energy. (g = 10 m/s²)",
+            options: ["12 J", "30 J", "120 J", "70 J"],
+            correct: 2,
+            difficulty: "easy"
+        },
+        {
+            question: "Which has more kinetic energy: 1 kg at 10 m/s or 2 kg at 5 m/s?",
+            options: [
+                "1 kg at 10 m/s",
+                "2 kg at 5 m/s",
+                "They are equal",
+                "Cannot determine"
+            ],
+            correct: 0,
+            difficulty: "easy"
+        },
+        // Energy - Medium
+        {
+            question: "An object has 100 J KE and 50 J PE. What is its total mechanical energy?",
+            options: ["50 J", "100 J", "150 J", "2 J"],
+            correct: 2,
+            difficulty: "medium"
+        },
+        {
             question: "What is the wave equation?",
             options: ["v = f + λ", "v = fλ", "v = f/λ", "v = λ/f"],
             correct: 1,
             difficulty: "medium"
         },
+        // Momentum - Easy
+        {
+            question: "A 2 kg object moving at 6 m/s has momentum of:",
+            options: ["3 kg·m/s", "12 kg·m/s", "6 kg·m/s", "8 kg·m/s"],
+            correct: 1,
+            difficulty: "easy"
+        },
+        {
+            question: "Which has more momentum: 1 kg at 10 m/s or 2 kg at 4 m/s?",
+            options: [
+                "1 kg at 10 m/s",
+                "2 kg at 4 m/s",
+                "They are equal",
+                "Cannot determine"
+            ],
+            correct: 0,
+            difficulty: "easy"
+        },
+        // Momentum - Medium
+        {
+            question: "A 3 kg object moving at 5 m/s collides with a 2 kg object at rest. They stick together. Find final velocity.",
+            options: ["3 m/s", "2.5 m/s", "5 m/s", "7.5 m/s"],
+            correct: 0,
+            difficulty: "medium"
+        },
+        // Waves - Easy
+        {
+            question: "A wave has frequency 10 Hz. What is its period?",
+            options: ["0.1 s", "1 s", "10 s", "0.01 s"],
+            correct: 0,
+            difficulty: "easy"
+        },
+        {
+            question: "Sound travels fastest through:",
+            options: ["Air", "Water", "Solid", "Vacuum"],
+            correct: 2,
+            difficulty: "easy"
+        },
+        // Hard questions across all topics
         {
             question: "A 1500 kg car needs to come to a complete stop in 5 seconds. If it's traveling at 20 m/s, what is the force needed?",
             options: ["6000 N", "7500 N", "-6000 N", "300 N"],
@@ -208,13 +380,13 @@ const physicsData = {
             question: "A sound wave has a frequency of 440 Hz. If the speed of sound is 343 m/s, what is the wavelength?",
             options: ["0.78 m", "1.28 m", "151,120 m", "783 Hz"],
             correct: 0,
-            difficulty: "medium"
+            difficulty: "hard"
         },
         {
             question: "What is the gravitational potential energy of a 5 kg object at a height of 100 m? (g = 9.8 m/s²)",
             options: ["490 J", "4900 J", "49,000 J", "980 J"],
             correct: 2,
-            difficulty: "medium"
+            difficulty: "hard"
         },
         {
             question: "If an object has zero acceleration, what can we conclude?",
@@ -225,6 +397,18 @@ const physicsData = {
                 "No forces act on the object"
             ],
             correct: 1,
+            difficulty: "hard"
+        },
+        {
+            question: "A 0.2 kg baseball is hit with an average force of 4000 N over 0.002 seconds. What is its final velocity starting from rest?",
+            options: ["10 m/s", "20 m/s", "40 m/s", "400 m/s"],
+            correct: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "A rotor blade sweeps through an angle of 2π radians in 1 second. What is its angular velocity?",
+            options: ["2π rad/s", "π rad/s", "4π rad/s", "1 rad/s"],
+            correct: 0,
             difficulty: "hard"
         }
     ],

@@ -9,6 +9,9 @@ let quizTimer = null;
 let quizStartTime = 0;
 let quizDifficulty = 'all';
 let filteredQuestions = [];
+let timerInterval = null;
+let timerSeconds = 1500; // 25 minutes
+let timerIsRunning = false;
 
 // Progress tracking
 let progress = {
@@ -16,7 +19,11 @@ let progress = {
     cardsStudied: 0,
     quizScores: [],
     problemsSolved: 0,
-    totalQuizTime: 0
+    totalQuizTime: 0,
+    todayFocus: 0,
+    streak: 0,
+    lastStudyDate: null,
+    achievements: []
 };
 
 // Load progress from localStorage
@@ -25,6 +32,13 @@ function loadProgress() {
     if (saved) {
         progress = JSON.parse(saved);
         updateProgressDisplay();
+        updateAchievements();
+    }
+    
+    const darkMode = localStorage.getItem('darkMode');
+    if (darkMode === 'true') {
+        document.body.classList.add('dark-mode');
+        updateDarkModeButton();
     }
 }
 
@@ -33,7 +47,19 @@ function saveProgress() {
     localStorage.setItem('physicsProgress', JSON.stringify(progress));
 }
 
-// Show sections
+// Dark mode toggle
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    updateDarkModeButton();
+}
+
+function updateDarkModeButton() {
+    const btn = document.getElementById('dark-mode-toggle');
+    btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+}
+
 function showSection(sectionId) {
     document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
     document.getElementById(sectionId).style.display = 'block';
@@ -43,6 +69,8 @@ function showSection(sectionId) {
         loadNotes('kinematics');
     } else if (sectionId === 'flashcards') {
         loadFlashcards();
+    } else if (sectionId === 'timer') {
+        initTimer();
     } else if (sectionId === 'quiz') {
         initQuiz();
     } else if (sectionId === 'problems') {
@@ -55,6 +83,79 @@ function setActiveNav(sectionId) {
         const isActive = link.getAttribute('onclick')?.includes(`'${sectionId}'`);
         link.style.background = isActive ? 'rgba(255, 255, 255, 0.18)' : 'transparent';
     });
+}
+
+// ============ TIMER SECTION ============
+function initTimer() {
+    updateTimerDisplay();
+}
+
+function startTimer() {
+    if (timerIsRunning) return;
+    timerIsRunning = true;
+    document.getElementById('btn-start').style.display = 'none';
+    document.getElementById('btn-pause').style.display = 'inline-block';
+    
+    timerInterval = setInterval(() => {
+        timerSeconds--;
+        updateTimerDisplay();
+        
+        if (timerSeconds <= 0) {
+            clearInterval(timerInterval);
+            timerIsRunning = false;
+            playTimerAlert();
+            progress.todayFocus += Math.floor(1500 / 60);
+            saveProgress();
+            updateTimerDisplay();
+            document.getElementById('btn-start').style.display = 'inline-block';
+            document.getElementById('btn-pause').style.display = 'none';
+        }
+    }, 1000);
+}
+
+function pauseTimer() {
+    timerIsRunning = false;
+    clearInterval(timerInterval);
+    document.getElementById('btn-start').style.display = 'inline-block';
+    document.getElementById('btn-pause').style.display = 'none';
+}
+
+function resetTimer() {
+    pauseTimer();
+    timerSeconds = 1500;
+    updateTimerDisplay();
+}
+
+function setTimer(minutes) {
+    pauseTimer();
+    timerSeconds = minutes * 60;
+    updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+    const mins = Math.floor(timerSeconds / 60);
+    const secs = timerSeconds % 60;
+    document.getElementById('timer-time').textContent = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    document.getElementById('today-focus').textContent = progress.todayFocus;
+    document.getElementById('streak-count').textContent = progress.streak;
+}
+
+function playTimerAlert() {
+    const audio = new AudioContext ? new (window.AudioContext || window.webkitAudioContext)() : null;
+    if (audio) {
+        const now = audio.currentTime;
+        const osc = audio.createOscillator();
+        const env = audio.createGain();
+        osc.connect(env);
+        env.connect(audio.destination);
+        osc.frequency.value = 800;
+        env.gain.setValueAtTime(0.3, now);
+        env.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+        osc.start(now);
+        osc.stop(now + 0.5);
+    }
+    alert('Study session complete! Time for a break. 🎉');
 }
 
 // ============ NOTES SECTION ============
@@ -126,6 +227,7 @@ function markCard(difficulty) {
     
     progress.cardsStudied++;
     saveProgress();
+    updateAchievements();
     
     // Move to next card
     if (currentFlashcardIndex < physicsData.flashcards.length - 1) {
@@ -278,6 +380,7 @@ function showQuizResults() {
     
     progress.quizScores.push(percentage);
     saveProgress();
+    updateAchievements();
 }
 
 // ============ PROBLEMS SECTION ============
@@ -360,8 +463,98 @@ function resetProgress() {
     }
 }
 
+// ============ ACHIEVEMENTS ============
+function unlockAchievement(id) {
+    if (!progress.achievements.includes(id)) {
+        progress.achievements.push(id);
+        saveProgress();
+        updateAchievements();
+        showAchievementToast(id);
+    }
+}
+
+function updateAchievements() {
+    // Check for first quiz
+    if (progress.quizScores.length > 0) {
+        unlockAchievement('first-quiz');
+    }
+    
+    // Check for perfect score
+    if (progress.quizScores.some(s => s === 100)) {
+        unlockAchievement('perfect-score');
+    }
+    
+    // Check for study streak
+    if (progress.streak >= 3) {
+        unlockAchievement('study-streak');
+    }
+    
+    // Check for card master
+    if (progress.cardsStudied >= 50) {
+        unlockAchievement('card-master');
+    }
+    
+    // Visual update
+    document.querySelectorAll('.achievement').forEach(el => {
+        const id = el.dataset.achievement;
+        if (progress.achievements.includes(id)) {
+            el.classList.add('unlocked');
+        } else {
+            el.classList.remove('unlocked');
+        }
+    });
+}
+
+function showAchievementToast(id) {
+    const achievements = {
+        'first-quiz': '🎯 Quiz Master - Complete first quiz',
+        'perfect-score': '⭐ Perfect Score - Scored 100%',
+        'study-streak': '🔥 On Fire - 3 day study streak',
+        'card-master': '🃏 Card Master - Studied 50 flashcards'
+    };
+    
+    const msg = achievements[id];
+    if (msg) console.log('Achievement Unlocked: ' + msg);
+}
+
+// ============ KEYBOARD SHORTCUTS ============
+document.addEventListener('keydown', (e) => {
+    // Check if we're in a flashcard view
+    if (document.getElementById('flashcards').style.display !== 'none') {
+        if (e.key === 'ArrowRight') {
+            nextCard();
+        } else if (e.key === 'ArrowLeft') {
+            previousCard();
+        } else if (e.key === ' ') {
+            e.preventDefault();
+            flipCard();
+        }
+    }
+    
+    // Quiz answer selection with numbers
+    if (document.getElementById('quiz').style.display !== 'none' && 
+        document.getElementById('quiz-content').innerHTML !== '' &&
+        !document.getElementById('quiz-difficulty').style.display !== 'none') {
+        const num = parseInt(e.key);
+        if (num >= 1 && num <= 4) {
+            const options = document.querySelectorAll('.quiz-option');
+            if (options[num - 1]) {
+                options[num - 1].click();
+            }
+        }
+    }
+});
+
 // Initialize
 window.addEventListener('DOMContentLoaded', () => {
     loadProgress();
     showSection('notes');
+    
+    // Set up dark mode toggle
+    const darkModeBtn = document.getElementById('dark-mode-toggle');
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener('click', toggleDarkMode);
+        updateDarkModeButton();
+    }
 });
+
