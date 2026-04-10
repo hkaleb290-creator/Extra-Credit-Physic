@@ -21,6 +21,7 @@ let progress = {
     notesReviewed: 0,
     cardsStudied: 0,
     quizScores: [],
+    examScores: [],
     problemsSolved: 0,
     totalQuizTime: 0,
     todayFocus: 0,
@@ -34,6 +35,7 @@ function loadProgress() {
     const saved = localStorage.getItem('physicsProgress');
     if (saved) {
         progress = JSON.parse(saved);
+        if (!Array.isArray(progress.examScores)) progress.examScores = [];
         updateProgressDisplay();
         updateAchievements();
     }
@@ -80,6 +82,8 @@ function showSection(sectionId) {
         loadProblems('kinematics');
     } else if (sectionId === 'exams') {
         initPracticeExams();
+    } else if (sectionId === 'dashboard') {
+        updateDashboardDisplay();
     }
 }
 
@@ -185,10 +189,28 @@ function submitPracticeExam() {
         </div>
     `;
 
-    progress.quizScores.push(score);
+    progress.examScores.push(score);
     saveProgress();
     updateProgressDisplay();
     updateAchievements();
+}
+
+function updateDashboardDisplay() {
+    const avgScore = progress.quizScores.length
+        ? Math.round(progress.quizScores.reduce((sum, value) => sum + value, 0) / progress.quizScores.length)
+        : 0;
+
+    const examCount = progress.examScores.length;
+
+    const avgScoreEl = document.getElementById('dashboard-avg-score');
+    const examCountEl = document.getElementById('dashboard-exam-count');
+    const streakEl = document.getElementById('dashboard-streak');
+    const problemsEl = document.getElementById('dashboard-problems');
+
+    if (avgScoreEl) avgScoreEl.textContent = avgScore + '%';
+    if (examCountEl) examCountEl.textContent = examCount;
+    if (streakEl) streakEl.textContent = progress.streak + ' days';
+    if (problemsEl) problemsEl.textContent = progress.problemsSolved;
 }
 
 // ============ TIMER SECTION ============
@@ -558,6 +580,7 @@ function resetProgress() {
             notesReviewed: 0,
             cardsStudied: 0,
             quizScores: [],
+            examScores: [],
             problemsSolved: 0,
             totalQuizTime: 0
         };
