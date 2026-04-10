@@ -174,15 +174,15 @@
             </div>
             <div class="exam-shell">
                 <div id="exam-menu" class="exam-menu">
-                    <button onclick="startPracticeExam('quick')" class="exam-choice">
+                    <button type="button" data-exam-type="quick" onclick="startPracticeExam('quick')" class="exam-choice">
                         <strong>Quick Exam</strong>
                         <span>15 questions</span>
                     </button>
-                    <button onclick="startPracticeExam('standard')" class="exam-choice">
+                    <button type="button" data-exam-type="standard" onclick="startPracticeExam('standard')" class="exam-choice">
                         <strong>Standard Exam</strong>
                         <span>25 questions</span>
                     </button>
-                    <button onclick="startPracticeExam('full')" class="exam-choice">
+                    <button type="button" data-exam-type="full" onclick="startPracticeExam('full')" class="exam-choice">
                         <strong>Full Exam</strong>
                         <span>All available questions</span>
                     </button>

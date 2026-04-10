@@ -104,6 +104,13 @@ function initPracticeExams() {
             </div>
         `;
     }
+
+    document.querySelectorAll('.exam-choice').forEach(button => {
+        button.addEventListener('click', () => {
+            const examKind = button.dataset.examType;
+            if (examKind) startPracticeExam(examKind);
+        });
+    });
 }
 
 function getExamQuestionPool() {
@@ -113,6 +120,11 @@ function getExamQuestionPool() {
 function startPracticeExam(type) {
     examType = type;
     examAnswers = [];
+
+    const content = document.getElementById('exam-content');
+    if (content) {
+        content.innerHTML = '<p style="color: var(--muted);">Loading exam...</p>';
+    }
 
     const pool = getExamQuestionPool().sort(() => Math.random() - 0.5);
     const counts = {
