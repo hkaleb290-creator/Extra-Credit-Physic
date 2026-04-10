@@ -680,11 +680,11 @@ window.addEventListener('DOMContentLoaded', () => {
     
     // Update streak tracking
     updateStudyStreak();
-
-    // Initialize feature panels
-    updatePerformanceDashboard();
-    displayWeakTopics();
-    updateSpacedRepetition();
+    +    // Initialize all new features
+    +    updatePerformanceDashboard();
+    +    displayWeakTopics();
+    +    updateSpacedRepetition();
+    };
     updateAllStats();
 });
 
@@ -1009,28 +1009,6 @@ let currentExamType = null;
 let examQuestions = [];
 let examAnswers = [];
 
-function getAllQuizQuestions() {
-    if (Array.isArray(physicsData.quiz)) {
-        return physicsData.quiz;
-    }
-
-    if (physicsData.quizzes && typeof physicsData.quizzes === 'object') {
-        return Object.values(physicsData.quizzes).flat();
-    }
-
-    return [];
-}
-
-function inferQuestionTopic(questionObj) {
-    const text = (questionObj.question || '').toLowerCase();
-
-    if (text.includes('newton') || text.includes('force') || text.includes('friction')) return 'forces';
-    if (text.includes('energy') || text.includes('work') || text.includes('power') || text.includes('kinetic') || text.includes('potential')) return 'energy';
-    if (text.includes('momentum') || text.includes('collision') || text.includes('impulse')) return 'momentum';
-    if (text.includes('wave') || text.includes('frequency') || text.includes('wavelength') || text.includes('doppler') || text.includes('sound')) return 'waves';
-    return 'kinematics';
-}
-
 function startPracticeExam(type) {
     currentExamType = type;
     examQuestions = [];
@@ -1039,16 +1017,11 @@ function startPracticeExam(type) {
     const counts = { short: 15, standard: 30, full: 50 };
     const questionCount = counts[type];
     
-    // Get all available questions from the canonical quiz source.
-    const allQuestions = getAllQuizQuestions();
-
-    if (allQuestions.length === 0) {
-        const content = document.getElementById('exam-content');
-        if (content) {
-            content.innerHTML = '<p style="color: var(--danger);">No exam questions are available right now.</p>';
-        }
-        return;
-    }
+    // Get all available questions
+    let allQuestions = [];
+    Object.values(physicsData.quizzes).forEach(topicQuestions => {
+        allQuestions = allQuestions.concat(topicQuestions);
+    });
     
     // Shuffle and select
     examQuestions = allQuestions.sort(() => Math.random() - 0.5).slice(0, questionCount);
@@ -1092,7 +1065,7 @@ function displayExamQuestion(index) {
 function submitExam() {
     let correct = 0;
     examQuestions.forEach((q, i) => {
-        if (examAnswers[i] === q.correct) correct++;
+        if (q.options[examAnswers[i]] === q.correct) correct++;
     });
     
     const percentage = Math.round((correct / examQuestions.length) * 100);
@@ -1162,12 +1135,16 @@ function buildCustomQuiz() {
         return;
     }
     
-    // Get matching questions from the unified quiz list.
-    const allQuestions = getAllQuizQuestions().filter(q => {
-        const topic = inferQuestionTopic(q);
-        const topicMatch = selectedTopics.includes(topic);
-        const difficultyMatch = selectedDifficulties.includes(q.difficulty);
-        return topicMatch && difficultyMatch;
+    // Get matching questions
+    let allQuestions = [];
+    selectedTopics.forEach(topic => {
+        if (physicsData.quizzes[topic]) {
+            physicsData.quizzes[topic].forEach(q => {
+                if (selectedDifficulties.includes(q.difficulty)) {
+                    allQuestions.push(q);
+                }
+            });
+        }
     });
     
     customQuizQuestions = allQuestions.sort(() => Math.random() - 0.5).slice(0, count);
@@ -1216,7 +1193,7 @@ function displayCustomQuizQuestion(index) {
 function submitCustomQuiz() {
     let correct = 0;
     customQuizQuestions.forEach((q, i) => {
-        if (customQuizAnswers[i] === q.correct) correct++;
+        if (q.options[customQuizAnswers[i]] === q.correct) correct++;
     });
     
     const percentage = Math.round((correct / customQuizQuestions.length) * 100);
