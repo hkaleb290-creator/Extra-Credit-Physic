@@ -15,6 +15,7 @@
             <h1 class="logo">Physics Study Hub</h1>
             <div class="nav-controls">
                 <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode" title="Dark mode">🌙</button>
+                                <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode" title="Dark mode">🌙</button>
                 <ul class="nav-menu">
                     <li><a href="#" onclick="showSection('notes')" class="nav-link">Notes</a></li>
                     <li><a href="#" onclick="showSection('flashcards')" class="nav-link">Flashcards</a></li>
@@ -75,6 +76,7 @@
                 <div class="flashcard-controls">
                     <button onclick="previousCard()" class="btn">← Previous</button>
                     <span id="card-counter">1 / 10</span>
+                                        <button onclick="nextCard()" class="btn">Next →</button>
                     <button onclick="nextCard()" class="btn">Next →</button>
                 </div>
                 <div class="card-nav">
@@ -533,6 +535,7 @@
 
             <div class="daily-challenge">
                 <h3>🎯 Daily Challenge</h3>
+                                <h3>🎯 Daily Challenge</h3>
                 <div id="challenge-content">
                     <p id="challenge-text">Complete a quiz on any topic!</p>
                     <button onclick="completeChallenge()" class="btn btn-primary">Mark Complete</button>
@@ -541,9 +544,11 @@
 
             <div class="achievements-section">
                 <h3>🏆 Achievements</h3>
+                                <h3>🏆 Achievements</h3>
                 <div id="achievements-list" class="achievements-grid">
                     <div class="achievement" data-achievement="first-quiz">
                         <div class="achievement-icon">🎯</div>
+                                                <div class="achievement-icon">🎯</div>
                         <div class="achievement-text">
                             <strong>Quiz Master</strong>
                             <p>Complete first quiz</p>
@@ -558,6 +563,7 @@
                     </div>
                     <div class="achievement" data-achievement="study-streak">
                         <div class="achievement-icon">🔥</div>
+                                                <div class="achievement-icon">🔥</div>
                         <div class="achievement-text">
                             <strong>On Fire</strong>
                             <p>3 day study streak</p>
@@ -572,6 +578,7 @@
                     </div>
                     <div class="achievement" data-achievement="problem-solver">
                         <div class="achievement-icon">💡</div>
+                                                <div class="achievement-icon">💡</div>
                         <div class="achievement-text">
                             <strong>Problem Solver</strong>
                             <p>Solve 20 problems</p>
