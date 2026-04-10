@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Study Hub</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">🔬 Physics Study Hub</h1>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="showSection('notes')" class="nav-link">📚 Notes</a></li>
+                <li><a href="#" onclick="showSection('flashcards')" class="nav-link">🃏 Flashcards</a></li>
+                <li><a href="#" onclick="showSection('quiz')" class="nav-link">❓ Quiz</a></li>
+                <li><a href="#" onclick="showSection('problems')" class="nav-link">📝 Problems</a></li>
+                <li><a href="#" onclick="showSection('progress')" class="nav-link">📊 Progress</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Notes Section -->
+        <section id="notes" class="section">
+            <div class="section-header">
+                <h2>📚 Study Notes</h2>
+                <p>Review key concepts and topics from physics</p>
+            </div>
+            <div class="notes-container">
+                <div class="notes-sidebar">
+                    <button class="note-btn active" onclick="loadNotes('kinematics')">Kinematics & Motion</button>
+                    <button class="note-btn" onclick="loadNotes('forces')">Forces & Newton's Laws</button>
+                    <button class="note-btn" onclick="loadNotes('energy')">Energy & Work</button>
+                    <button class="note-btn" onclick="loadNotes('momentum')">Momentum & Collisions</button>
+                    <button class="note-btn" onclick="loadNotes('waves')">Waves & Sound</button>
+                </div>
+                <div id="notes-content" class="notes-content"></div>
+            </div>
+        </section>
+
+        <!-- Flashcards Section -->
+        <section id="flashcards" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>🃏 Flashcards</h2>
+                <p>Study with interactive flashcards</p>
+            </div>
+            <div class="flashcards-container">
+                <div id="flashcard" class="flashcard" onclick="flipCard()">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">Question</div>
+                        <div class="flashcard-back">Answer</div>
+                    </div>
+                </div>
+                <div class="flashcard-controls">
+                    <button onclick="previousCard()" class="btn">← Previous</button>
+                    <span id="card-counter">1 / 10</span>
+                    <button onclick="nextCard()" class="btn">Next →</button>
+                </div>
+                <div class="card-nav">
+                    <button onclick="markCard('hard')" class="btn btn-hard">Hard</button>
+                    <button onclick="markCard('medium')" class="btn btn-medium">Medium</button>
+                    <button onclick="markCard('easy')" class="btn btn-easy">Easy</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>❓ Quiz Mode</h2>
+                <p>Test your knowledge with quizzes</p>
+            </div>
+            <div class="quiz-container">
+                <div id="quiz-difficulty" style="text-align: center; margin-bottom: 2rem;">
+                    <h3>Select Difficulty</h3>
+                    <button onclick="startQuizWithDifficulty('all')" class="btn btn-primary">All Questions</button>
+                    <button onclick="startQuizWithDifficulty('easy')" class="btn btn-easy">Easy Only</button>
+                    <button onclick="startQuizWithDifficulty('medium')" class="btn btn-medium">Medium Only</button>
+                    <button onclick="startQuizWithDifficulty('hard')" class="btn btn-hard">Hard Only</button>
+                </div>
+                <div id="quiz-timer" style="text-align: center; font-size: 1.5rem; font-weight: bold; color: #e74c3c; margin-bottom: 1rem; display: none;">
+                    ⏱️ Time: <span id="timer-display">0:00</span>
+                </div>
+                <div id="quiz-content"></div>
+            </div>
+        </section>
+
+        <!-- Problems Section -->
+        <section id="problems" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>📝 Practice Problems</h2>
+                <p>Work through problem solutions</p>
+            </div>
+            <div class="problems-container">
+                <div class="problems-sidebar">
+                    <button class="problem-btn active" onclick="loadProblems('kinematics')">Kinematics</button>
+                    <button class="problem-btn" onclick="loadProblems('forces')">Forces</button>
+                    <button class="problem-btn" onclick="loadProblems('energy')">Energy</button>
+                    <button class="problem-btn" onclick="loadProblems('momentum')">Momentum</button>
+                </div>
+                <div id="problems-content" class="problems-content"></div>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section id="progress" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>📊 Your Progress</h2>
+                <p>Track your learning journey</p>
+            </div>
+            <div class="progress-container">
+                <div class="progress-stat">
+                    <h3>Notes Reviewed</h3>
+                    <div class="stat-value" id="notes-reviewed">0</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-stat">
+                    <h3>Cards Studied</h3>
+                    <div class="stat-value" id="cards-studied">0</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-stat">
+                    <h3>Quiz Average</h3>
+                    <div class="stat-value" id="quiz-avg">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-stat">
+                    <h3>Problems Solved</h3>
+                    <div class="stat-value" id="problems-solved">0</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <button onclick="resetProgress()" class="btn btn-danger">Reset Progress</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
