@@ -105,6 +105,47 @@ body.dark-mode .dashboard-card h3 {
     color: #e4f1ff;
 }
 
+/* Team */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.team-card {
+    background: #f7fcff;
+    border: 1px solid #d5e6f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+}
+
+.team-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #17364d;
+}
+
+.team-role {
+    color: var(--brand);
+    font-weight: 700;
+    margin: 0.25rem 0 0.75rem;
+}
+
+.team-desc {
+    color: var(--muted);
+    margin: 0;
+}
+
+body.dark-mode .team-card {
+    background: #0f192a;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .team-name {
+    color: #e4f1ff;
+}
+
 /* Practice Exams */
 .exam-shell {
     max-width: 900px;
