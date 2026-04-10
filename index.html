@@ -170,21 +170,13 @@
         <section id="exams" class="section" style="display: none;">
             <div class="section-header">
                 <h2>🧪 Practice Exams</h2>
-                <p>Mixed-topic final exam practice with timed, scored tests</p>
+                <p>One full final exam that mixes topics and grades automatically</p>
             </div>
             <div class="exam-shell">
                 <div id="exam-menu" class="exam-menu">
-                    <button type="button" data-exam-type="quick" onclick="startPracticeExam('quick')" class="exam-choice">
-                        <strong>Quick Exam</strong>
-                        <span>15 questions</span>
-                    </button>
-                    <button type="button" data-exam-type="standard" onclick="startPracticeExam('standard')" class="exam-choice">
-                        <strong>Standard Exam</strong>
-                        <span>25 questions</span>
-                    </button>
-                    <button type="button" data-exam-type="full" onclick="startPracticeExam('full')" class="exam-choice">
-                        <strong>Full Exam</strong>
-                        <span>All available questions</span>
+                    <button type="button" onclick="startPracticeExam()" class="exam-choice exam-choice-primary">
+                        <strong>Start Final Exam</strong>
+                        <span>25 questions • mixed topics</span>
                     </button>
                 </div>
                 <div id="exam-content" class="exam-content"></div>

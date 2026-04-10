@@ -113,7 +113,7 @@ body.dark-mode .dashboard-card h3 {
 
 .exam-menu {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
@@ -134,6 +134,13 @@ body.dark-mode .dashboard-card h3 {
 .exam-choice:hover {
     border-color: var(--brand);
     transform: translateY(-1px);
+}
+
+.exam-choice-primary {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 84px;
 }
 
 .exam-choice strong {

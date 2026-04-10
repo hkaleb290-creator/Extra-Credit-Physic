@@ -14,7 +14,6 @@ let timerSeconds = 1500; // 25 minutes
 let timerIsRunning = false;
 let examQuestions = [];
 let examAnswers = [];
-let examType = null;
 
 // Progress tracking
 let progress = {
@@ -100,25 +99,17 @@ function initPracticeExams() {
     if (content) {
         content.innerHTML = `
             <div class="exam-intro">
-                <p>Select an exam length to begin. Questions are pulled from the full quiz bank and mixed across topics.</p>
+                <p>Click Start Final Exam to begin a single mixed-topic exam.</p>
             </div>
         `;
     }
-
-    document.querySelectorAll('.exam-choice').forEach(button => {
-        button.addEventListener('click', () => {
-            const examKind = button.dataset.examType;
-            if (examKind) startPracticeExam(examKind);
-        });
-    });
 }
 
 function getExamQuestionPool() {
     return Array.isArray(physicsData.quiz) ? physicsData.quiz.slice() : [];
 }
 
-function startPracticeExam(type) {
-    examType = type;
+function startPracticeExam() {
     examAnswers = [];
 
     const content = document.getElementById('exam-content');
@@ -127,13 +118,7 @@ function startPracticeExam(type) {
     }
 
     const pool = getExamQuestionPool().sort(() => Math.random() - 0.5);
-    const counts = {
-        quick: 15,
-        standard: 25,
-        full: pool.length
-    };
-
-    examQuestions = pool.slice(0, counts[type] || 15);
+    examQuestions = pool.slice(0, 25);
 
     if (examQuestions.length === 0) {
         document.getElementById('exam-content').innerHTML = '<p style="color: var(--danger);">No exam questions are available yet.</p>';
@@ -197,7 +182,7 @@ function submitPracticeExam() {
             <h3>Exam Complete</h3>
             <div class="exam-score">${score}%</div>
             <p>You answered ${correct} out of ${examQuestions.length} correctly.</p>
-            <button class="btn btn-primary" onclick="startPracticeExam('${examType || 'quick'}')">Retake Exam</button>
+            <button class="btn btn-primary" onclick="startPracticeExam()">Retake Exam</button>
         </div>
     `;
 
