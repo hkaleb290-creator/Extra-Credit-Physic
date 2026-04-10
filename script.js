@@ -23,7 +23,10 @@ let progress = {
     todayFocus: 0,
     streak: 0,
     lastStudyDate: null,
-    achievements: []
+    achievements: [],
+    dailyChallengeComplete: false,
+    challengeDate: null,
+    lastUpdate: new Date().toDateString()
 };
 
 // Load progress from localStorage
@@ -38,7 +41,6 @@ function loadProgress() {
     const darkMode = localStorage.getItem('darkMode');
     if (darkMode === 'true') {
         document.body.classList.add('dark-mode');
-        updateDarkModeButton();
     }
 }
 
@@ -52,12 +54,8 @@ function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
     localStorage.setItem('darkMode', isDark);
-    updateDarkModeButton();
-}
-
-function updateDarkModeButton() {
     const btn = document.getElementById('dark-mode-toggle');
-    btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    if (btn) btn.innerHTML = isDark ? '☀️' : '🌙';
 }
 
 function showSection(sectionId) {
@@ -170,10 +168,13 @@ function loadNotes(topic) {
     const noteData = physicsData.notes[topic];
     const container = document.getElementById('notes-content');
     
-    container.innerHTML = '';
-    noteData.content.forEach(note => {
+    container.innerHTML = '<div id="note-search-bar" style="margin-bottom: 1rem;"><input type="text" id="note-filter" placeholder="Search notes..." style="width: 100%; padding: 0.7rem; border: 1px solid #d5e6f0; border-radius: 8px; font-size: 0.95rem;" oninput="filterNotes()"></div>';
+    
+    const searchBar = container.querySelector('#note-search-bar');
+    noteData.content.forEach((note, idx) => {
         const noteDiv = document.createElement('div');
         noteDiv.className = 'note-item';
+        noteDiv.dataset.index = idx;
         noteDiv.innerHTML = `
             <h3>${note.heading}</h3>
             <p>${note.text.replace(/\n/g, '<br>')}</p>
@@ -183,6 +184,14 @@ function loadNotes(topic) {
 
     progress.notesReviewed++;
     saveProgress();
+}
+
+function filterNotes() {
+    const query = document.getElementById('note-filter').value.toLowerCase();
+    document.querySelectorAll('.note-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(query) ? 'block' : 'none';
+    });
 }
 
 // ============ FLASHCARDS SECTION ============
@@ -432,6 +441,7 @@ function updateProgressDisplay() {
         const avgScore = Math.round(progress.quizScores.reduce((a, b) => a + b, 0) / progress.quizScores.length);
         document.getElementById('quiz-avg').textContent = avgScore + '%';
         document.querySelectorAll('.progress-stat')[2].querySelector('.progress-fill').style.width = avgScore + '%';
+        document.getElementById('avg-score').textContent = avgScore + '%';
     }
     
     document.getElementById('problems-solved').textContent = progress.problemsSolved;
@@ -444,6 +454,16 @@ function updateProgressDisplay() {
     document.querySelectorAll('.progress-stat')[0].querySelector('.progress-fill').style.width = Math.min(100, (progress.notesReviewed / maxNotes) * 100) + '%';
     document.querySelectorAll('.progress-stat')[1].querySelector('.progress-fill').style.width = Math.min(100, (progress.cardsStudied / maxCards) * 100) + '%';
     document.querySelectorAll('.progress-stat')[3].querySelector('.progress-fill').style.width = Math.min(100, (progress.problemsSolved / maxProblems) * 100) + '%';
+    
+    // Update stats dashboard
+    const studyEfficiency = Math.min(100, Math.round(((progress.notesReviewed / 5) + (progress.cardsStudied / 50) + (progress.problemsSolved / 20)) * 33.33));
+    document.getElementById('efficiency-score').textContent = studyEfficiency + '%';
+    
+    const focusHours = Math.round(progress.todayFocus / 60 * 10) / 10;
+    document.getElementById('total-focus').textContent = focusHours + 'h';
+    
+    const masteredCount = Math.min(5, Math.floor((progress.quizScores.filter(s => s >= 80).length) / 2));
+    document.getElementById('mastered-topics').textContent = masteredCount + '/5';
 }
 
 function resetProgress() {
@@ -494,6 +514,16 @@ function updateAchievements() {
         unlockAchievement('card-master');
     }
     
+    // Check for problem solver
+    if (progress.problemsSolved >= 20) {
+        unlockAchievement('problem-solver');
+    }
+    
+    // Check for focus beast
+    if (progress.todayFocus >= 300) {
+        unlockAchievement('focus-beast');
+    }
+    
     // Visual update
     document.querySelectorAll('.achievement').forEach(el => {
         const id = el.dataset.achievement;
@@ -503,6 +533,9 @@ function updateAchievements() {
             el.classList.remove('unlocked');
         }
     });
+    
+    // Update daily challenge
+    updateDailyChallenge();
 }
 
 function showAchievementToast(id) {
@@ -510,11 +543,39 @@ function showAchievementToast(id) {
         'first-quiz': '🎯 Quiz Master - Complete first quiz',
         'perfect-score': '⭐ Perfect Score - Scored 100%',
         'study-streak': '🔥 On Fire - 3 day study streak',
-        'card-master': '🃏 Card Master - Studied 50 flashcards'
+        'card-master': '🃏 Card Master - Studied 50 flashcards',
+        'problem-solver': '💡 Problem Solver - Solved 20 problems',
+        'focus-beast': '⏱️ Focus Beast - 5 hours focus time'
     };
     
     const msg = achievements[id];
     if (msg) console.log('Achievement Unlocked: ' + msg);
+}
+
+function updateDailyChallenge() {
+    const today = new Date().toDateString();
+    if (progress.challengeDate !== today) {
+        progress.dailyChallengeComplete = false;
+        progress.challengeDate = today;
+        saveProgress();
+    }
+    
+    const challengeContent = document.getElementById('challenge-content');
+    if (challengeContent) {
+        if (progress.dailyChallengeComplete) {
+            document.getElementById('challenge-text').textContent = '✓ Challenge complete! See you tomorrow!';
+            document.querySelector('.daily-challenge .btn').style.display = 'none';
+        } else {
+            document.querySelector('.daily-challenge .btn').style.display = 'inline-block';
+        }
+    }
+}
+
+function completeChallenge() {
+    progress.dailyChallengeComplete = true;
+    saveProgress();
+    updateDailyChallenge();
+    alert('Daily challenge complete! Great job! 🎉');
 }
 
 // ============ KEYBOARD SHORTCUTS ============
@@ -554,7 +615,26 @@ window.addEventListener('DOMContentLoaded', () => {
     const darkModeBtn = document.getElementById('dark-mode-toggle');
     if (darkModeBtn) {
         darkModeBtn.addEventListener('click', toggleDarkMode);
-        updateDarkModeButton();
+        const isDark = localStorage.getItem('darkMode') === 'true';
+        darkModeBtn.innerHTML = isDark ? '☀️' : '🌙';
     }
+    
+    // Update streak tracking
+    updateStudyStreak();
 });
+
+function updateStudyStreak() {
+    const today = new Date().toDateString();
+    const lastDate = localStorage.getItem('lastStudyDate');
+    
+    if (lastDate !== today) {
+        localStorage.setItem('lastStudyDate', today);
+        if (lastDate) {
+            progress.streak++;
+        } else {
+            progress.streak = 1;
+        }
+        saveProgress();
+    }
+}
 

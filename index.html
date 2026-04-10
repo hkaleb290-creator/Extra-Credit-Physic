@@ -170,6 +170,39 @@
                 <h2>📊 Your Progress</h2>
                 <p>Track your learning journey and achievements</p>
             </div>
+
+            <!-- Study Stats Dashboard -->
+            <div class="stats-dashboard">
+                <div class="stat-card highlight">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Study Efficiency</div>
+                        <div class="stat-number" id="efficiency-score">0%</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Focus Time</div>
+                        <div class="stat-number" id="total-focus">0h</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Average Quiz Score</div>
+                        <div class="stat-number" id="avg-score">N/A</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Topics Mastered</div>
+                        <div class="stat-number" id="mastered-topics">0/5</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="progress-container">
                 <div class="progress-stat">
                     <h3>Notes Reviewed</h3>
@@ -198,6 +231,14 @@
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 0%"></div>
                     </div>
+                </div>
+            </div>
+
+            <div class="daily-challenge">
+                <h3>🎯 Daily Challenge</h3>
+                <div id="challenge-content">
+                    <p id="challenge-text">Complete a quiz on any topic!</p>
+                    <button onclick="completeChallenge()" class="btn btn-primary">Mark Complete</button>
                 </div>
             </div>
 
@@ -230,6 +271,20 @@
                         <div class="achievement-text">
                             <strong>Card Master</strong>
                             <p>Study 50 flashcards</p>
+                        </div>
+                    </div>
+                    <div class="achievement" data-achievement="problem-solver">
+                        <div class="achievement-icon">💡</div>
+                        <div class="achievement-text">
+                            <strong>Problem Solver</strong>
+                            <p>Solve 20 problems</p>
+                        </div>
+                    </div>
+                    <div class="achievement" data-achievement="focus-beast">
+                        <div class="achievement-icon">⏱️</div>
+                        <div class="achievement-text">
+                            <strong>Focus Beast</strong>
+                            <p>5 hours focus time</p>
                         </div>
                     </div>
                 </div>
