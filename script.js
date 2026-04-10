@@ -123,7 +123,12 @@ function setTheme(themeName) {
 
 function showSection(sectionId) {
     document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-    document.getElementById(sectionId).style.display = 'block';
+    const targetSection = document.getElementById(sectionId);
+    if (!targetSection) {
+        console.warn('Section not found:', sectionId);
+        return;
+    }
+    targetSection.style.display = 'block';
     setActiveNav(sectionId);
 
     if (sectionId === 'notes') {
@@ -230,6 +235,12 @@ function loadNotes(topic) {
 
     const noteData = physicsData.notes[topic];
     const container = document.getElementById('notes-content');
+
+    if (!container) return;
+    if (!noteData || !Array.isArray(noteData.content)) {
+        container.innerHTML = '<p style="color: var(--danger);">Unable to load notes for this topic right now.</p>';
+        return;
+    }
     
     container.innerHTML = '<div id="note-search-bar" style="margin-bottom: 1rem;"><input type="text" id="note-filter" placeholder="Search notes..." style="width: 100%; padding: 0.7rem; border: 1px solid #d5e6f0; border-radius: 8px; font-size: 0.95rem;" oninput="filterNotes()"></div>';
     
@@ -668,6 +679,21 @@ document.addEventListener('keydown', (e) => {
 // Initialize
 window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content Loaded - initializing app');
+
+    // Bind nav links defensively so section switches still work if inline handlers are stale.
+    document.querySelectorAll('.nav-link').forEach(link => {
+        const onclickValue = link.getAttribute('onclick') || '';
+        const match = onclickValue.match(/showSection\('([^']+)'\)/);
+        if (match) {
+            link.dataset.section = match[1];
+            link.removeAttribute('onclick');
+        }
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = link.dataset.section;
+            if (sectionId) showSection(sectionId);
+        });
+    });
     
     loadProgress();
     showSection('notes');
