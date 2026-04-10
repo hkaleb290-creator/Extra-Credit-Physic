@@ -22,6 +22,7 @@
                     <li><a href="#" onclick="showSection('quiz')" class="nav-link">Quiz</a></li>
                     <li><a href="#" onclick="showSection('problems')" class="nav-link">Problems</a></li>
                     <li><a href="#" onclick="showSection('resources')" class="nav-link">Resources</a></li>
+                    <li><a href="#" onclick="showSection('exams')" class="nav-link">Practice Exams</a></li>
                     <li><a href="#" onclick="showSection('progress')" class="nav-link">Progress</a></li>
                 </ul>
             </div>
@@ -161,6 +162,31 @@
                     <p>If you need the highest-quality originals locally, keep them outside git and open from your computer.</p>
                     <a class="btn btn-secondary" href="README.md" target="_blank" rel="noopener">View Project Notes</a>
                 </article>
+            </div>
+        </section>
+
+        <!-- Practice Exams Section -->
+        <section id="exams" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>🧪 Practice Exams</h2>
+                <p>Mixed-topic final exam practice with timed, scored tests</p>
+            </div>
+            <div class="exam-shell">
+                <div id="exam-menu" class="exam-menu">
+                    <button onclick="startPracticeExam('quick')" class="exam-choice">
+                        <strong>Quick Exam</strong>
+                        <span>15 questions</span>
+                    </button>
+                    <button onclick="startPracticeExam('standard')" class="exam-choice">
+                        <strong>Standard Exam</strong>
+                        <span>25 questions</span>
+                    </button>
+                    <button onclick="startPracticeExam('full')" class="exam-choice">
+                        <strong>Full Exam</strong>
+                        <span>All available questions</span>
+                    </button>
+                </div>
+                <div id="exam-content" class="exam-content"></div>
             </div>
         </section>
 

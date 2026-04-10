@@ -68,6 +68,119 @@ body.dark-mode .resource-card {
     border-color: rgba(255, 255, 255, 0.15);
 }
 
+/* Practice Exams */
+.exam-shell {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.exam-menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.exam-choice {
+    border: 1px solid #d5e6f0;
+    background: #f7fcff;
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    transition: 0.2s ease;
+}
+
+.exam-choice:hover {
+    border-color: var(--brand);
+    transform: translateY(-1px);
+}
+
+.exam-choice strong {
+    color: #17364d;
+}
+
+.exam-choice span {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.exam-content {
+    background: #f7fcff;
+    border: 1px solid #d5e6f0;
+    border-radius: 14px;
+    padding: 1.5rem;
+    min-height: 220px;
+}
+
+.exam-intro {
+    color: var(--muted);
+}
+
+.exam-question-card h3 {
+    color: #17364d;
+    margin-bottom: 1rem;
+}
+
+.exam-meta {
+    color: var(--brand);
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+}
+
+.exam-options {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 0 1.25rem;
+}
+
+.exam-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid #d5e6f0;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+}
+
+.exam-option input {
+    margin-top: 0.2rem;
+}
+
+.exam-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.exam-results {
+    text-align: center;
+}
+
+.exam-score {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--brand);
+    margin: 0.75rem 0;
+}
+
+body.dark-mode .exam-choice,
+body.dark-mode .exam-content,
+body.dark-mode .exam-option {
+    background: #0f192a;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .exam-choice strong,
+body.dark-mode .exam-question-card h3 {
+    color: #e4f1ff;
+}
+
 body {
     font-family: 'Sora', 'Segoe UI', sans-serif;
     color: var(--text);

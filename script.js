@@ -12,6 +12,9 @@ let filteredQuestions = [];
 let timerInterval = null;
 let timerSeconds = 1500; // 25 minutes
 let timerIsRunning = false;
+let examQuestions = [];
+let examAnswers = [];
+let examType = null;
 
 // Progress tracking
 let progress = {
@@ -75,6 +78,8 @@ function showSection(sectionId) {
         initQuiz();
     } else if (sectionId === 'problems') {
         loadProblems('kinematics');
+    } else if (sectionId === 'exams') {
+        initPracticeExams();
     }
 }
 
@@ -83,6 +88,107 @@ function setActiveNav(sectionId) {
         const isActive = link.getAttribute('onclick')?.includes(`'${sectionId}'`);
         link.style.background = isActive ? 'rgba(255, 255, 255, 0.18)' : 'transparent';
     });
+}
+
+// ============ PRACTICE EXAMS SECTION ============
+function initPracticeExams() {
+    const content = document.getElementById('exam-content');
+    if (content) {
+        content.innerHTML = `
+            <div class="exam-intro">
+                <p>Select an exam length to begin. Questions are pulled from the full quiz bank and mixed across topics.</p>
+            </div>
+        `;
+    }
+}
+
+function getExamQuestionPool() {
+    return Array.isArray(physicsData.quiz) ? physicsData.quiz.slice() : [];
+}
+
+function startPracticeExam(type) {
+    examType = type;
+    examAnswers = [];
+
+    const pool = getExamQuestionPool().sort(() => Math.random() - 0.5);
+    const counts = {
+        quick: 15,
+        standard: 25,
+        full: pool.length
+    };
+
+    examQuestions = pool.slice(0, counts[type] || 15);
+
+    if (examQuestions.length === 0) {
+        document.getElementById('exam-content').innerHTML = '<p style="color: var(--danger);">No exam questions are available yet.</p>';
+        return;
+    }
+
+    renderPracticeExamQuestion(0);
+}
+
+function renderPracticeExamQuestion(index) {
+    const content = document.getElementById('exam-content');
+    if (!content) return;
+
+    if (index < 0) index = 0;
+    if (index >= examQuestions.length) {
+        submitPracticeExam();
+        return;
+    }
+
+    const question = examQuestions[index];
+    let html = `
+        <div class="exam-question-card">
+            <div class="exam-meta">Question ${index + 1} of ${examQuestions.length}</div>
+            <h3>${question.question}</h3>
+            <div class="exam-options">`;
+
+    question.options.forEach((option, optionIndex) => {
+        const checked = examAnswers[index] === optionIndex ? 'checked' : '';
+        html += `
+            <label class="exam-option">
+                <input type="radio" name="exam-q-${index}" value="${optionIndex}" ${checked} onclick="examAnswers[${index}] = ${optionIndex}">
+                <span>${option}</span>
+            </label>`;
+    });
+
+    html += `
+            </div>
+            <div class="exam-controls">
+                <button class="btn btn-secondary" onclick="renderPracticeExamQuestion(${index - 1})" ${index === 0 ? 'disabled' : ''}>Previous</button>
+                <button class="btn btn-primary" onclick="renderPracticeExamQuestion(${index + 1})">${index === examQuestions.length - 1 ? 'Submit Exam' : 'Next'}</button>
+            </div>
+        </div>`;
+
+    content.innerHTML = html;
+}
+
+function submitPracticeExam() {
+    let correct = 0;
+    examQuestions.forEach((question, index) => {
+        if (examAnswers[index] === question.correct) {
+            correct++;
+        }
+    });
+
+    const score = examQuestions.length ? Math.round((correct / examQuestions.length) * 100) : 0;
+    const content = document.getElementById('exam-content');
+    if (!content) return;
+
+    content.innerHTML = `
+        <div class="exam-results">
+            <h3>Exam Complete</h3>
+            <div class="exam-score">${score}%</div>
+            <p>You answered ${correct} out of ${examQuestions.length} correctly.</p>
+            <button class="btn btn-primary" onclick="startPracticeExam('${examType || 'quick'}')">Retake Exam</button>
+        </div>
+    `;
+
+    progress.quizScores.push(score);
+    saveProgress();
+    updateProgressDisplay();
+    updateAchievements();
 }
 
 // ============ TIMER SECTION ============
