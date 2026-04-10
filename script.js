@@ -23,35 +23,7 @@ let progress = {
     todayFocus: 0,
     streak: 0,
     lastStudyDate: null,
-    achievements: [],
-    dailyChallengeComplete: false,
-    challengeDate: null,
-    lastUpdate: new Date().toDateString(),
-    // Session history
-    sessionHistory: [],
-    // Topic mastery tracking
-    topicScores: {
-        kinematics: [],
-        forces: [],
-        energy: [],
-        momentum: [],
-        waves: []
-    },
-    // Weekly goals
-    weeklyGoals: {
-        focusHoursTarget: 10,
-        quizzesTarget: 5,
-        problemsTarget: 20,
-        currentWeekStart: new Date().toISOString()
-    },
-    // Leaderboard
-    leaderboardScore: 0,
-    // Favorites
-    favoriteNotes: [],
-    // Study planner
-    plannedSessions: [],
-    // Theme
-    theme: 'default'
+    achievements: []
 };
 
 // Load progress from localStorage
@@ -66,6 +38,7 @@ function loadProgress() {
     const darkMode = localStorage.getItem('darkMode');
     if (darkMode === 'true') {
         document.body.classList.add('dark-mode');
+        updateDarkModeButton();
     }
 }
 
@@ -74,19 +47,17 @@ function saveProgress() {
     localStorage.setItem('physicsProgress', JSON.stringify(progress));
 }
 
-// Dark mode toggle with theme selector
+// Dark mode toggle
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
     localStorage.setItem('darkMode', isDark);
-    const btn = document.getElementById('dark-mode-toggle');
-    if (btn) btn.innerHTML = isDark ? '☀️' : '🌙';
-    console.log('Dark mode toggled:', isDark);
+    updateDarkModeButton();
 }
 
-function setTheme(themeName) {
-    document.body.className = themeName === 'light' ? '' : `dark-mode ${themeName}-theme`;
-    localStorage.setItem('theme', themeName);
+function updateDarkModeButton() {
+    const btn = document.getElementById('dark-mode-toggle');
+    btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
 }
 
 function showSection(sectionId) {
@@ -199,13 +170,10 @@ function loadNotes(topic) {
     const noteData = physicsData.notes[topic];
     const container = document.getElementById('notes-content');
     
-    container.innerHTML = '<div id="note-search-bar" style="margin-bottom: 1rem;"><input type="text" id="note-filter" placeholder="Search notes..." style="width: 100%; padding: 0.7rem; border: 1px solid #d5e6f0; border-radius: 8px; font-size: 0.95rem;" oninput="filterNotes()"></div>';
-    
-    const searchBar = container.querySelector('#note-search-bar');
-    noteData.content.forEach((note, idx) => {
+    container.innerHTML = '';
+    noteData.content.forEach(note => {
         const noteDiv = document.createElement('div');
         noteDiv.className = 'note-item';
-        noteDiv.dataset.index = idx;
         noteDiv.innerHTML = `
             <h3>${note.heading}</h3>
             <p>${note.text.replace(/\n/g, '<br>')}</p>
@@ -215,14 +183,6 @@ function loadNotes(topic) {
 
     progress.notesReviewed++;
     saveProgress();
-}
-
-function filterNotes() {
-    const query = document.getElementById('note-filter').value.toLowerCase();
-    document.querySelectorAll('.note-item').forEach(item => {
-        const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(query) ? 'block' : 'none';
-    });
 }
 
 // ============ FLASHCARDS SECTION ============
@@ -419,8 +379,6 @@ function showQuizResults() {
     document.getElementById('quiz-timer').style.display = 'none';
     
     progress.quizScores.push(percentage);
-    recordTopicScore(quizDifficulty, percentage);
-    recordSession(quizDifficulty || 'general', 'quiz', Math.round((Date.now() - quizStartTime) / 60000), percentage);
     saveProgress();
     updateAchievements();
 }
@@ -474,7 +432,6 @@ function updateProgressDisplay() {
         const avgScore = Math.round(progress.quizScores.reduce((a, b) => a + b, 0) / progress.quizScores.length);
         document.getElementById('quiz-avg').textContent = avgScore + '%';
         document.querySelectorAll('.progress-stat')[2].querySelector('.progress-fill').style.width = avgScore + '%';
-        document.getElementById('avg-score').textContent = avgScore + '%';
     }
     
     document.getElementById('problems-solved').textContent = progress.problemsSolved;
@@ -487,16 +444,6 @@ function updateProgressDisplay() {
     document.querySelectorAll('.progress-stat')[0].querySelector('.progress-fill').style.width = Math.min(100, (progress.notesReviewed / maxNotes) * 100) + '%';
     document.querySelectorAll('.progress-stat')[1].querySelector('.progress-fill').style.width = Math.min(100, (progress.cardsStudied / maxCards) * 100) + '%';
     document.querySelectorAll('.progress-stat')[3].querySelector('.progress-fill').style.width = Math.min(100, (progress.problemsSolved / maxProblems) * 100) + '%';
-    
-    // Update stats dashboard
-    const studyEfficiency = Math.min(100, Math.round(((progress.notesReviewed / 5) + (progress.cardsStudied / 50) + (progress.problemsSolved / 20)) * 33.33));
-    document.getElementById('efficiency-score').textContent = studyEfficiency + '%';
-    
-    const focusHours = Math.round(progress.todayFocus / 60 * 10) / 10;
-    document.getElementById('total-focus').textContent = focusHours + 'h';
-    
-    const masteredCount = Math.min(5, Math.floor((progress.quizScores.filter(s => s >= 80).length) / 2));
-    document.getElementById('mastered-topics').textContent = masteredCount + '/5';
 }
 
 function resetProgress() {
@@ -547,16 +494,6 @@ function updateAchievements() {
         unlockAchievement('card-master');
     }
     
-    // Check for problem solver
-    if (progress.problemsSolved >= 20) {
-        unlockAchievement('problem-solver');
-    }
-    
-    // Check for focus beast
-    if (progress.todayFocus >= 300) {
-        unlockAchievement('focus-beast');
-    }
-    
     // Visual update
     document.querySelectorAll('.achievement').forEach(el => {
         const id = el.dataset.achievement;
@@ -566,9 +503,6 @@ function updateAchievements() {
             el.classList.remove('unlocked');
         }
     });
-    
-    // Update daily challenge
-    updateDailyChallenge();
 }
 
 function showAchievementToast(id) {
@@ -576,39 +510,11 @@ function showAchievementToast(id) {
         'first-quiz': '🎯 Quiz Master - Complete first quiz',
         'perfect-score': '⭐ Perfect Score - Scored 100%',
         'study-streak': '🔥 On Fire - 3 day study streak',
-        'card-master': '🃏 Card Master - Studied 50 flashcards',
-        'problem-solver': '💡 Problem Solver - Solved 20 problems',
-        'focus-beast': '⏱️ Focus Beast - 5 hours focus time'
+        'card-master': '🃏 Card Master - Studied 50 flashcards'
     };
     
     const msg = achievements[id];
     if (msg) console.log('Achievement Unlocked: ' + msg);
-}
-
-function updateDailyChallenge() {
-    const today = new Date().toDateString();
-    if (progress.challengeDate !== today) {
-        progress.dailyChallengeComplete = false;
-        progress.challengeDate = today;
-        saveProgress();
-    }
-    
-    const challengeContent = document.getElementById('challenge-content');
-    if (challengeContent) {
-        if (progress.dailyChallengeComplete) {
-            document.getElementById('challenge-text').textContent = '✓ Challenge complete! See you tomorrow!';
-            document.querySelector('.daily-challenge .btn').style.display = 'none';
-        } else {
-            document.querySelector('.daily-challenge .btn').style.display = 'inline-block';
-        }
-    }
-}
-
-function completeChallenge() {
-    progress.dailyChallengeComplete = true;
-    saveProgress();
-    updateDailyChallenge();
-    alert('Daily challenge complete! Great job! 🎉');
 }
 
 // ============ KEYBOARD SHORTCUTS ============
@@ -641,279 +547,14 @@ document.addEventListener('keydown', (e) => {
 
 // Initialize
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded - initializing app');
-    
     loadProgress();
     showSection('notes');
     
-    // Set up dark mode toggle with explicit binding
+    // Set up dark mode toggle
     const darkModeBtn = document.getElementById('dark-mode-toggle');
-    console.log('Dark mode button element:', darkModeBtn);
-    
     if (darkModeBtn) {
-        // Remove any existing listeners
-        darkModeBtn.removeEventListener('click', toggleDarkMode);
-        // Add fresh listener
-        darkModeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Dark mode button clicked');
-            toggleDarkMode();
-        });
-        
-        // Set initial icon
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        darkModeBtn.innerHTML = isDark ? '☀️' : '🌙';
-        console.log('Dark mode initialized. isDark:', isDark);
-    } else {
-        console.warn('Dark mode button not found!');
+        darkModeBtn.addEventListener('click', toggleDarkMode);
+        updateDarkModeButton();
     }
-    
-    // Update streak tracking
-    updateStudyStreak();
-    updateAllStats();
 });
-
-function updateStudyStreak() {
-    const today = new Date().toDateString();
-    const lastDate = localStorage.getItem('lastStudyDate');
-    
-    if (lastDate !== today) {
-        localStorage.setItem('lastStudyDate', today);
-        if (lastDate) {
-            progress.streak++;
-        } else {
-            progress.streak = 1;
-        }
-        saveProgress();
-    }
-}
-
-// ============= NEW FEATURES =============
-
-function updateAllStats() {
-    updateProgressDisplay();
-    updateTopicMastery();
-    updateWeeklyGoals();
-    updateLeaderboard();
-    updateStudyHistory();
-    displayStudyTips();
-}
-
-// Session History Tracking
-function recordSession(topic, type, duration, score = null) {
-    const session = {
-        date: new Date().toISOString(),
-        topic: topic,
-        type: type, // 'quiz', 'flashcard', 'problem', 'notes'
-        duration: duration,
-        score: score
-    };
-    if (!progress.sessionHistory) progress.sessionHistory = [];
-    progress.sessionHistory.push(session);
-    saveProgress();
-}
-
-// Topic Mastery Tracking
-function recordTopicScore(topic, score) {
-    if (!progress.topicScores[topic]) progress.topicScores[topic] = [];
-    progress.topicScores[topic].push(score);
-    progress.leaderboardScore += score;
-    saveProgress();
-}
-
-function getTopicMastery(topic) {
-    if (!progress.topicScores[topic] || progress.topicScores[topic].length === 0) return 0;
-    const scores = progress.topicScores[topic];
-    const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
-    return Math.round(avgScore);
-}
-
-function updateTopicMastery() {
-    const masteryContainer = document.getElementById('topic-mastery-display');
-    if (!masteryContainer) return;
-    
-    let html = '<div class="mastery-grid">';
-    const topics = ['kinematics', 'forces', 'energy', 'momentum', 'waves'];
-    
-    topics.forEach(topic => {
-        const mastery = getTopicMastery(topic);
-        const level = mastery >= 80 ? 'expert' : mastery >= 60 ? 'proficient' : mastery >= 40 ? 'learning' : 'beginner';
-        html += `
-            <div class="mastery-card ${level}">
-                <h4>${topic.charAt(0).toUpperCase() + topic.slice(1)}</h4>
-                <div class="mastery-bar">
-                    <div class="mastery-fill" style="width: ${mastery}%"></div>
-                </div>
-                <span class="mastery-percent">${mastery}%</span>
-            </div>
-        `;
-    });
-    
-    html += '</div>';
-    masteryContainer.innerHTML = html;
-}
-
-// Weekly Goals Tracking
-function updateWeeklyGoals() {
-    const goalsContainer = document.getElementById('weekly-goals-display');
-    if (!goalsContainer) return;
-    
-    const weekStart = new Date(progress.weeklyGoals.currentWeekStart);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 7);
-    
-    let focusHours = 0;
-    let quizzesCompleted = 0;
-    let problemsCompleted = 0;
-    
-    progress.sessionHistory.forEach(session => {
-        const sessionDate = new Date(session.date);
-        if (sessionDate >= weekStart && sessionDate <= weekEnd) {
-            if (session.type === 'quiz') quizzesCompleted++;
-            if (session.type === 'problem') problemsCompleted++;
-            focusHours += session.duration / 60;
-        }
-    });
-    
-    const focusPercent = Math.min(100, Math.round((focusHours / progress.weeklyGoals.focusHoursTarget) * 100));
-    const quizPercent = Math.min(100, Math.round((quizzesCompleted / progress.weeklyGoals.quizzesTarget) * 100));
-    const problemPercent = Math.min(100, Math.round((problemsCompleted / progress.weeklyGoals.problemsTarget) * 100));
-    
-    goalsContainer.innerHTML = `
-        <div class="goals-grid">
-            <div class="goal-card">
-                <h4>Focus Hours</h4>
-                <div class="goal-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${focusPercent}%"></div>
-                    </div>
-                    <span>${focusHours.toFixed(1)}h / ${progress.weeklyGoals.focusHoursTarget}h</span>
-                </div>
-            </div>
-            <div class="goal-card">
-                <h4>Quizzes Completed</h4>
-                <div class="goal-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${quizPercent}%"></div>
-                    </div>
-                    <span>${quizzesCompleted} / ${progress.weeklyGoals.quizzesTarget}</span>
-                </div>
-            </div>
-            <div class="goal-card">
-                <h4>Problems Solved</h4>
-                <div class="goal-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${problemPercent}%"></div>
-                    </div>
-                    <span>${problemsCompleted} / ${progress.weeklyGoals.problemsTarget}</span>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// Leaderboard System
-function updateLeaderboard() {
-    const leaderboardContainer = document.getElementById('leaderboard-display');
-    if (!leaderboardContainer) return;
-    
-    const localScores = JSON.parse(localStorage.getItem('leaderboardScores') || '[]');
-    const myScore = {
-        name: localStorage.getItem('studentName') || 'You',
-        score: progress.leaderboardScore,
-        date: new Date().toLocaleDateString()
-    };
-    
-    localScores.push(myScore);
-    localScores.sort((a, b) => b.score - a.score);
-    const topScores = localScores.slice(0, 5);
-    
-    let html = '<div class="leaderboard-list">';
-    topScores.forEach((entry, i) => {
-        const isYou = entry.name === myScore.name;
-        html += `
-            <div class="leaderboard-entry ${isYou ? 'you' : ''}">
-                <span class="rank">#${i + 1}</span>
-                <span class="name">${entry.name}</span>
-                <span class="score">${entry.score} pts</span>
-            </div>
-        `;
-    });
-    html += '</div>';
-    leaderboardContainer.innerHTML = html;
-}
-
-// Study History
-function updateStudyHistory() {
-    const historyContainer = document.getElementById('study-history-display');
-    if (!historyContainer) return;
-    
-    const recentSessions = progress.sessionHistory.slice(-10).reverse();
-    
-    let html = '<div class="history-list">';
-    recentSessions.forEach(session => {
-        const date = new Date(session.date).toLocaleDateString();
-        const icon = session.type === 'quiz' ? '❓' : session.type === 'problem' ? '📝' : session.type === 'flashcard' ? '🃏' : '📚';
-        html += `
-            <div class="history-item">
-                <span class="icon">${icon}</span>
-                <span class="details">
-                    <strong>${session.type}</strong> - ${session.topic} (${session.duration}min)
-                    <br><small>${date}</small>
-                </span>
-                ${session.score ? `<span class="score">${session.score}%</span>` : ''}
-            </div>
-        `;
-    });
-    html += '</div>';
-    historyContainer.innerHTML = html;
-}
-
-// Study Tips & Spotlight
-const studyTips = [
-    '💡 Tip: Take breaks every 25 minutes (Pomodoro Technique)',
-    '💡 Tip: Review notes within 24 hours for better retention',
-    '💡 Tip: Teach the concept to someone else to test your understanding',
-    '💡 Tip: Mix different study modes - don\'t just do quizzes',
-    '💡 Tip: Study the hardest topics first when you\'re fresh',
-    '🎓 Did you know? The average student needs 66 days to form a study habit',
-    '🎯 Challenge: Complete all your weekly goals this week!',
-    '⚡ Momentum matters: Your current streak is 🔥 ' + progress.streak + ' days!',
-    '📊 Track: You\'ve solved ' + progress.problemsSolved + ' problems this session',
-    '🏆 Achievement: ' + (progress.achievements.length > 0 ? 'Great job unlocking achievements!' : 'Unlock your first achievement!')
-];
-
-function displayStudyTips() {
-    const tipContainer = document.getElementById('study-tips-display');
-    if (!tipContainer) return;
-    
-    const randomTip = studyTips[Math.floor(Math.random() * studyTips.length)];
-    tipContainer.innerHTML = `<div class="study-tip-card">${randomTip}</div>`;
-}
-
-// Favorite Notes System
-function toggleFavoriteNote(noteName) {
-    if (!progress.favoriteNotes) progress.favoriteNotes = [];
-    const index = progress.favoriteNotes.indexOf(noteName);
-    if (index > -1) {
-        progress.favoriteNotes.splice(index, 1);
-    } else {
-        progress.favoriteNotes.push(noteName);
-    }
-    saveProgress();
-}
-
-function isFavoriteNote(noteName) {
-    return progress.favoriteNotes && progress.favoriteNotes.includes(noteName);
-}
-
-// Set Student Name for Leaderboard
-function setStudentName() {
-    const nameInput = document.getElementById('student-name-input');
-    if (nameInput && nameInput.value.trim()) {
-        localStorage.setItem('studentName', nameInput.value.trim());
-        updateLeaderboard();
-    }
-}
 

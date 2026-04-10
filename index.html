@@ -22,13 +22,6 @@
                     <li><a href="#" onclick="showSection('quiz')" class="nav-link">Quiz</a></li>
                     <li><a href="#" onclick="showSection('problems')" class="nav-link">Problems</a></li>
                     <li><a href="#" onclick="showSection('resources')" class="nav-link">Resources</a></li>
-                    <li><a href="#" onclick="showSection('formulas')" class="nav-link">Formulas</a></li>
-                    <li><a href="#" onclick="showSection('mastery')" class="nav-link">Mastery</a></li>
-                    <li><a href="#" onclick="showSection('goals')" class="nav-link">Goals</a></li>
-                    <li><a href="#" onclick="showSection('history')" class="nav-link">History</a></li>
-                    <li><a href="#" onclick="showSection('tips')" class="nav-link">Tips</a></li>
-                    <li><a href="#" onclick="showSection('leaderboard')" class="nav-link">Leaderboard</a></li>
-                    <li><a href="#" onclick="showSection('credits')" class="nav-link">Team</a></li>
                     <li><a href="#" onclick="showSection('progress')" class="nav-link">Progress</a></li>
                 </ul>
             </div>
@@ -171,228 +164,12 @@
             </div>
         </section>
 
-        <!-- Formula Sheet Section -->
-        <section id="formulas" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>📐 Formula Sheet</h2>
-                <p>Quick reference for all important physics equations</p>
-            </div>
-            <div class="formulas-container">
-                <div class="formula-card">
-                    <h3>Kinematics</h3>
-                    <div class="formula">v = u + at</div>
-                    <div class="formula">s = ut + ½at²</div>
-                    <div class="formula">v² = u² + 2as</div>
-                    <div class="formula">a = Δv/Δt</div>
-                </div>
-                <div class="formula-card">
-                    <h3>Newton's Laws</h3>
-                    <div class="formula">F = ma</div>
-                    <div class="formula">F₁ = -F₂</div>
-                    <div class="formula">F_friction = μN</div>
-                    <div class="formula">W = Fs cos θ</div>
-                </div>
-                <div class="formula-card">
-                    <h3>Energy</h3>
-                    <div class="formula">KE = ½mv²</div>
-                    <div class="formula">PE = mgh</div>
-                    <div class="formula">E = mc²</div>
-                    <div class="formula">P = W/t</div>
-                </div>
-                <div class="formula-card">
-                    <h3>Momentum & Collisions</h3>
-                    <div class="formula">p = mv</div>
-                    <div class="formula">J = FΔt = Δp</div>
-                    <div class="formula">m₁v₁ + m₂v₂ = (m₁+m₂)v_f</div>
-                    <div class="formula">e = (v₂ - v₁)/(u₁ - u₂)</div>
-                </div>
-                <div class="formula-card">
-                    <h3>Waves & Oscillations</h3>
-                    <div class="formula">v = fλ</div>
-                    <div class="formula">T = 1/f</div>
-                    <div class="formula">y = A sin(ωt + φ)</div>
-                    <div class="formula">I = P/A</div>
-                </div>
-                <div class="formula-card">
-                    <h3>Circular Motion</h3>
-                    <div class="formula">a_c = v²/r = ω²r</div>
-                    <div class="formula">F_c = mv²/r</div>
-                    <div class="formula">ω = 2πf = 2π/T</div>
-                    <div class="formula">τ = Iα</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Topic Mastery Section -->
-        <section id="mastery" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>🎯 Topic Mastery</h2>
-                <p>Your proficiency in each physics topic</p>
-            </div>
-            <div id="topic-mastery-display"></div>
-        </section>
-
-        <!-- Weekly Goals Section -->
-        <section id="goals" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>🏆 Weekly Goals</h2>
-                <p>Track your progress toward this week's study targets</p>
-            </div>
-            <div id="weekly-goals-display"></div>
-        </section>
-
-        <!-- Study History Section -->
-        <section id="history" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>📅 Study History</h2>
-                <p>Recent study sessions and activities</p>
-            </div>
-            <div id="study-history-display"></div>
-        </section>
-
-        <!-- Study Tips Section -->
-        <section id="tips" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>💡 Study Tips & Insights</h2>
-                <p>Daily motivation and learning strategies</p>
-            </div>
-            <div id="study-tips-display"></div>
-            <div class="tips-content">
-                <h3>Pro Study Strategies</h3>
-                <div class="strategy-grid">
-                    <div class="strategy-card">
-                        <h4>🧠 Spaced Repetition</h4>
-                        <p>Review material at increasing intervals for better long-term retention</p>
-                    </div>
-                    <div class="strategy-card">
-                        <h4>✍️ Active Recall</h4>
-                        <p>Test yourself frequently instead of just re-reading notes</p>
-                    </div>
-                    <div class="strategy-card">
-                        <h4>🎓 Interleaving</h4>
-                        <p>Mix different topics and problem types during study sessions</p>
-                    </div>
-                    <div class="strategy-card">
-                        <h4>🤝 Teaching</h4>
-                        <p>Explain concepts to others to deepen your understanding</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Leaderboard Section -->
-        <section id="leaderboard" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>🏅 Leaderboard</h2>
-                <p>Top performers and your ranking</p>
-            </div>
-            <div class="leaderboard-controls">
-                <input type="text" id="student-name-input" placeholder="Enter your name" value="" style="padding: 0.5rem; border-radius: 8px; border: 1px solid #ddd;">
-                <button onclick="setStudentName()" class="btn btn-primary" style="margin-left: 0.5rem;">Set Name</button>
-            </div>
-            <div id="leaderboard-display"></div>
-        </section>
-
-        <!-- Team/Credits Section -->
-        <section id="credits" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>👥 Meet the Team</h2>
-                <p>Physics Study Hub is built by passionate students</p>
-            </div>
-            <div class="team-grid">
-                <div class="team-member">
-                    <div class="member-icon">👨‍💻</div>
-                    <h3>Kaleb Harris</h3>
-                    <p class="role">Project Lead & Full Stack Developer</p>
-                    <p class="contribution">Architecture, UI/UX design, dark mode, timer system, and GitHub Pages deployment</p>
-                </div>
-                <div class="team-member">
-                    <div class="member-icon">📚</div>
-                    <h3>Kyle Mccrackin</h3>
-                    <p class="role">Content & Quiz Designer</p>
-                    <p class="contribution">Physics content curation, quiz question development, and problem set creation</p>
-                </div>
-                <div class="team-member">
-                    <div class="member-icon">🎨</div>
-                    <h3>Tyler Rankins</h3>
-                    <p class="role">UI/UX & Visual Design</p>
-                    <p class="contribution">Design system, color palette, animations, and responsive layout optimization</p>
-                </div>
-                <div class="team-member">
-                    <div class="member-icon">🔧</div>
-                    <h3>Luke Prez</h3>
-                    <p class="role">Backend & Feature Engineering</p>
-                    <p class="contribution">Achievements system, progress tracking, localStorage optimization, and keyboard shortcuts</p>
-                </div>
-            </div>
-
-            <div class="credits-info">
-                <h3>Project Stats</h3>
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <div class="stat-num">30+</div>
-                        <div class="stat-label">Quiz Questions</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-num">20</div>
-                        <div class="stat-label">Flashcards</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-num">16</div>
-                        <div class="stat-label">Practice Problems</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-num">8</div>
-                        <div class="stat-label">Achievements</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="credits-footer">
-                <p>🎓 Made with ❤️ for physics students everywhere</p>
-                <p style="color: var(--muted); font-size: 0.9rem;">Extra Credit Physics Project • 2026</p>
-            </div>
-        </section>
-
         <!-- Progress Section -->
         <section id="progress" class="section" style="display: none;">
             <div class="section-header">
                 <h2>📊 Your Progress</h2>
                 <p>Track your learning journey and achievements</p>
             </div>
-
-            <!-- Study Stats Dashboard -->
-            <div class="stats-dashboard">
-                <div class="stat-card highlight">
-                    <div class="stat-icon">📈</div>
-                    <div class="stat-info">
-                        <div class="stat-label">Study Efficiency</div>
-                        <div class="stat-number" id="efficiency-score">0%</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⏰</div>
-                    <div class="stat-info">
-                        <div class="stat-label">Total Focus Time</div>
-                        <div class="stat-number" id="total-focus">0h</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🎯</div>
-                    <div class="stat-info">
-                        <div class="stat-label">Average Quiz Score</div>
-                        <div class="stat-number" id="avg-score">N/A</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📚</div>
-                    <div class="stat-info">
-                        <div class="stat-label">Topics Mastered</div>
-                        <div class="stat-number" id="mastered-topics">0/5</div>
-                    </div>
-                </div>
-            </div>
-
             <div class="progress-container">
                 <div class="progress-stat">
                     <h3>Notes Reviewed</h3>
@@ -421,14 +198,6 @@
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 0%"></div>
                     </div>
-                </div>
-            </div>
-
-            <div class="daily-challenge">
-                <h3>🎯 Daily Challenge</h3>
-                <div id="challenge-content">
-                    <p id="challenge-text">Complete a quiz on any topic!</p>
-                    <button onclick="completeChallenge()" class="btn btn-primary">Mark Complete</button>
                 </div>
             </div>
 
@@ -461,20 +230,6 @@
                         <div class="achievement-text">
                             <strong>Card Master</strong>
                             <p>Study 50 flashcards</p>
-                        </div>
-                    </div>
-                    <div class="achievement" data-achievement="problem-solver">
-                        <div class="achievement-icon">💡</div>
-                        <div class="achievement-text">
-                            <strong>Problem Solver</strong>
-                            <p>Solve 20 problems</p>
-                        </div>
-                    </div>
-                    <div class="achievement" data-achievement="focus-beast">
-                        <div class="achievement-icon">⏱️</div>
-                        <div class="achievement-text">
-                            <strong>Focus Beast</strong>
-                            <p>5 hours focus time</p>
                         </div>
                     </div>
                 </div>
