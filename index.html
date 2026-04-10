@@ -4,18 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Physics Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <h1 class="logo">🔬 Physics Study Hub</h1>
+            <h1 class="logo">Physics Study Hub</h1>
             <ul class="nav-menu">
-                <li><a href="#" onclick="showSection('notes')" class="nav-link">📚 Notes</a></li>
-                <li><a href="#" onclick="showSection('flashcards')" class="nav-link">🃏 Flashcards</a></li>
-                <li><a href="#" onclick="showSection('quiz')" class="nav-link">❓ Quiz</a></li>
-                <li><a href="#" onclick="showSection('problems')" class="nav-link">📝 Problems</a></li>
-                <li><a href="#" onclick="showSection('progress')" class="nav-link">📊 Progress</a></li>
+                <li><a href="#" onclick="showSection('notes')" class="nav-link">Notes</a></li>
+                <li><a href="#" onclick="showSection('flashcards')" class="nav-link">Flashcards</a></li>
+                <li><a href="#" onclick="showSection('quiz')" class="nav-link">Quiz</a></li>
+                <li><a href="#" onclick="showSection('problems')" class="nav-link">Problems</a></li>
+                <li><a href="#" onclick="showSection('resources')" class="nav-link">Resources</a></li>
+                <li><a href="#" onclick="showSection('progress')" class="nav-link">Progress</a></li>
             </ul>
         </div>
     </nav>
@@ -29,11 +33,11 @@
             </div>
             <div class="notes-container">
                 <div class="notes-sidebar">
-                    <button class="note-btn active" onclick="loadNotes('kinematics')">Kinematics & Motion</button>
-                    <button class="note-btn" onclick="loadNotes('forces')">Forces & Newton's Laws</button>
-                    <button class="note-btn" onclick="loadNotes('energy')">Energy & Work</button>
-                    <button class="note-btn" onclick="loadNotes('momentum')">Momentum & Collisions</button>
-                    <button class="note-btn" onclick="loadNotes('waves')">Waves & Sound</button>
+                    <button class="note-btn active" data-topic="kinematics" onclick="loadNotes('kinematics')">Kinematics & Motion</button>
+                    <button class="note-btn" data-topic="forces" onclick="loadNotes('forces')">Forces & Newton's Laws</button>
+                    <button class="note-btn" data-topic="energy" onclick="loadNotes('energy')">Energy & Work</button>
+                    <button class="note-btn" data-topic="momentum" onclick="loadNotes('momentum')">Momentum & Collisions</button>
+                    <button class="note-btn" data-topic="waves" onclick="loadNotes('waves')">Waves & Sound</button>
                 </div>
                 <div id="notes-content" class="notes-content"></div>
             </div>
@@ -94,12 +98,37 @@
             </div>
             <div class="problems-container">
                 <div class="problems-sidebar">
-                    <button class="problem-btn active" onclick="loadProblems('kinematics')">Kinematics</button>
-                    <button class="problem-btn" onclick="loadProblems('forces')">Forces</button>
-                    <button class="problem-btn" onclick="loadProblems('energy')">Energy</button>
-                    <button class="problem-btn" onclick="loadProblems('momentum')">Momentum</button>
+                    <button class="problem-btn active" data-category="kinematics" onclick="loadProblems('kinematics')">Kinematics</button>
+                    <button class="problem-btn" data-category="forces" onclick="loadProblems('forces')">Forces</button>
+                    <button class="problem-btn" data-category="energy" onclick="loadProblems('energy')">Energy</button>
+                    <button class="problem-btn" data-category="momentum" onclick="loadProblems('momentum')">Momentum</button>
                 </div>
                 <div id="problems-content" class="problems-content"></div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>📄 Study Resources</h2>
+                <p>Use compressed PDFs for faster loading and GitHub-safe file sizes</p>
+            </div>
+            <div class="resources-grid">
+                <article class="resource-card">
+                    <h3>PHYS I Notes (Web Optimized)</h3>
+                    <p>Compressed for fast opening and GitHub-safe size limits.</p>
+                    <a class="btn btn-primary" href="PHYS I Notes.web.pdf" target="_blank" rel="noopener">Open PDF</a>
+                </article>
+                <article class="resource-card">
+                    <h3>PHYS Work (Web Optimized)</h3>
+                    <p>Optimized copy ready for publishing in this repository.</p>
+                    <a class="btn btn-primary" href="PHYS Work.web.pdf" target="_blank" rel="noopener">Open PDF</a>
+                </article>
+                <article class="resource-card">
+                    <h3>Quick Access</h3>
+                    <p>If you need the highest-quality originals locally, keep them outside git and open from your computer.</p>
+                    <a class="btn btn-secondary" href="README.md" target="_blank" rel="noopener">View Project Notes</a>
+                </article>
             </div>
         </section>
 

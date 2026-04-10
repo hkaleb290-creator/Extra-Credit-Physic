@@ -37,6 +37,7 @@ function saveProgress() {
 function showSection(sectionId) {
     document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
     document.getElementById(sectionId).style.display = 'block';
+    setActiveNav(sectionId);
 
     if (sectionId === 'notes') {
         loadNotes('kinematics');
@@ -49,13 +50,21 @@ function showSection(sectionId) {
     }
 }
 
+function setActiveNav(sectionId) {
+    document.querySelectorAll('.nav-link').forEach(link => {
+        const isActive = link.getAttribute('onclick')?.includes(`'${sectionId}'`);
+        link.style.background = isActive ? 'rgba(255, 255, 255, 0.18)' : 'transparent';
+    });
+}
+
 // ============ NOTES SECTION ============
 function loadNotes(topic) {
     currentNoteSection = topic;
-    
-    // Update active button
-    document.querySelectorAll('.note-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+
+    // Update active button without depending on a global click event.
+    document.querySelectorAll('.note-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.topic === topic);
+    });
 
     const noteData = physicsData.notes[topic];
     const container = document.getElementById('notes-content');
@@ -274,10 +283,11 @@ function showQuizResults() {
 // ============ PROBLEMS SECTION ============
 function loadProblems(category) {
     currentProblemSection = category;
-    
-    // Update active button
-    document.querySelectorAll('.problem-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+
+    // Update active button without depending on a global click event.
+    document.querySelectorAll('.problem-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.category === category);
+    });
 
     const problems = physicsData.problems[category];
     const container = document.getElementById('problems-content');
@@ -339,7 +349,8 @@ function resetProgress() {
             notesReviewed: 0,
             cardsStudied: 0,
             quizScores: [],
-            problemsSolved: 0
+            problemsSolved: 0,
+            totalQuizTime: 0
         };
         cardDifficulty = {};
         quizAnswers = [];
