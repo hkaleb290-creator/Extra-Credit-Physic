@@ -103,6 +103,9 @@ function initPracticeExams() {
             </div>
         `;
     }
+
+    // Start the exam automatically so the user can go straight into the test.
+    window.requestAnimationFrame(() => startPracticeExam());
 }
 
 function getExamQuestionPool() {
