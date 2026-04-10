@@ -543,6 +543,14 @@ main {
     .flashcard {
         height: 280px;
     }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* Timer Section */
@@ -790,4 +798,141 @@ kbd {
 
 .shortcut span {
     color: var(--muted);
+}
+
+/* Team/Credits Section */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.team-member {
+    background: linear-gradient(135deg, #f8fcff, #f3f9fd);
+    border: 1px solid #d5e6f0;
+    border-radius: 14px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.team-member:hover {
+    border-color: var(--brand);
+    box-shadow: 0 8px 24px rgba(0, 136, 201, 0.15);
+    transform: translateY(-2px);
+}
+
+.member-icon {
+    font-size: 3rem;
+    margin-bottom: 0.8rem;
+}
+
+.team-member h3 {
+    color: #17364d;
+    margin-bottom: 0.4rem;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.team-member .role {
+    color: var(--brand);
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+}
+
+.team-member .contribution {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+body.dark-mode .team-member {
+    background: linear-gradient(135deg, #0d1620, #0f192a);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .team-member h3 {
+    color: #d8eefa;
+}
+
+/* Credits Info */
+.credits-info {
+    background: linear-gradient(135deg, #eaf7ff, #f0f5ff);
+    border: 2px solid var(--brand);
+    border-radius: 14px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.credits-info h3 {
+    text-align: center;
+    color: #17364d;
+    margin-bottom: 1.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #c5d9e6;
+}
+
+.stat-num {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--brand-strong);
+    font-family: 'Space Grotesk', monospace;
+    margin-bottom: 0.3rem;
+}
+
+.stat-label {
+    display: block;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+body.dark-mode .credits-info {
+    background: linear-gradient(135deg, #0f2540, #0a1a2e);
+    border-color: rgba(0, 136, 201, 0.3);
+}
+
+body.dark-mode .stat-item {
+    background: #0d1620;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Credits Footer */
+.credits-footer {
+    text-align: center;
+    padding: 1.5rem;
+    background: #f7fcff;
+    border-radius: 12px;
+    border: 1px solid #d5e6f0;
+}
+
+.credits-footer p {
+    margin: 0.5rem 0;
+    color: #17364d;
+    font-weight: 600;
+}
+
+body.dark-mode .credits-footer {
+    background: #0d1620;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .credits-footer p {
+    color: #d8eefa;
 }
