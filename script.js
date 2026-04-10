@@ -13,63 +13,86 @@ let timerInterval = null;
 let timerSeconds = 1500; // 25 minutes
 let timerIsRunning = false;
 
+function createDefaultProgress() {
+    return {
+        notesReviewed: 0,
+        cardsStudied: 0,
+        quizScores: [],
+        problemsSolved: 0,
+        totalQuizTime: 0,
+        todayFocus: 0,
+        streak: 0,
+        lastStudyDate: null,
+        achievements: [],
+        dailyChallengeComplete: false,
+        challengeDate: null,
+        lastUpdate: new Date().toDateString(),
+        sessionHistory: [],
+        topicScores: {
+            kinematics: [],
+            forces: [],
+            energy: [],
+            momentum: [],
+            waves: []
+        },
+        weeklyGoals: {
+            focusHoursTarget: 10,
+            quizzesTarget: 5,
+            problemsTarget: 20,
+            currentWeekStart: new Date().toISOString()
+        },
+        leaderboardScore: 0,
+        favoriteNotes: [],
+        plannedSessions: [],
+        theme: 'default',
+        cardLastReviewed: {},
+        cardNextReviewDate: {},
+        customQuizzes: [],
+        practiceExams: [],
+        performanceHistory: []
+    };
+}
+
+function mergeProgress(savedProgress) {
+    const defaults = createDefaultProgress();
+    const saved = savedProgress && typeof savedProgress === 'object' ? savedProgress : {};
+
+    return {
+        ...defaults,
+        ...saved,
+        quizScores: Array.isArray(saved.quizScores) ? saved.quizScores : defaults.quizScores,
+        achievements: Array.isArray(saved.achievements) ? saved.achievements : defaults.achievements,
+        sessionHistory: Array.isArray(saved.sessionHistory) ? saved.sessionHistory : defaults.sessionHistory,
+        favoriteNotes: Array.isArray(saved.favoriteNotes) ? saved.favoriteNotes : defaults.favoriteNotes,
+        plannedSessions: Array.isArray(saved.plannedSessions) ? saved.plannedSessions : defaults.plannedSessions,
+        customQuizzes: Array.isArray(saved.customQuizzes) ? saved.customQuizzes : defaults.customQuizzes,
+        practiceExams: Array.isArray(saved.practiceExams) ? saved.practiceExams : defaults.practiceExams,
+        performanceHistory: Array.isArray(saved.performanceHistory) ? saved.performanceHistory : defaults.performanceHistory,
+        topicScores: {
+            ...defaults.topicScores,
+            ...(saved.topicScores || {})
+        },
+        weeklyGoals: {
+            ...defaults.weeklyGoals,
+            ...(saved.weeklyGoals || {})
+        },
+        cardLastReviewed: saved.cardLastReviewed && typeof saved.cardLastReviewed === 'object' ? saved.cardLastReviewed : defaults.cardLastReviewed,
+        cardNextReviewDate: saved.cardNextReviewDate && typeof saved.cardNextReviewDate === 'object' ? saved.cardNextReviewDate : defaults.cardNextReviewDate
+    };
+}
+
 // Progress tracking
-let progress = {
-    notesReviewed: 0,
-    cardsStudied: 0,
-    quizScores: [],
-    problemsSolved: 0,
-    totalQuizTime: 0,
-    todayFocus: 0,
-    streak: 0,
-    lastStudyDate: null,
-    achievements: [],
-    dailyChallengeComplete: false,
-    challengeDate: null,
-    lastUpdate: new Date().toDateString(),
-    // Session history
-    sessionHistory: [],
-    // Topic mastery tracking
-    topicScores: {
-        kinematics: [],
-        forces: [],
-        energy: [],
-        momentum: [],
-        waves: []
-    },
-    // Weekly goals
-    weeklyGoals: {
-        focusHoursTarget: 10,
-        quizzesTarget: 5,
-        problemsTarget: 20,
-        currentWeekStart: new Date().toISOString()
-    },
-    // Leaderboard
-    leaderboardScore: 0,
-    // Favorites
-    favoriteNotes: [],
-    // Study planner
-    plannedSessions: [],
-    // Theme
-    theme: 'default'
-    // Spaced repetition tracking
-    cardLastReviewed: {},
-    cardNextReviewDate: {},
-    // Custom quizzes
-    customQuizzes: [],
-    // Practice exam tracking
-    practiceExams: [],
-    // Performance data
-    performanceHistory: []
-};
+let progress = createDefaultProgress();
 
 // Load progress from localStorage
 function loadProgress() {
     const saved = localStorage.getItem('physicsProgress');
     if (saved) {
-        progress = JSON.parse(saved);
+        progress = mergeProgress(JSON.parse(saved));
         updateProgressDisplay();
         updateAchievements();
+    } else {
+        progress = createDefaultProgress();
     }
     
     const darkMode = localStorage.getItem('darkMode');
@@ -510,13 +533,7 @@ function updateProgressDisplay() {
 
 function resetProgress() {
     if (confirm('Are you sure you want to reset all progress?')) {
-        progress = {
-            notesReviewed: 0,
-            cardsStudied: 0,
-            quizScores: [],
-            problemsSolved: 0,
-            totalQuizTime: 0
-        };
+        progress = createDefaultProgress();
         cardDifficulty = {};
         quizAnswers = [];
         saveProgress();
