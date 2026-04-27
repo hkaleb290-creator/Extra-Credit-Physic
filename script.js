@@ -1,5 +1,15 @@
 /**
- * Physics Study Hub - Refactored Script
+ * Physics Study Hu
+    generateRandomExam() {
+        const qCount = parseInt(document.getElementById('examQCount')?.value || 25);
+        const questions = physicsData.quiz.slice().sort(() => Math.random() - 0.5).slice(0, Math.min(qCount, physicsData.quiz.length));
+        
+        AppState.examQuestions = questions;
+        AppState.examAnswers = new Array(questions.length).fill(-1);
+        
+        UI.showSection('exams');
+        this.start();
+    },b - Refactored Script
  * Modular architecture with better separation of concerns
  * 12 Topics | 85+ Flashcards | 130+ Quizzes | 30+ Problems
  */
@@ -112,6 +122,9 @@ const UI = {
             'resources': () => this.loadResources(),
             'team': () => this.loadTeam(),
             'progress': () => this.updateProgressDisplay()
+              'formulas': () => this.loadFormulas(),
+              'apps': () => this.loadApplications(),
+              'tools': () => this.loadTools()
         };
         
         if (handlers[sectionId]) handlers[sectionId]();
@@ -248,10 +261,157 @@ const UI = {
             </div>
         `;
     }
+
+    loadFormulas() {
+        const content = document.getElementById('formulas-content');
+        if (!content) return;
+        let html = '<div class="formulas-grid">';
+        
+        for (const [topic, formulas] of Object.entries(physicsData.formulas || {})) {
+            const topicTitle = physicsData.notes[topic]?.title || topic.charAt(0).toUpperCase() + topic.slice(1);
+            html += '<div class="formula-card"><h3>' + topicTitle + '</h3>';
+            html += formulas.map(f => '<div class="formula-item">' + f + '</div>').join('');
+            html += '</div>';
+        }
+        html += '</div>';
+        content.innerHTML = html;
+        AppState.incrementProgress('notesReviewed');
+    },
+
+    loadApplications() {
+        const content = document.getElementById('apps-content');
+        if (!content) return;
+        let html = '<div class="apps-grid">';
+        
+        for (const [topic, apps] of Object.entries(physicsData.applications || {})) {
+            const topicTitle = physicsData.notes[topic]?.title || topic;
+            html += '<div class="app-card"><h3>' + topicTitle + '</h3>';
+            html += apps.map(app => '<div class="app-item">' + app + '</div>').join('');
+            html += '</div>';
+        }
+        html += '</div>';
+        content.innerHTML = html;
+    },
+
+    loadTools() {
+        const content = document.getElementById('tools-content');
+        if (!content) return;
+        let html = '<div class="tools-container">';
+        
+        // Video recommendations
+        html += '<div class="tools-section"><h3>📺 Video Tutorials</h3>';
+        html += '<div class="videos-grid">';
+        for (const [topic, videos] of Object.entries(physicsData.videos || {})) {
+            const topicTitle = physicsData.notes[topic]?.title || topic;
+            videos.forEach(v => {
+                html += '<a class="video-card" href="' + v.url + '" target="_blank">';
+                html += '<strong>' + topicTitle + '</strong><br>';
+                html += v.title + ' 🎥</a>';
+            });
+        }
+        html += '</div></div>';
+        
+        // PhET Simulations
+        html += '<div class="tools-section"><h3>⚗️ Interactive Simulations (PhET)</h3>';
+        html += '<div class="sims-grid">';
+        for (const [topic, url] of Object.entries(physicsData.simulations || {})) {
+            if (topic !== 'all') {
+                const topicTitle = physicsData.notes[topic]?.title || topic;
+                html += '<a class="sim-card" href="' + url + '" target="_blank">';
+                html += topicTitle + ' 🧪</a>';
+            }
+        }
+        html += '<a class="sim-card" href="' + (physicsData.simulations.all || 'https://phet.colorado.edu') + '" target="_blank">All PhET Labs 🔗</a>';
+        html += '</div></div>';
+        
+        // Practice Exam Generator
+        html += '<div class="tools-section"><h3>📝 Practice Exam Generator</h3>';
+        html += '<p>Generate randomized practice exams with custom question count:</p>';
+        html += '<div class="exam-gen"><input type="number" id="examQCount" min="5" max="170" value="25" style="width:60px; padding:8px;"> Questions ';
+        html += '<button class="btn btn-primary" onclick="ExamManager.generateRandomExam()">Generate Exam</button></div></div>';
+        
+        content.innerHTML = html;
+    }
 };
 
 // ============================================
 // CONTENT MANAGER MODULE
+// ============================================
+
+
+    loadFormulas() {
+        const content = document.getElementById('formulas-content');
+        if (!content) return;
+        let html = '<div class="formulas-grid">';
+        
+        for (const [topic, formulas] of Object.entries(physicsData.formulas || {})) {
+            const topicTitle = physicsData.notes[topic]?.title || topic.charAt(0).toUpperCase() + topic.slice(1);
+            html += '<div class="formula-card"><h3>' + topicTitle + '</h3>';
+            html += formulas.map(f => '<div class="formula-item">' + f + '</div>').join('');
+            html += '</div>';
+        }
+        html += '</div>';
+        content.innerHTML = html;
+        AppState.incrementProgress('notesReviewed');
+    },
+
+    loadApplications() {
+        const content = document.getElementById('apps-content');
+        if (!content) return;
+        let html = '<div class="apps-grid">';
+        
+        for (const [topic, apps] of Object.entries(physicsData.applications || {})) {
+            const topicTitle = physicsData.notes[topic]?.title || topic;
+            html += '<div class="app-card"><h3>' + topicTitle + '</h3>';
+            html += apps.map(app => '<div class="app-item">' + app + '</div>').join('');
+            html += '</div>';
+        }
+        html += '</div>';
+        content.innerHTML = html;
+    },
+
+    loadTools() {
+        const content = document.getElementById('tools-content');
+        if (!content) return;
+        let html = '<div class="tools-container">';
+        
+        // Video recommendations
+        html += '<div class="tools-section"><h3>?? Video Tutorials</h3>';
+        html += '<div class="videos-grid">';
+        for (const [topic, videos] of Object.entries(physicsData.videos || {})) {
+            const topicTitle = physicsData.notes[topic]?.title || topic;
+            videos.forEach(v => {
+                html += '<a class="video-card" href="' + v.url + '" target="_blank">';
+                html += '<strong>' + topicTitle + '</strong><br>';
+                html += v.title + ' ??</a>';
+            });
+        }
+        html += '</div></div>';
+        
+        // PhET Simulations
+        html += '<div class="tools-section"><h3>?? Interactive Simulations (PhET)</h3>';
+        html += '<div class="sims-grid">';
+        for (const [topic, url] of Object.entries(physicsData.simulations || {})) {
+            if (topic !== 'all') {
+                const topicTitle = physicsData.notes[topic]?.title || topic;
+                html += '<a class="sim-card" href="' + url + '" target="_blank">';
+                html += topicTitle + ' ??</a>';
+            }
+        }
+        html += '<a class="sim-card" href="' + (physicsData.simulations.all || 'https://phet.colorado.edu') + '" target="_blank">All PhET Labs ??</a>';
+        html += '</div></div>';
+        
+        // Practice Exam Generator
+        html += '<div class="tools-section"><h3>?? Practice Exam Generator</h3>';
+        html += '<p>Generate randomized practice exams with custom question count:</p>';
+        html += '<div class="exam-gen"><input type="number" id="examQCount" min="5" max="170" value="25" style="width:60px; padding:8px;"> Questions ';
+        html += '<button class="btn btn-primary" onclick="ExamManager.generateRandomExam()">Generate Exam</button></div></div>';
+        
+        content.innerHTML = html;
+    }
+
+// ============================================
+// CONTENT MANAGER MODULE  
 // ============================================
 
 const ContentManager = {
@@ -691,3 +851,6 @@ function showSection(sectionId) {
 function toggleDarkMode() {
     AppState.toggleDarkMode();
 }
+
+
+

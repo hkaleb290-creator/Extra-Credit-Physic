@@ -1084,3 +1084,220 @@ kbd {
 .shortcut span {
     color: var(--muted);
 }
+
+/* ============ FORMULA SHEET ============ */
+.formulas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.formula-card {
+    background: linear-gradient(135deg, #f8fcff 0%, #eef7ff 100%);
+    border: 2px solid var(--brand);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.formula-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 136, 201, 0.15);
+}
+
+.formula-card h3 {
+    color: var(--brand);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    border-bottom: 2px solid rgba(0, 136, 201, 0.3);
+    padding-bottom: 0.5rem;
+}
+
+.formula-item {
+    font-family: 'Courier New', monospace;
+    color: #1a1a1a;
+    padding: 0.6rem;
+    margin: 0.5rem 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* ============ APPLICATIONS ============ */
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.app-card {
+    background: linear-gradient(135deg, #fff9f0 0%, #ffe8d6 100%);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(240, 166, 32, 0.15);
+}
+
+.app-card h3 {
+    color: #d97706;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.app-item {
+    padding: 0.7rem;
+    margin: 0.6rem 0;
+    background: rgba(255, 255, 255, 0.9);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+/* ============ TOOLS SECTION ============ */
+.tools-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tools-section {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0efff 100%);
+    border: 2px solid var(--brand);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.tools-section h3 {
+    color: var(--brand);
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 3px solid var(--brand);
+    padding-bottom: 0.5rem;
+}
+
+/* Videos Grid */
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.video-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.2rem;
+    text-decoration: none;
+    color: #1a1a1a;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.video-card:hover {
+    border-color: var(--brand);
+    background: #f0f9ff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 136, 201, 0.12);
+}
+
+.video-card strong {
+    color: var(--brand);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Simulations Grid */
+.sims-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.sim-card {
+    background: linear-gradient(135deg, #e0f7ff 0%, #b3e5ff 100%);
+    border: 2px solid var(--brand);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #0277bd;
+    text-align: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+}
+
+.sim-card:hover {
+    background: linear-gradient(135deg, #00bcd4 0%, #0288d1 100%);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 136, 201, 0.2);
+}
+
+/* Exam Generator */
+.exam-gen {
+    background: white;
+    border: 2px solid var(--brand);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.exam-gen input {
+    border: 2px solid var(--brand);
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #1a1a1a;
+    transition: all 0.3s ease;
+}
+
+.exam-gen input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 136, 201, 0.2);
+}
+
+/* Dark Mode Adjustments */
+body.dark-mode .formula-item {
+    background: rgba(0, 0, 0, 0.3);
+    color: #e0e0e0;
+}
+
+body.dark-mode .app-item {
+    background: rgba(0, 0, 0, 0.3);
+    color: #e0e0e0;
+}
+
+body.dark-mode .video-card {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #444;
+}
+
+body.dark-mode .video-card:hover {
+    background: #1a3a4a;
+    border-color: var(--brand);
+}
+
+body.dark-mode .exam-gen input {
+    background: #333;
+    color: #e0e0e0;
+    border-color: var(--brand);
+}

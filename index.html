@@ -26,7 +26,9 @@
                     <li><a href="#" onclick="showSection('dashboard')" class="nav-link">Dashboard</a></li>
                     <li><a href="#" onclick="showSection('team')" class="nav-link">Team</a></li>
                     <li><a href="#" onclick="showSection('progress')" class="nav-link">Progress</a></li>
-                </ul>
+                                    <li><a href="#" onclick="showSection('formulas')" class="nav-link">?? Formulas</a></li>
+                    <li><a href="#" onclick="showSection('apps')" class="nav-link">?? Apps & Labs</a></li>
+                    <li><a href="#" onclick="showSection('tools')" class="nav-link">??? Tools</a></li></ul>
             </div>
         </div>
     </nav>
@@ -53,6 +55,7 @@
                     <button class="note-btn" data-topic="optics" onclick="ContentManager.loadNotes('optics')">Optics & Light</button>
                     <button class="note-btn" data-topic="modern" onclick="ContentManager.loadNotes('modern')">Modern Physics & Quantum</button>
                     <button class="note-btn" data-topic="relativity" onclick="ContentManager.loadNotes('relativity')">Relativity & Space-Time</button>
+                    <button class="note-btn" data-topic="shm" onclick="ContentManager.loadNotes('shm')">SHM & Oscillations</button>
                 </div>
                 <div id="notes-content" class="notes-content"></div>
             </div>
@@ -123,6 +126,7 @@
                     <button class="problem-btn" data-category="optics" onclick="ContentManager.loadProblems('optics')">Optics</button>
                     <button class="problem-btn" data-category="modern" onclick="ContentManager.loadProblems('modern')">Modern Physics</button>
                     <button class="problem-btn" data-category="relativity" onclick="ContentManager.loadProblems('relativity')">Relativity</button>
+                    <button class="problem-btn" data-category="shm" onclick="ContentManager.loadProblems('shm')">SHM & Oscillations</button>
                 </div>
                 <div id="problems-content" class="problems-content"></div>
             </div>
@@ -178,3 +182,38 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
+        <!-- Formulas Section -->
+        <section id="formulas" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>?? Formula Sheet</h2>
+                <p>Quick reference of all essential equations</p>
+            </div>
+            <div id="formulas-content"></div>
+        </section>
+
+        <!-- Apps & Real-World Applications -->
+        <section id="apps" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>?? Real-World Applications</h2>
+                <p>Physics in everyday life and modern technology</p>
+            </div>
+            <div id="apps-content"></div>
+        </section>
+
+        <!-- Tools Section (Concept Maps, Study Planner, etc) -->
+        <section id="tools" class="section" style="display: none;">
+            <div class="section-header">
+                <h2>??? Study Tools & Resources</h2>
+                <p>Advanced learning tools and interactive simulations</p>
+            </div>
+            <div id="tools-content"></div>
+        </section>
+        < / m a i n > 
+ 
+         < s c r i p t   s r c = " d a t a . j s " > < / s c r i p t > 
+         < s c r i p t   s r c = " s c r i p t . j s " > < / s c r i p t > 
+ < / b o d y > 
+ < / h t m l >  
+ 

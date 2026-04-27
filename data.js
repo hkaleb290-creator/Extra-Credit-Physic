@@ -134,6 +134,21 @@ const physicsData = {
                 { heading: "Spacetime Intervals", text: "Δs² = (cΔt)² - (Δx)². Invariant in all reference frames." },
                 { heading: "Relativistic Doppler", text: "f' = f√((1 - β)/(1 + β)) where β = v/c. Frequency change for moving sources." }
             ]
+        },
+        shm: {
+            title: "Simple Harmonic Motion & Oscillations",
+            content: [
+                { heading: "Periodic Motion", text: "Motion that repeats in equal time intervals. Period T = time for one complete oscillation; Frequency f = 1/T." },
+                { heading: "Simple Harmonic Motion Definition", text: "Oscillatory motion where acceleration is proportional to displacement and opposite in direction: a = -ω²x" },
+                { heading: "SHM Displacement Equation", text: "x(t) = A cos(ωt + φ) where A = amplitude, ω = angular frequency, φ = phase constant" },
+                { heading: "Angular Frequency & Period", text: "ω = 2πf = 2π/T. Higher ω means faster oscillations; ω = √(k/m) for spring." },
+                { heading: "Velocity & Acceleration in SHM", text: "v(t) = -Aω sin(ωt + φ); v_max = Aω\na(t) = -Aω² cos(ωt + φ); a_max = Aω²" },
+                { heading: "Energy in SHM", text: "Total energy E = ½kA² (constant). Energy oscillates between kinetic and potential: E = KE + PE" },
+                { heading: "Spring Oscillator", text: "Period T = 2π√(m/k) where m = mass, k = spring constant. Independent of amplitude." },
+                { heading: "Pendulum Motion", text: "Simple pendulum period T = 2π√(L/g) for small angles. Independent of mass but dependent on length." },
+                { heading: "Damped Oscillations", text: "When friction/resistance present: amplitude decreases exponentially A(t) = A₀e^(-γt). Eventually stops." },
+                { heading: "Forced Oscillations & Resonance", text: "Driving force at natural frequency causes resonance - maximum amplitude. Amplitude grows unbounded without damping." }
+            ]
         }
     },
 
@@ -247,7 +262,17 @@ const physicsData = {
         { front: "Time dilation?", back: "t = t₀/√(1 - v²/c²) - moving clocks slow" },
         { front: "Length contraction?", back: "L = L₀√(1 - v²/c²)" },
         { front: "Relativistic momentum?", back: "p = γm₀v where γ = 1/√(1 - v²/c²)" },
-        { front: "Spacetime interval?", back: "Δs² = (cΔt)² - (Δx)² - invariant" }
+        { front: "Spacetime interval?", back: "Δs² = (cΔt)² - (Δx)² - invariant" },
+
+        // SIMPLE HARMONIC MOTION (8)
+        { front: "Period vs Frequency?", back: "Period T = time for one oscillation; Frequency f = 1/T (oscillations per second)" },
+        { front: "SHM acceleration formula?", back: "a = -ω²x (proportional to displacement, opposite direction)" },
+        { front: "SHM displacement equation?", back: "x(t) = A cos(ωt + φ) where A = amplitude, ω = angular frequency" },
+        { front: "Max velocity in SHM?", back: "v_max = Aω = A(2πf)" },
+        { front: "Max acceleration in SHM?", back: "a_max = Aω² = A(2πf)²" },
+        { front: "Spring oscillator period?", back: "T = 2π√(m/k) - depends on mass and spring constant" },
+        { front: "Simple pendulum period?", back: "T = 2π√(L/g) - depends on length only (small angles)" },
+        { front: "Total energy in SHM?", back: "E = ½kA² (constant) - oscillates between kinetic and potential energy" }
     ],
 
     quiz: [
@@ -406,7 +431,38 @@ const physicsData = {
         { question: "Relativistic momentum p =", options: ["γm₀v", "m₀v", "m₀v²", "γm₀c"], correct: 0, difficulty: "hard" },
         { question: "Spacetime interval Δs² =", options: ["(Δx)²", "(cΔt)² + (Δx)²", "(cΔt)² - (Δx)²", "(Δx)² - (cΔt)²"], correct: 2, difficulty: "hard" },
         { question: "At v = 0.9c, time dilation factor γ ≈:", options: ["0.9", "1.5", "2.29", "10"], correct: 2, difficulty: "hard" },
-        { question: "Light always travels at c:", options: ["In all frames", "Relative to observer", "In vacuum only", "On average"], correct: 0, difficulty: "hard" }
+        { question: "Light always travels at c:", options: ["In all frames", "Relative to observer", "In vacuum only", "On average"], correct: 0, difficulty: "hard" },
+
+        // SIMPLE HARMONIC MOTION (12 questions) - NEW!
+        { question: "In SHM, acceleration a =:", options: ["-ωx", "-ω²x", "ωx²", "ω²x"], correct: 1, difficulty: "easy" },
+        { question: "Period of oscillation T relates to frequency f as:", options: ["T = f", "T = 2πf", "T = 1/f", "T = f²"], correct: 2, difficulty: "easy" },
+        { question: "Mass on spring oscillates. Doubling the mass:", options: ["Halves period", "Doubles period", "Increases by √2", "No effect"], correct: 2, difficulty: "easy" },
+        { question: "Simple pendulum with length L. Period is:", options: ["2π√(L/g)", "2π√(m/L)", "2π√(g/L)", "2πL/g"], correct: 0, difficulty: "easy" },
+        { question: "SHM: Maximum velocity occurs at:", options: ["Maximum displacement", "Equilibrium position", "Zero acceleration", "Quarter period"], correct: 1, difficulty: "medium" },
+        { question: "Spring with k=100 N/m, m=1 kg. Angular frequency ω =:", options: ["10 rad/s", "100 rad/s", "1 rad/s", "√10 rad/s"], correct: 0, difficulty: "medium" },
+        { question: "Energy in SHM oscillates between:", options: ["KE and PE", "KE and work", "PE and temperature", "Momentum and KE"], correct: 0, difficulty: "medium" },
+        { question: "Damped oscillation: amplitude decreases because of:", options: ["Gravity", "Friction/resistance", "Spring constant", "Mass"], correct: 1, difficulty: "medium" },
+        { question: "For pendulum: gravity g increases. Period T:", options: ["Increases", "Decreases", "Stays same", "Becomes zero"], correct: 1, difficulty: "hard" },
+        { question: "Resonance occurs when driving frequency =:", options: ["Natural frequency", "Twice natural", "Half natural", "Random"], correct: 0, difficulty: "hard" },
+        { question: "Mass on spring: v_max = Aω. If A doubles and ω halves, v_max:", options: ["Doubles", "Halves", "Stays same", "Quadruples"], correct: 2, difficulty: "hard" },
+        { question: "Simple pendulum vs spring: Period depends on mass?", options: ["Both", "Pendulum only", "Spring only", "Neither"], correct: 2, difficulty: "hard" },
+
+        // ADDITIONAL EXAM-STYLE QUESTIONS (Mixed Topics)
+        { question: "Object slides down frictionless incline. Which is conserved?", options: ["KE only", "PE only", "Momentum only", "Mechanical energy"], correct: 3, difficulty: "medium" },
+        { question: "Elastic collision between equal masses, one at rest. Result:", options: ["Both stationary", "First stops, second moves", "Both move together", "First rebounds"], correct: 1, difficulty: "hard" },
+        { question: "Standing wave: nodes occur where:", options: ["Amplitude max", "Displacement zero", "Velocity max", "Phase = π"], correct: 1, difficulty: "hard" },
+        { question: "Pressure in fluid at depth h: P = P₀ + ρgh. This assumes:", options: ["Constant density", "Constant temperature", "No motion", "Ideal fluid"], correct: 0, difficulty: "medium" },
+        { question: "Heat capacity C = Q/(m·ΔT). Units are:", options: ["J/kg·K", "J/K", "kg·K/J", "K/J"], correct: 0, difficulty: "easy" },
+        { question: "Entropy increases in:", options: ["Reversible process", "Ideal gas expansion", "Isolated system", "Freezing water"], correct: 2, difficulty: "hard" },
+        { question: "Equipotential surfaces are perpendicular to:", options: ["Field lines", "Velocity", "Magnetic field", "Gravity"], correct: 0, difficulty: "medium" },
+        { question: "Transformer voltage relation: V₁/V₂ =:", options: ["I₂/I₁", "N₁/N₂", "R₁/R₂", "P₁/P₂"], correct: 1, difficulty: "medium" },
+        { question: "Thin lens focal length: 1/f = 1/s_o + 1/s_i. Object at f: Image at:", options: ["f", "∞", "0", "2f"], correct: 1, difficulty: "medium" },
+        { question: "Hydrogen atom: electron in n=2. To ionize needs:", options: ["3.4 eV", "6.8 eV", "10.2 eV", "13.6 eV"], correct: 0, difficulty: "hard" },
+        { question: "Wave: λ = 0.5 m, v = 20 m/s. Frequency f =:", options: ["10 Hz", "40 Hz", "0.025 Hz", "100 Hz"], correct: 0, difficulty: "easy" },
+        { question: "Circular motion: centripetal acceleration a_c =:", options: ["v/r", "v²/r", "vr", "v/r²"], correct: 1, difficulty: "easy" },
+        { question: "Escape velocity from Earth: v_e = √(2GM/R). What does it depend on?", options: ["Planet mass only", "Planet radius only", "Both M and R", "Speed at surface"], correct: 2, difficulty: "hard" },
+        { question: "Buoyant force equals weight of:", options: ["Object", "Displaced fluid", "Container", "Surrounding air"], correct: 1, difficulty: "easy" },
+        { question: "Ideal gas: PV = nRT. At constant T and V, P increases with:", options: ["Temperature", "Number of moles", "Volume", "Pressure"], correct: 1, difficulty: "easy" }
     ],
 
     problems: {
@@ -500,6 +556,74 @@ const physicsData = {
             { title: "Lorentz Factor", statement: "v = 0.9c. What is γ?", solution: "γ = 1/√(1 - 0.81) = 1/√0.19 ≈ 2.29" },
             { title: "Relativistic Momentum", statement: "m = 1 kg, v = 0.9c. Momentum?", solution: "p = γm₀v = 2.29 × 1 × 0.9c\np ≈ 2.06 × (3×10⁸) ≈ 6.18 × 10⁸ kg·m/s" },
             { title: "Mass-Energy", statement: "1 kg mass converts to energy. Energy?", solution: "E = mc² = 1 × (3×10⁸)²\nE = 9 × 10¹⁶ J" }
+        ],
+        shm: [
+            { title: "Spring Period", statement: "Mass 500 g on spring k=100 N/m. Period?", solution: "T = 2π√(m/k) = 2π√(0.5/100)\nT = 2π√(0.005) = 2π(0.0707)\nT ≈ 0.444 seconds" },
+            { title: "Pendulum Period", statement: "Pendulum length 1 m. Period? (g = 10)", solution: "T = 2π√(L/g) = 2π√(1/10)\nT = 2π(0.316) ≈ 2.0 seconds" },
+            { title: "SHM Maximum Velocity", statement: "Spring: A = 0.1 m, ω = 10 rad/s. v_max?", solution: "v_max = Aω = 0.1 × 10 = 1.0 m/s" },
+            { title: "SHM Energy", statement: "Spring k=200 N/m, A = 0.2 m. Total energy?", solution: "E = ½kA² = ½ × 200 × (0.2)²\nE = 100 × 0.04 = 4 J" }
         ]
     }
 };
+// FORMULA SHEET - All key equations by topic
+physicsData.formulas = {
+    kinematics: ["v = v0 + at", "s = v0t + �at�", "v� = v0� + 2as", "s = (v0 + v)t/2"],
+    forces: ["F = ma", "f = �N", "F_g = mg"],
+    energy: ["W = F�d", "KE = �mv�", "PE = mgh", "E = KE + PE"],
+    momentum: ["p = mv", "Impulse = F�?t"],
+    waves: ["v = f?", "T = 1/f"],
+    circular: ["a_c = v�/r", "F_c = mv�/r", "F_g = G(m1m2)/r�"],
+    fluids: ["P = F/A", "P = ?gh", "F_b = ?Vg"],
+    thermodynamics: ["Q = mc?T", "PV = nRT"],
+    electrostatics: ["F = kq1q2/r�", "E = kQ/r�", "V = kQ/r"],
+    magnetism: ["F = qvB", "e = -dF/dt"],
+    optics: ["n1 sin ?1 = n2 sin ?2", "1/f = 1/s_o + 1/s_i"],
+    shm: ["T = 2pv(m/k)", "x = A cos(?t)", "E = �kA�"]
+};
+
+// VIDEO RECOMMENDATIONS
+physicsData.videos = {
+    kinematics: [{ title: "Kinematics", url: "https://www.youtube.com/results?search_query=kinematics+khan+academy" }],
+    forces: [{ title: "Newton's Laws", url: "https://www.youtube.com/results?search_query=newtons+laws+khan+academy" }],
+    energy: [{ title: "Energy Conservation", url: "https://www.youtube.com/results?search_query=energy+conservation" }],
+    momentum: [{ title: "Momentum & Collisions", url: "https://www.youtube.com/results?search_query=momentum+collisions" }],
+    waves: [{ title: "Waves & Sound", url: "https://www.youtube.com/results?search_query=waves+sound+physics" }],
+    shm: [{ title: "Simple Harmonic Motion", url: "https://www.youtube.com/results?search_query=simple+harmonic+motion" }]
+};
+
+// REAL-WORLD APPLICATIONS
+physicsData.applications = {
+    kinematics: ["?? Car Braking: Stopping distance calculations", "?? Basketball: Projectile motion", "?? Airplane: Takeoff acceleration"],
+    forces: ["?? Elevators: Normal force changes", "?? Rock Climbing: Tension in ropes", "?? Skiing: Friction on slopes"],
+    energy: ["? Hydroelectric Dams", "??? Car Engines", "?? LED Lights"],
+    momentum: ["?? Football Tackles", "?? Rocket Propulsion", "?? Billiards"],
+    waves: ["?? Music & Sound", "?? Cell Phones", "?? Ultrasound"],
+    circular: ["?? Ferris Wheel", "?? Planetary Orbits", "?? CDs/DVDs"],
+    fluids: ["?? Water Pressure", "?? Airplane Wings", "?? Hydraulic Systems"],
+    thermodynamics: ["?? Refrigerators", "?? Solar Panels", "?? Cooking"],
+    electrostatics: ["? Lightning", "?? MRI Machines", "?? Chips"],
+    magnetism: ["?? Compass", "?? Motors", "?? Transformers"],
+    optics: ["?? Microscopes", "?? Telescopes", "?? Eyeglasses"],
+    shm: ["??? Buildings", "?? Guitars", "? Clocks"]
+};
+
+// PhET SIMULATION LINKS
+physicsData.simulations = {
+    all: "https://phet.colorado.edu/en/simulations?subjects=physics",
+    kinematics: "https://phet.colorado.edu/en/simulations/filter?subjects=physics&topics=motion",
+    forces: "https://phet.colorado.edu/en/simulations/filter?subjects=physics&topics=forces-and-motion",
+    waves: "https://phet.colorado.edu/en/simulations/filter?subjects=physics&topics=waves",
+    energy: "https://phet.colorado.edu/en/simulations/filter?subjects=physics&topics=energy"
+};
+
+// PRACTICE EXAM GENERATOR
+function generateRandomExam(questionCount = 25) {
+    let exam = [];
+    for (let i = 0; i < questionCount && i < physicsData.quiz.length; i++) {
+        const randomIndex = Math.floor(Math.random() * physicsData.quiz.length);
+        if (!exam.find(q => q === physicsData.quiz[randomIndex])) {
+            exam.push(physicsData.quiz[randomIndex]);
+        }
+    }
+    return exam;
+}
