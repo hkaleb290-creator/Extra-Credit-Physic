@@ -1,689 +1,693 @@
-// Global variables
-let currentNoteSection = 'kinematics';
-let currentFlashcardIndex = 0;
-let currentQuizIndex = 0;
-let currentProblemSection = 'kinematics';
-let quizAnswers = [];
-let cardDifficulty = {};
-let quizTimer = null;
-let quizStartTime = 0;
-let quizDifficulty = 'all';
-let filteredQuestions = [];
-let timerInterval = null;
-let timerSeconds = 1500; // 25 minutes
-let timerIsRunning = false;
-let examQuestions = [];
-let examAnswers = [];
+/**
+ * Physics Study Hub - Refactored Script
+ * Modular architecture with better separation of concerns
+ * 12 Topics | 85+ Flashcards | 130+ Quizzes | 30+ Problems
+ */
 
-// Progress tracking
-let progress = {
-    notesReviewed: 0,
-    cardsStudied: 0,
-    quizScores: [],
-    examScores: [],
-    problemsSolved: 0,
-    totalQuizTime: 0,
-    todayFocus: 0,
-    streak: 0,
-    lastStudyDate: null,
-    achievements: []
+// ============================================
+// STATE MANAGEMENT MODULE
+// ============================================
+
+const AppState = {
+    // UI State
+    currentSection: 'notes',
+    currentNoteSection: 'kinematics',
+    currentFlashcardIndex: 0,
+    currentQuizIndex: 0,
+    currentProblemSection: 'kinematics',
+    quizDifficulty: 'all',
+    isDarkMode: false,
+    
+    // Quiz/Exam State
+    quizAnswers: [],
+    quizStartTime: 0,
+    quizTimer: null,
+    quizDuration: 0,
+    filteredQuestions: [],
+    examQuestions: [],
+    examAnswers: [],
+    cardDifficulty: {},
+    
+    // Study Progress
+    progress: {
+        notesReviewed: 0,
+        cardsStudied: 0,
+        quizScores: [],
+        examScores: [],
+        problemsSolved: 0,
+        totalQuizTime: 0,
+        todayFocus: 0,
+        streak: 0,
+        lastStudyDate: null,
+        achievements: []
+    },
+    
+    // Utility functions
+    save() {
+        localStorage.setItem('physicsProgress', JSON.stringify(this.progress));
+        localStorage.setItem('darkMode', this.isDarkMode);
+    },
+    
+    load() {
+        const saved = localStorage.getItem('physicsProgress');
+        if (saved) {
+            this.progress = JSON.parse(saved);
+            if (!Array.isArray(this.progress.examScores)) this.progress.examScores = [];
+            if (!Array.isArray(this.progress.quizScores)) this.progress.quizScores = [];
+        }
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        if (darkMode) this.toggleDarkMode();
+    },
+    
+    toggleDarkMode() {
+        this.isDarkMode = !this.isDarkMode;
+        document.body.classList.toggle('dark-mode', this.isDarkMode);
+        this.save();
+        UI.updateDarkModeButton();
+    },
+    
+    incrementProgress(field) {
+        if (this.progress.hasOwnProperty(field)) {
+            this.progress[field]++;
+            this.save();
+        }
+    }
 };
 
-// Load progress from localStorage
-function loadProgress() {
-    const saved = localStorage.getItem('physicsProgress');
-    if (saved) {
-        progress = JSON.parse(saved);
-        if (!Array.isArray(progress.examScores)) progress.examScores = [];
-        updateProgressDisplay();
-        updateAchievements();
-    }
+// ============================================
+// UI MODULE
+// ============================================
+
+const UI = {
+    showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.section').forEach(s => {
+            s.style.display = 'none';
+            s.classList.remove('active');
+        });
+        
+        // Show target section
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.style.display = 'block';
+            section.classList.add('active');
+        }
+        
+        AppState.currentSection = sectionId;
+        this.updateActiveNav(sectionId);
+        
+        // Initialize section content
+        this.initSection(sectionId);
+    },
     
-    const darkMode = localStorage.getItem('darkMode');
-    if (darkMode === 'true') {
-        document.body.classList.add('dark-mode');
-        updateDarkModeButton();
+    initSection(sectionId) {
+        const handlers = {
+            'notes': () => ContentManager.loadNotes('kinematics'),
+            'flashcards': () => ContentManager.loadFlashcards(),
+            'timer': () => TimerManager.init(),
+            'quiz': () => QuizManager.init(),
+            'problems': () => ContentManager.loadProblems('kinematics'),
+            'exams': () => ExamManager.init(),
+            'dashboard': () => this.updateDashboard(),
+            'resources': () => this.loadResources(),
+            'team': () => this.loadTeam(),
+            'progress': () => this.updateProgressDisplay()
+        };
+        
+        if (handlers[sectionId]) handlers[sectionId]();
+    },
+    
+    updateActiveNav(sectionId) {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            const isActive = link.getAttribute('onclick')?.includes(`'${sectionId}'`);
+            link.classList.toggle('active', isActive);
+            link.style.background = isActive ? 'rgba(255, 255, 255, 0.18)' : 'transparent';
+        });
+    },
+    
+    updateDarkModeButton() {
+        const btn = document.getElementById('dark-mode-toggle');
+        if (btn) btn.textContent = AppState.isDarkMode ? '☀️' : '🌙';
+    },
+    
+    updateDashboard() {
+        const content = document.getElementById('dashboard-content');
+        if (!content) return;
+        
+        const p = AppState.progress;
+        const quizAvg = p.quizScores.length ? (p.quizScores.reduce((a, b) => a + b) / p.quizScores.length).toFixed(1) : '0';
+        
+        content.innerHTML = `
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>Flashcards Studied</h3>
+                    <div class="dashboard-value">${p.cardsStudied}</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Quizzes Taken</h3>
+                    <div class="dashboard-value">${p.quizScores.length}</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Average Score</h3>
+                    <div class="dashboard-value">${quizAvg}%</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Problems Solved</h3>
+                    <div class="dashboard-value">${p.problemsSolved}</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Study Streak</h3>
+                    <div class="dashboard-value">${p.streak} days</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Total Study Time</h3>
+                    <div class="dashboard-value">${Math.round(p.totalQuizTime / 60)}m</div>
+                </div>
+            </div>
+            <div style="margin-top: 2rem;">
+                <h3>Achievements 🏆</h3>
+                <div class="achievements-list" id="achievements-list"></div>
+                <button onclick="AppState.progress.quizScores = []; AppState.progress.cardsStudied = 0; AppState.progress.problemsSolved = 0; AppState.save(); UI.updateDashboard();" class="reset-btn">
+                    Reset Progress
+                </button>
+            </div>
+        `;
+        
+        this.updateAchievements();
+    },
+    
+    updateProgressDisplay() {
+        this.updateDashboard();
+    },
+    
+    updateAchievements() {
+        const p = AppState.progress;
+        const list = document.getElementById('achievements-list');
+        if (!list) return;
+        
+        const achievements = [];
+        if (p.cardsStudied >= 10) achievements.push('🎯 Flash Master (10 cards)');
+        if (p.quizScores.length >= 5) achievements.push('📝 Quiz Champion (5 quizzes)');
+        if (p.cardsStudied >= 50) achievements.push('⭐ Knowledge Seeker (50 cards)');
+        if (p.quizScores.length >= 20) achievements.push('🔥 Study Legend (20 quizzes)');
+        if (p.streak >= 7) achievements.push('🌟 Week Warrior (7 day streak)');
+        
+        list.innerHTML = achievements.length ? achievements.map(a => `<div class="achievement">${a}</div>`).join('') : '<p style="color: var(--muted);">Complete more to earn achievements!</p>';
+    },
+    
+    loadResources() {
+        const content = document.getElementById('resources-content');
+        if (!content) return;
+        content.innerHTML = `
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h3>📚 Physics Textbook</h3>
+                    <p>OpenStax College Physics - Free comprehensive resource</p>
+                </div>
+                <div class="resource-card">
+                    <h3>🎥 Video Tutorials</h3>
+                    <p>Khan Academy - Excellent video explanations for all topics</p>
+                </div>
+                <div class="resource-card">
+                    <h3>🔬 Interactive Simulations</h3>
+                    <p>PhET Simulations - Hands-on learning with interactive demos</p>
+                </div>
+                <div class="resource-card">
+                    <h3>📊 Physics Formulas</h3>
+                    <p>Complete reference sheet with all major equations</p>
+                </div>
+                <div class="resource-card">
+                    <h3>📱 Mobile Apps</h3>
+                    <p>Physics Toolbox, Wolfram Alpha, iPhysics</p>
+                </div>
+                <div class="resource-card">
+                    <h3>🌐 Online Communities</h3>
+                    <p>Reddit r/learnphysics, Physics forums, Stack Exchange</p>
+                </div>
+            </div>
+        `;
+    },
+    
+    loadTeam() {
+        const content = document.getElementById('team-content');
+        if (!content) return;
+        content.innerHTML = `
+            <div class="team-container">
+                <h2>About This Study Hub</h2>
+                <p>Created to help students master physics through interactive learning tools:</p>
+                <ul>
+                    <li>📚 Comprehensive study notes for 12 physics topics</li>
+                    <li>🃏 85+ interactive flashcards for quick review</li>
+                    <li>❓ 130+ quiz questions with difficulty levels</li>
+                    <li>📝 30+ solved practice problems</li>
+                    <li>⏱️ Built-in Pomodoro timer for focused study</li>
+                    <li>📊 Progress tracking and achievement system</li>
+                </ul>
+                <h3>Version: 2.0 - Comprehensive Edition</h3>
+                <p style="color: var(--muted); font-size: 0.9rem;">Last updated: April 2026</p>
+            </div>
+        `;
     }
-}
+};
 
-// Save progress to localStorage
-function saveProgress() {
-    localStorage.setItem('physicsProgress', JSON.stringify(progress));
-}
+// ============================================
+// CONTENT MANAGER MODULE
+// ============================================
 
-// Dark mode toggle
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDark);
-    updateDarkModeButton();
-}
-
-function updateDarkModeButton() {
-    const btn = document.getElementById('dark-mode-toggle');
-    btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-}
-
-function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-    document.getElementById(sectionId).style.display = 'block';
-    setActiveNav(sectionId);
-
-    if (sectionId === 'notes') {
-        loadNotes('kinematics');
-    } else if (sectionId === 'flashcards') {
-        loadFlashcards();
-    } else if (sectionId === 'timer') {
-        initTimer();
-    } else if (sectionId === 'quiz') {
-        initQuiz();
-    } else if (sectionId === 'problems') {
-        loadProblems('kinematics');
-    } else if (sectionId === 'exams') {
-        initPracticeExams();
-    } else if (sectionId === 'dashboard') {
-        updateDashboardDisplay();
+const ContentManager = {
+    getTopics() {
+        return Object.keys(physicsData.notes);
+    },
+    
+    getTopic(topicId) {
+        return physicsData.notes[topicId];
+    },
+    
+    loadNotes(topicId = 'kinematics') {
+        AppState.currentNoteSection = topicId;
+        const content = document.getElementById('notes-content');
+        const menu = document.getElementById('notes-menu');
+        
+        if (!content) return;
+        
+        const topic = this.getTopic(topicId);
+        if (!topic) return;
+        
+        // Update menu
+        if (menu) {
+            menu.innerHTML = this.getTopics()
+                .map(id => `<button class="note-btn ${id === topicId ? 'active' : ''}" onclick="ContentManager.loadNotes('${id}')">${physicsData.notes[id].title}</button>`)
+                .join('');
+        }
+        
+        // Render content
+        const html = topic.content.map(item => `
+            <div class="note-item">
+                <h4>${item.heading}</h4>
+                <p>${item.text.replace(/\n/g, '<br>')}</p>
+            </div>
+        `).join('');
+        
+        content.innerHTML = `<h2>${topic.title}</h2>${html}`;
+        AppState.incrementProgress('notesReviewed');
+    },
+    
+    loadProblems(sectionId = 'kinematics') {
+        AppState.currentProblemSection = sectionId;
+        const content = document.getElementById('problems-content');
+        const menu = document.getElementById('problems-menu');
+        
+        if (!content || !physicsData.problems[sectionId]) return;
+        
+        // Update menu
+        if (menu) {
+            menu.innerHTML = Object.keys(physicsData.problems)
+                .map(id => `<button class="problem-btn ${id === sectionId ? 'active' : ''}" onclick="ContentManager.loadProblems('${id}')">${physicsData.notes[id].title}</button>`)
+                .join('');
+        }
+        
+        // Render problems
+        const problems = physicsData.problems[sectionId];
+        const html = problems.map((prob, idx) => `
+            <div class="problem-item">
+                <h4>${prob.title}</h4>
+                <p><strong>Problem:</strong> ${prob.statement}</p>
+                <button class="solution-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">Show Solution</button>
+                <div class="solution" style="display: none;"><strong>Solution:</strong><p>${prob.solution.replace(/\n/g, '<br>')}</p></div>
+            </div>
+        `).join('');
+        
+        content.innerHTML = `<h2>${physicsData.notes[sectionId].title} - Problems</h2>${html}`;
+        AppState.incrementProgress('problemsSolved');
+    },
+    
+    loadFlashcards() {
+        const container = document.getElementById('flashcard-container');
+        if (!container) return;
+        
+        const card = physicsData.flashcards[AppState.currentFlashcardIndex];
+        if (!card) return;
+        
+        container.innerHTML = `
+            <div class="flashcard-inner" onclick="Flashcard.toggle()">
+                <div class="flashcard-front">
+                    <p>${card.front}</p>
+                </div>
+                <div class="flashcard-back" style="display:none;">
+                    <p>${card.back}</p>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('card-counter').textContent = `${AppState.currentFlashcardIndex + 1} / ${physicsData.flashcards.length}`;
+        AppState.incrementProgress('cardsStudied');
     }
-}
+};
 
-function setActiveNav(sectionId) {
-    document.querySelectorAll('.nav-link').forEach(link => {
-        const isActive = link.getAttribute('onclick')?.includes(`'${sectionId}'`);
-        link.style.background = isActive ? 'rgba(255, 255, 255, 0.18)' : 'transparent';
-    });
-}
+// ============================================
+// FLASHCARD MODULE
+// ============================================
 
-// ============ PRACTICE EXAMS SECTION ============
-function initPracticeExams() {
-    const content = document.getElementById('exam-content');
-    if (content) {
+const Flashcard = {
+    next() {
+        if (AppState.currentFlashcardIndex < physicsData.flashcards.length - 1) {
+            AppState.currentFlashcardIndex++;
+            ContentManager.loadFlashcards();
+        }
+    },
+    
+    prev() {
+        if (AppState.currentFlashcardIndex > 0) {
+            AppState.currentFlashcardIndex--;
+            ContentManager.loadFlashcards();
+        }
+    },
+    
+    toggle() {
+        const front = document.querySelector('.flashcard-front');
+        const back = document.querySelector('.flashcard-back');
+        if (front && back) {
+            const isFront = front.style.display !== 'none';
+            front.style.display = isFront ? 'none' : 'block';
+            back.style.display = isFront ? 'block' : 'none';
+        }
+    },
+    
+    shuffle() {
+        const shuffled = [...physicsData.flashcards].sort(() => Math.random() - 0.5);
+        window.physicsData.flashcards = shuffled;
+        AppState.currentFlashcardIndex = 0;
+        ContentManager.loadFlashcards();
+    }
+};
+
+// ============================================
+// QUIZ MODULE
+// ============================================
+
+const QuizManager = {
+    init() {
+        const content = document.getElementById('quiz-content');
+        if (!content) return;
+        
+        const topics = ContentManager.getTopics();
+        content.innerHTML = `
+            <div class="quiz-intro">
+                <h3>Quiz Settings</h3>
+                <label>Difficulty Level:
+                    <select id="difficulty-select" onchange="QuizManager.updateDifficulty(this.value)">
+                        <option value="all">All</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </label>
+                <button onclick="QuizManager.start()" class="start-btn">Start Quiz</button>
+            </div>
+        `;
+    },
+    
+    updateDifficulty(level) {
+        AppState.quizDifficulty = level;
+    },
+    
+    start() {
+        AppState.quizAnswers = [];
+        const pool = physicsData.quiz;
+        AppState.filteredQuestions = AppState.quizDifficulty === 'all' 
+            ? pool.slice()
+            : pool.filter(q => q.difficulty === AppState.quizDifficulty);
+        
+        if (AppState.filteredQuestions.length === 0) {
+            alert('No questions available for this difficulty level.');
+            return;
+        }
+        
+        AppState.filteredQuestions.sort(() => Math.random() - 0.5);
+        AppState.currentQuizIndex = 0;
+        AppState.quizStartTime = Date.now();
+        this.renderQuestion();
+    },
+    
+    renderQuestion() {
+        const content = document.getElementById('quiz-content');
+        const q = AppState.filteredQuestions[AppState.currentQuizIndex];
+        
+        if (!q) {
+            this.finish();
+            return;
+        }
+        
+        const html = `
+            <div class="quiz-question-container">
+                <div class="quiz-progress">Question ${AppState.currentQuizIndex + 1} / ${AppState.filteredQuestions.length}</div>
+                <h3>${q.question}</h3>
+                <div class="quiz-options">
+                    ${q.options.map((opt, idx) => `
+                        <label class="quiz-option">
+                            <input type="radio" name="answer" value="${idx}" onchange="QuizManager.selectAnswer(${idx})">
+                            ${opt}
+                        </label>
+                    `).join('')}
+                </div>
+                <div class="quiz-controls">
+                    <button onclick="QuizManager.prev()" ${AppState.currentQuizIndex === 0 ? 'disabled' : ''}>← Previous</button>
+                    <button onclick="QuizManager.next()" ${AppState.currentQuizIndex === AppState.filteredQuestions.length - 1 ? 'disabled' : ''}>Next →</button>
+                    <button onclick="QuizManager.finish()" class="finish-btn">Finish Quiz</button>
+                </div>
+            </div>
+        `;
+        
+        content.innerHTML = html;
+    },
+    
+    selectAnswer(index) {
+        AppState.quizAnswers[AppState.currentQuizIndex] = index;
+    },
+    
+    next() {
+        if (AppState.currentQuizIndex < AppState.filteredQuestions.length - 1) {
+            AppState.currentQuizIndex++;
+            this.renderQuestion();
+        }
+    },
+    
+    prev() {
+        if (AppState.currentQuizIndex > 0) {
+            AppState.currentQuizIndex--;
+            this.renderQuestion();
+        }
+    },
+    
+    finish() {
+        const correct = AppState.quizAnswers.filter((ans, idx) => 
+            ans === AppState.filteredQuestions[idx].correct
+        ).length;
+        
+        const score = Math.round((correct / AppState.filteredQuestions.length) * 100);
+        const duration = Math.round((Date.now() - AppState.quizStartTime) / 1000);
+        
+        AppState.progress.quizScores.push(score);
+        AppState.progress.totalQuizTime += duration;
+        AppState.save();
+        
+        const content = document.getElementById('quiz-content');
+        content.innerHTML = `
+            <div class="quiz-results">
+                <h2>Quiz Complete! 🎉</h2>
+                <div class="result-card">
+                    <p>Score: <span class="score">${score}%</span></p>
+                    <p>Correct: ${correct} / ${AppState.filteredQuestions.length}</p>
+                    <p>Time: ${duration}s</p>
+                </div>
+                <button onclick="QuizManager.init()">Take Another Quiz</button>
+            </div>
+        `;
+    }
+};
+
+// ============================================
+// TIMER MODULE (POMODORO)
+// ============================================
+
+const TimerManager = {
+    init() {
+        const content = document.getElementById('timer-content');
+        if (!content) return;
+        
+        content.innerHTML = `
+            <div class="timer-container">
+                <h2>Study Timer (Pomodoro)</h2>
+                <div class="timer-display" id="timer-display">25:00</div>
+                <div class="timer-options">
+                    <button onclick="TimerManager.setDuration(1500)">25 min</button>
+                    <button onclick="TimerManager.setDuration(900)">15 min</button>
+                    <button onclick="TimerManager.setDuration(2700)">45 min</button>
+                </div>
+                <div class="timer-controls">
+                    <button onclick="TimerManager.start()" class="start-btn">Start</button>
+                    <button onclick="TimerManager.pause()" class="pause-btn">Pause</button>
+                    <button onclick="TimerManager.reset()" class="reset-btn">Reset</button>
+                </div>
+            </div>
+        `;
+    },
+    
+    setDuration(seconds) {
+        AppState.quizTimer = seconds;
+        this.updateDisplay();
+    },
+    
+    updateDisplay() {
+        const display = document.getElementById('timer-display');
+        if (display) {
+            const mins = Math.floor(AppState.quizTimer / 60);
+            const secs = AppState.quizTimer % 60;
+            display.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+    },
+    
+    start() {
+        if (AppState.timerInterval) return;
+        
+        AppState.timerInterval = setInterval(() => {
+            if (AppState.quizTimer > 0) {
+                AppState.quizTimer--;
+                this.updateDisplay();
+            } else {
+                this.pause();
+                alert('Time\'s up! ⏰');
+            }
+        }, 1000);
+    },
+    
+    pause() {
+        if (AppState.timerInterval) {
+            clearInterval(AppState.timerInterval);
+            AppState.timerInterval = null;
+        }
+    },
+    
+    reset() {
+        this.pause();
+        AppState.quizTimer = 1500;
+        this.updateDisplay();
+    }
+};
+
+// ============================================
+// EXAM MODULE
+// ============================================
+
+const ExamManager = {
+    init() {
+        const content = document.getElementById('exam-content');
+        if (!content) return;
+        
         content.innerHTML = `
             <div class="exam-intro">
-                <p>Click Start Final Exam to begin a single mixed-topic exam.</p>
+                <h2>Practice Final Exam</h2>
+                <p>25 random questions from all topics and difficulties</p>
+                <button onclick="ExamManager.start()" class="start-btn">Start Exam</button>
             </div>
         `;
-    }
-
-    // Start the exam automatically so the user can go straight into the test.
-    window.requestAnimationFrame(() => startPracticeExam());
-}
-
-function getExamQuestionPool() {
-    return Array.isArray(physicsData.quiz) ? physicsData.quiz.slice() : [];
-}
-
-function startPracticeExam() {
-    examAnswers = [];
-
-    const content = document.getElementById('exam-content');
-    if (content) {
-        content.innerHTML = '<p style="color: var(--muted);">Loading exam...</p>';
-    }
-
-    const pool = getExamQuestionPool().sort(() => Math.random() - 0.5);
-    examQuestions = pool.slice(0, 25);
-
-    if (examQuestions.length === 0) {
-        document.getElementById('exam-content').innerHTML = '<p style="color: var(--danger);">No exam questions are available yet.</p>';
-        return;
-    }
-
-    renderPracticeExamQuestion(0);
-}
-
-function renderPracticeExamQuestion(index) {
-    const content = document.getElementById('exam-content');
-    if (!content) return;
-
-    if (index < 0) index = 0;
-    if (index >= examQuestions.length) {
-        submitPracticeExam();
-        return;
-    }
-
-    const question = examQuestions[index];
-    let html = `
-        <div class="exam-question-card">
-            <div class="exam-meta">Question ${index + 1} of ${examQuestions.length}</div>
-            <h3>${question.question}</h3>
-            <div class="exam-options">`;
-
-    question.options.forEach((option, optionIndex) => {
-        const checked = examAnswers[index] === optionIndex ? 'checked' : '';
-        html += `
-            <label class="exam-option">
-                <input type="radio" name="exam-q-${index}" value="${optionIndex}" ${checked} onclick="examAnswers[${index}] = ${optionIndex}">
-                <span>${option}</span>
-            </label>`;
-    });
-
-    html += `
-            </div>
-            <div class="exam-controls">
-                <button class="btn btn-secondary" onclick="renderPracticeExamQuestion(${index - 1})" ${index === 0 ? 'disabled' : ''}>Previous</button>
-                <button class="btn btn-primary" onclick="renderPracticeExamQuestion(${index + 1})">${index === examQuestions.length - 1 ? 'Submit Exam' : 'Next'}</button>
-            </div>
-        </div>`;
-
-    content.innerHTML = html;
-}
-
-function submitPracticeExam() {
-    let correct = 0;
-    examQuestions.forEach((question, index) => {
-        if (examAnswers[index] === question.correct) {
-            correct++;
-        }
-    });
-
-    const score = examQuestions.length ? Math.round((correct / examQuestions.length) * 100) : 0;
-    const content = document.getElementById('exam-content');
-    if (!content) return;
-
-    content.innerHTML = `
-        <div class="exam-results">
-            <h3>Exam Complete</h3>
-            <div class="exam-score">${score}%</div>
-            <p>You answered ${correct} out of ${examQuestions.length} correctly.</p>
-            <button class="btn btn-primary" onclick="startPracticeExam()">Retake Exam</button>
-        </div>
-    `;
-
-    progress.examScores.push(score);
-    saveProgress();
-    updateProgressDisplay();
-    updateAchievements();
-}
-
-function updateDashboardDisplay() {
-    const avgScore = progress.quizScores.length
-        ? Math.round(progress.quizScores.reduce((sum, value) => sum + value, 0) / progress.quizScores.length)
-        : 0;
-
-    const examCount = progress.examScores.length;
-
-    const avgScoreEl = document.getElementById('dashboard-avg-score');
-    const examCountEl = document.getElementById('dashboard-exam-count');
-    const streakEl = document.getElementById('dashboard-streak');
-    const problemsEl = document.getElementById('dashboard-problems');
-
-    if (avgScoreEl) avgScoreEl.textContent = avgScore + '%';
-    if (examCountEl) examCountEl.textContent = examCount;
-    if (streakEl) streakEl.textContent = progress.streak + ' days';
-    if (problemsEl) problemsEl.textContent = progress.problemsSolved;
-}
-
-// ============ TIMER SECTION ============
-function initTimer() {
-    updateTimerDisplay();
-}
-
-function startTimer() {
-    if (timerIsRunning) return;
-    timerIsRunning = true;
-    document.getElementById('btn-start').style.display = 'none';
-    document.getElementById('btn-pause').style.display = 'inline-block';
+    },
     
-    timerInterval = setInterval(() => {
-        timerSeconds--;
-        updateTimerDisplay();
+    start() {
+        AppState.examAnswers = [];
+        const pool = physicsData.quiz.slice().sort(() => Math.random() - 0.5);
+        AppState.examQuestions = pool.slice(0, 25);
+        AppState.currentQuizIndex = 0;
+        AppState.quizStartTime = Date.now();
+        this.renderQuestion(0);
+    },
+    
+    renderQuestion(index) {
+        const content = document.getElementById('exam-content');
+        if (!content) return;
         
-        if (timerSeconds <= 0) {
-            clearInterval(timerInterval);
-            timerIsRunning = false;
-            playTimerAlert();
-            progress.todayFocus += Math.floor(1500 / 60);
-            saveProgress();
-            updateTimerDisplay();
-            document.getElementById('btn-start').style.display = 'inline-block';
-            document.getElementById('btn-pause').style.display = 'none';
+        if (index >= AppState.examQuestions.length) {
+            this.finish();
+            return;
         }
-    }, 1000);
-}
-
-function pauseTimer() {
-    timerIsRunning = false;
-    clearInterval(timerInterval);
-    document.getElementById('btn-start').style.display = 'inline-block';
-    document.getElementById('btn-pause').style.display = 'none';
-}
-
-function resetTimer() {
-    pauseTimer();
-    timerSeconds = 1500;
-    updateTimerDisplay();
-}
-
-function setTimer(minutes) {
-    pauseTimer();
-    timerSeconds = minutes * 60;
-    updateTimerDisplay();
-}
-
-function updateTimerDisplay() {
-    const mins = Math.floor(timerSeconds / 60);
-    const secs = timerSeconds % 60;
-    document.getElementById('timer-time').textContent = 
-        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    document.getElementById('today-focus').textContent = progress.todayFocus;
-    document.getElementById('streak-count').textContent = progress.streak;
-}
-
-function playTimerAlert() {
-    const audio = new AudioContext ? new (window.AudioContext || window.webkitAudioContext)() : null;
-    if (audio) {
-        const now = audio.currentTime;
-        const osc = audio.createOscillator();
-        const env = audio.createGain();
-        osc.connect(env);
-        env.connect(audio.destination);
-        osc.frequency.value = 800;
-        env.gain.setValueAtTime(0.3, now);
-        env.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-        osc.start(now);
-        osc.stop(now + 0.5);
-    }
-    alert('Study session complete! Time for a break. 🎉');
-}
-
-// ============ NOTES SECTION ============
-function loadNotes(topic) {
-    currentNoteSection = topic;
-
-    // Update active button without depending on a global click event.
-    document.querySelectorAll('.note-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.topic === topic);
-    });
-
-    const noteData = physicsData.notes[topic];
-    const container = document.getElementById('notes-content');
-    
-    container.innerHTML = '';
-    noteData.content.forEach(note => {
-        const noteDiv = document.createElement('div');
-        noteDiv.className = 'note-item';
-        noteDiv.innerHTML = `
-            <h3>${note.heading}</h3>
-            <p>${note.text.replace(/\n/g, '<br>')}</p>
-        `;
-        container.appendChild(noteDiv);
-    });
-
-    progress.notesReviewed++;
-    saveProgress();
-}
-
-// ============ FLASHCARDS SECTION ============
-function loadFlashcards() {
-    currentFlashcardIndex = 0;
-    displayFlashcard();
-}
-
-function displayFlashcard() {
-    const card = physicsData.flashcards[currentFlashcardIndex];
-    const container = document.getElementById('flashcard');
-    
-    container.classList.remove('flipped');
-    container.querySelector('.flashcard-front').textContent = card.front;
-    container.querySelector('.flashcard-back').textContent = card.back;
-    
-    document.getElementById('card-counter').textContent = `${currentFlashcardIndex + 1} / ${physicsData.flashcards.length}`;
-}
-
-function flipCard() {
-    const card = document.getElementById('flashcard');
-    card.classList.toggle('flipped');
-}
-
-function nextCard() {
-    if (currentFlashcardIndex < physicsData.flashcards.length - 1) {
-        currentFlashcardIndex++;
-        displayFlashcard();
-    }
-}
-
-function previousCard() {
-    if (currentFlashcardIndex > 0) {
-        currentFlashcardIndex--;
-        displayFlashcard();
-    }
-}
-
-function markCard(difficulty) {
-    const cardId = currentFlashcardIndex;
-    cardDifficulty[cardId] = difficulty;
-    
-    progress.cardsStudied++;
-    saveProgress();
-    updateAchievements();
-    
-    // Move to next card
-    if (currentFlashcardIndex < physicsData.flashcards.length - 1) {
-        nextCard();
-    } else {
-        alert('You\'ve reviewed all flashcards! 🎉');
-        currentFlashcardIndex = 0;
-        displayFlashcard();
-    }
-}
-
-// ============ QUIZ SECTION ============
-function initQuiz() {
-    const container = document.getElementById('quiz-content');
-    document.getElementById('quiz-difficulty').style.display = 'block';
-    container.innerHTML = '';
-}
-
-function showDifficultySelect() {
-    document.getElementById('quiz-difficulty').style.display = 'block';
-}
-
-function startQuizWithDifficulty(difficulty) {
-    quizDifficulty = difficulty;
-    
-    // Filter questions by difficulty
-    if (difficulty === 'all') {
-        filteredQuestions = physicsData.quiz;
-    } else {
-        filteredQuestions = physicsData.quiz.filter(q => q.difficulty === difficulty);
-    }
-    
-    if (filteredQuestions.length === 0) {
-        alert('No questions available for this difficulty level!');
-        return;
-    }
-    
-    currentQuizIndex = 0;
-    quizAnswers = [];
-    quizStartTime = Date.now();
-    
-    document.getElementById('quiz-difficulty').style.display = 'none';
-    document.getElementById('quiz-timer').style.display = 'block';
-    
-    startTimer();
-    displayQuizQuestion();
-}
-
-function startTimer() {
-    const timerDisplay = document.getElementById('timer-display');
-    
-    quizTimer = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - quizStartTime) / 1000);
-        const minutes = Math.floor(elapsed / 60);
-        const seconds = elapsed % 60;
-        timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }, 100);
-}
-
-function stopTimer() {
-    if (quizTimer) {
-        clearInterval(quizTimer);
-        const elapsedSeconds = Math.floor((Date.now() - quizStartTime) / 1000);
-        progress.totalQuizTime += elapsedSeconds;
-    }
-}
-
-function displayQuizQuestion() {
-    const question = filteredQuestions[currentQuizIndex];
-    const container = document.getElementById('quiz-content');
-    
-    let html = `
-        <div class="quiz-question">
-            <h3>Question ${currentQuizIndex + 1} of ${filteredQuestions.length}</h3>
-            <p style="font-size: 1.1rem; margin: 1rem 0;">${question.question}</p>
-            <div style="background: #f0f0f0; padding: 0.5rem 1rem; border-radius: 5px; margin-bottom: 1rem; display: inline-block;">
-                <strong>Difficulty:</strong> <span style="text-transform: capitalize; font-weight: bold; color: ${getDifficultyColor(question.difficulty)}">${question.difficulty}</span>
-            </div>
-            <div class="quiz-options">
-    `;
-    
-    question.options.forEach((option, index) => {
-        html += `
-            <div class="quiz-option" onclick="selectAnswer(${index})" data-index="${index}">
-                ${option}
+        
+        const q = AppState.examQuestions[index];
+        const html = `
+            <div class="exam-question-container">
+                <div class="exam-meta">Question ${index + 1} / 25</div>
+                <h3>${q.question}</h3>
+                <div class="exam-options">
+                    ${q.options.map((opt, idx) => `
+                        <label class="exam-option">
+                            <input type="radio" name="exam-answer" value="${idx}" onchange="ExamManager.selectAnswer(${idx})">
+                            ${opt}
+                        </label>
+                    `).join('')}
+                </div>
+                <div class="exam-nav">
+                    <button onclick="ExamManager.renderQuestion(${index - 1})" ${index === 0 ? 'disabled' : ''}>← Back</button>
+                    <button onclick="ExamManager.renderQuestion(${index + 1})" ${index === 24 ? 'disabled' : ''}>Next →</button>
+                    <button onclick="ExamManager.finish()" class="submit-btn">Submit Exam</button>
+                </div>
             </div>
         `;
-    });
+        
+        content.innerHTML = html;
+    },
     
-    html += '</div></div>';
-    container.innerHTML = html;
-}
-
-function getDifficultyColor(difficulty) {
-    if (difficulty === 'easy') return '#2ecc71';
-    if (difficulty === 'medium') return '#f39c12';
-    if (difficulty === 'hard') return '#e74c3c';
-    return '#3498db';
-}
-
-function selectAnswer(index) {
-    const question = filteredQuestions[currentQuizIndex];
-    quizAnswers.push(index);
+    selectAnswer(index) {
+        AppState.examAnswers[AppState.currentQuizIndex] = index;
+    },
     
-    const options = document.querySelectorAll('.quiz-option');
-    options.forEach(opt => opt.style.pointerEvents = 'none');
-    
-    options[index].classList.add('selected');
-    if (index === question.correct) {
-        options[index].classList.add('correct');
-    } else {
-        options[index].classList.add('wrong');
-        options[question.correct].classList.add('correct');
-    }
-    
-    setTimeout(() => {
-        if (currentQuizIndex < filteredQuestions.length - 1) {
-            currentQuizIndex++;
-            displayQuizQuestion();
-        } else {
-            showQuizResults();
-        }
-    }, 1500);
-}
-
-function showQuizResults() {
-    stopTimer();
-    let correct = 0;
-    filteredQuestions.forEach((q, i) => {
-        if (quizAnswers[i] === q.correct) correct++;
-    });
-    
-    const percentage = Math.round((correct / filteredQuestions.length) * 100);
-    const container = document.getElementById('quiz-content');
-    const elapsedSeconds = Math.floor((Date.now() - quizStartTime) / 1000);
-    const minutes = Math.floor(elapsedSeconds / 60);
-    const seconds = elapsedSeconds % 60;
-    
-    container.innerHTML = `
-        <div style="text-align: center;">
-            <h2>Quiz Complete! 🎉</h2>
-            <div style="font-size: 3rem; color: #3498db; font-weight: bold; margin: 1rem 0;">${percentage}%</div>
-            <p style="font-size: 1.2rem; color: #95a5a6;">You got ${correct} out of ${filteredQuestions.length} correct</p>
-            <p style="font-size: 1.1rem; color: #95a5a6;">⏱️ Time taken: ${minutes}:${seconds.toString().padStart(2, '0')}</p>
-            <button onclick="initQuiz()" class="btn btn-primary" style="margin-top: 1rem;">Retake Quiz</button>
-        </div>
-    `;
-    
-    document.getElementById('quiz-timer').style.display = 'none';
-    
-    progress.quizScores.push(percentage);
-    saveProgress();
-    updateAchievements();
-}
-
-// ============ PROBLEMS SECTION ============
-function loadProblems(category) {
-    currentProblemSection = category;
-
-    // Update active button without depending on a global click event.
-    document.querySelectorAll('.problem-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.category === category);
-    });
-
-    const problems = physicsData.problems[category];
-    const container = document.getElementById('problems-content');
-    
-    container.innerHTML = '';
-    problems.forEach((problem, index) => {
-        const problemDiv = document.createElement('div');
-        problemDiv.className = 'problem-item';
-        problemDiv.innerHTML = `
-            <h4>${problem.title}</h4>
-            <div class="problem-statement">${problem.statement}</div>
-            <div class="problem-solution" id="solution-${index}">
-                <strong>Solution:</strong><br>
-                ${problem.solution.replace(/\n/g, '<br>')}
+    finish() {
+        const correct = AppState.examAnswers.filter((ans, idx) => 
+            ans === AppState.examQuestions[idx].correct
+        ).length;
+        
+        const score = Math.round((correct / 25) * 100);
+        const duration = Math.round((Date.now() - AppState.quizStartTime) / 1000);
+        
+        AppState.progress.examScores.push(score);
+        AppState.progress.totalQuizTime += duration;
+        AppState.save();
+        
+        const content = document.getElementById('exam-content');
+        content.innerHTML = `
+            <div class="exam-results">
+                <h2>Exam Results 📋</h2>
+                <div class="results-card">
+                    <p>Final Score: <span class="big-score">${score}%</span></p>
+                    <p>Correct: ${correct} / 25</p>
+                    <p>Time: ${Math.round(duration / 60)} minutes</p>
+                    <p style="color: ${score >= 80 ? 'var(--ok)' : score >= 60 ? 'var(--warn)' : 'var(--danger)'}; font-weight: bold;">
+                        ${score >= 90 ? '🌟 Outstanding!' : score >= 80 ? '✅ Great!' : score >= 70 ? '👍 Good' : 'Keep practicing!'}
+                    </p>
+                </div>
+                <button onclick="ExamManager.init()">Take Another Exam</button>
             </div>
-            <button class="btn btn-secondary" onclick="toggleSolution(${index})">Show Solution</button>
         `;
-        container.appendChild(problemDiv);
-    });
-}
+    }
+};
 
-function toggleSolution(index) {
-    const solution = document.getElementById(`solution-${index}`);
-    solution.classList.toggle('show');
-    
-    const button = event.target;
-    button.textContent = solution.classList.contains('show') ? 'Hide Solution' : 'Show Solution';
-    
-    progress.problemsSolved++;
-    saveProgress();
-}
+// ============================================
+// INITIALIZATION
+// ============================================
 
-// ============ PROGRESS SECTION ============
-function updateProgressDisplay() {
-    document.getElementById('notes-reviewed').textContent = progress.notesReviewed;
-    document.getElementById('cards-studied').textContent = progress.cardsStudied;
+document.addEventListener('DOMContentLoaded', () => {
+    AppState.load();
+    UI.updateDarkModeButton();
+    UI.showSection('notes');
     
-    if (progress.quizScores.length > 0) {
-        const avgScore = Math.round(progress.quizScores.reduce((a, b) => a + b, 0) / progress.quizScores.length);
-        document.getElementById('quiz-avg').textContent = avgScore + '%';
-        document.querySelectorAll('.progress-stat')[2].querySelector('.progress-fill').style.width = avgScore + '%';
-    }
-    
-    document.getElementById('problems-solved').textContent = progress.problemsSolved;
-    
-    // Update progress bars
-    const maxNotes = 5;
-    const maxCards = 50;
-    const maxProblems = 20;
-    
-    document.querySelectorAll('.progress-stat')[0].querySelector('.progress-fill').style.width = Math.min(100, (progress.notesReviewed / maxNotes) * 100) + '%';
-    document.querySelectorAll('.progress-stat')[1].querySelector('.progress-fill').style.width = Math.min(100, (progress.cardsStudied / maxCards) * 100) + '%';
-    document.querySelectorAll('.progress-stat')[3].querySelector('.progress-fill').style.width = Math.min(100, (progress.problemsSolved / maxProblems) * 100) + '%';
-}
-
-function resetProgress() {
-    if (confirm('Are you sure you want to reset all progress?')) {
-        progress = {
-            notesReviewed: 0,
-            cardsStudied: 0,
-            quizScores: [],
-            examScores: [],
-            problemsSolved: 0,
-            totalQuizTime: 0
-        };
-        cardDifficulty = {};
-        quizAnswers = [];
-        saveProgress();
-        updateProgressDisplay();
-        alert('Progress reset! 🔄');
-    }
-}
-
-// ============ ACHIEVEMENTS ============
-function unlockAchievement(id) {
-    if (!progress.achievements.includes(id)) {
-        progress.achievements.push(id);
-        saveProgress();
-        updateAchievements();
-        showAchievementToast(id);
-    }
-}
-
-function updateAchievements() {
-    // Check for first quiz
-    if (progress.quizScores.length > 0) {
-        unlockAchievement('first-quiz');
-    }
-    
-    // Check for perfect score
-    if (progress.quizScores.some(s => s === 100)) {
-        unlockAchievement('perfect-score');
-    }
-    
-    // Check for study streak
-    if (progress.streak >= 3) {
-        unlockAchievement('study-streak');
-    }
-    
-    // Check for card master
-    if (progress.cardsStudied >= 50) {
-        unlockAchievement('card-master');
-    }
-    
-    // Visual update
-    document.querySelectorAll('.achievement').forEach(el => {
-        const id = el.dataset.achievement;
-        if (progress.achievements.includes(id)) {
-            el.classList.add('unlocked');
-        } else {
-            el.classList.remove('unlocked');
-        }
-    });
-}
-
-function showAchievementToast(id) {
-    const achievements = {
-        'first-quiz': '🎯 Quiz Master - Complete first quiz',
-        'perfect-score': '⭐ Perfect Score - Scored 100%',
-        'study-streak': '🔥 On Fire - 3 day study streak',
-        'card-master': '🃏 Card Master - Studied 50 flashcards'
-    };
-    
-    const msg = achievements[id];
-    if (msg) console.log('Achievement Unlocked: ' + msg);
-}
-
-// ============ KEYBOARD SHORTCUTS ============
-document.addEventListener('keydown', (e) => {
-    // Check if we're in a flashcard view
-    if (document.getElementById('flashcards').style.display !== 'none') {
-        if (e.key === 'ArrowRight') {
-            nextCard();
-        } else if (e.key === 'ArrowLeft') {
-            previousCard();
-        } else if (e.key === ' ') {
-            e.preventDefault();
-            flipCard();
-        }
-    }
-    
-    // Quiz answer selection with numbers
-    if (document.getElementById('quiz').style.display !== 'none' && 
-        document.getElementById('quiz-content').innerHTML !== '' &&
-        !document.getElementById('quiz-difficulty').style.display !== 'none') {
-        const num = parseInt(e.key);
-        if (num >= 1 && num <= 4) {
-            const options = document.querySelectorAll('.quiz-option');
-            if (options[num - 1]) {
-                options[num - 1].click();
-            }
-        }
-    }
+    // Event listeners
+    document.getElementById('dark-mode-toggle')?.addEventListener('click', () => AppState.toggleDarkMode());
 });
 
-// Initialize
-window.addEventListener('DOMContentLoaded', () => {
-    loadProgress();
-    showSection('notes');
-    
-    // Set up dark mode toggle
-    const darkModeBtn = document.getElementById('dark-mode-toggle');
-    if (darkModeBtn) {
-        darkModeBtn.addEventListener('click', toggleDarkMode);
-        updateDarkModeButton();
-    }
-});
+// Global function for nav links
+function showSection(sectionId) {
+    UI.showSection(sectionId);
+}
 
+// Maintain backward compatibility with existing HTML onclick handlers
+function toggleDarkMode() {
+    AppState.toggleDarkMode();
+}

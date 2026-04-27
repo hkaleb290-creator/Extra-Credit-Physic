@@ -39,12 +39,20 @@
                 <p>Review key concepts and topics from physics</p>
             </div>
             <div class="notes-container">
-                <div class="notes-sidebar">
-                    <button class="note-btn active" data-topic="kinematics" onclick="loadNotes('kinematics')">Kinematics & Motion</button>
-                    <button class="note-btn" data-topic="forces" onclick="loadNotes('forces')">Forces & Newton's Laws</button>
-                    <button class="note-btn" data-topic="energy" onclick="loadNotes('energy')">Energy & Work</button>
-                    <button class="note-btn" data-topic="momentum" onclick="loadNotes('momentum')">Momentum & Collisions</button>
-                    <button class="note-btn" data-topic="waves" onclick="loadNotes('waves')">Waves & Sound</button>
+                <div class="notes-sidebar" id="notes-menu">
+                    <button class="note-btn active" data-topic="kinematics" onclick="ContentManager.loadNotes('kinematics')">Kinematics & Motion</button>
+                    <button class="note-btn" data-topic="forces" onclick="ContentManager.loadNotes('forces')">Forces & Newton's Laws</button>
+                    <button class="note-btn" data-topic="energy" onclick="ContentManager.loadNotes('energy')">Energy & Work</button>
+                    <button class="note-btn" data-topic="momentum" onclick="ContentManager.loadNotes('momentum')">Momentum & Collisions</button>
+                    <button class="note-btn" data-topic="waves" onclick="ContentManager.loadNotes('waves')">Waves & Sound</button>
+                    <button class="note-btn" data-topic="circular" onclick="ContentManager.loadNotes('circular')">Circular Motion & Gravity</button>
+                    <button class="note-btn" data-topic="fluids" onclick="ContentManager.loadNotes('fluids')">Fluids & Pressure</button>
+                    <button class="note-btn" data-topic="thermodynamics" onclick="ContentManager.loadNotes('thermodynamics')">Thermodynamics & Heat</button>
+                    <button class="note-btn" data-topic="electrostatics" onclick="ContentManager.loadNotes('electrostatics')">Electrostatics & Charge</button>
+                    <button class="note-btn" data-topic="magnetism" onclick="ContentManager.loadNotes('magnetism')">Magnetism & EM Effects</button>
+                    <button class="note-btn" data-topic="optics" onclick="ContentManager.loadNotes('optics')">Optics & Light</button>
+                    <button class="note-btn" data-topic="modern" onclick="ContentManager.loadNotes('modern')">Modern Physics & Quantum</button>
+                    <button class="note-btn" data-topic="relativity" onclick="ContentManager.loadNotes('relativity')">Relativity & Space-Time</button>
                 </div>
                 <div id="notes-content" class="notes-content"></div>
             </div>
@@ -57,21 +65,19 @@
                 <p>Study with interactive flashcards</p>
             </div>
             <div class="flashcards-container">
-                <div id="flashcard" class="flashcard" onclick="flipCard()">
+                <div id="flashcard-container" class="flashcard" onclick="Flashcard.toggle()">
                     <div class="flashcard-inner">
                         <div class="flashcard-front">Question</div>
                         <div class="flashcard-back">Answer</div>
                     </div>
                 </div>
                 <div class="flashcard-controls">
-                    <button onclick="previousCard()" class="btn">← Previous</button>
+                    <button onclick="Flashcard.prev()" class="btn">← Previous</button>
                     <span id="card-counter">1 / 10</span>
-                    <button onclick="nextCard()" class="btn">Next →</button>
+                    <button onclick="Flashcard.next()" class="btn">Next →</button>
                 </div>
                 <div class="card-nav">
-                    <button onclick="markCard('hard')" class="btn btn-hard">Hard</button>
-                    <button onclick="markCard('medium')" class="btn btn-medium">Medium</button>
-                    <button onclick="markCard('easy')" class="btn btn-easy">Easy</button>
+                    <button onclick="Flashcard.shuffle()" class="btn btn-primary">🔀 Shuffle</button>
                 </div>
             </div>
         </section>
@@ -82,26 +88,7 @@
                 <h2>⏱️ Study Timer</h2>
                 <p>Pomodoro-style focused study sessions</p>
             </div>
-            <div class="timer-container">
-                <div class="timer-display">
-                    <div class="timer-time" id="timer-time">25:00</div>
-                    <div class="timer-label" id="timer-label">Focus Time</div>
-                </div>
-                <div class="timer-controls">
-                    <button onclick="startTimer()" class="btn btn-primary" id="btn-start">▶ Start</button>
-                    <button onclick="pauseTimer()" class="btn btn-warning" id="btn-pause" style="display:none;">⏸ Pause</button>
-                    <button onclick="resetTimer()" class="btn btn-secondary">↻ Reset</button>
-                </div>
-                <div class="timer-presets">
-                    <button onclick="setTimer(25)" class="timer-preset">25 min</button>
-                    <button onclick="setTimer(5)" class="timer-preset">5 min</button>
-                    <button onclick="setTimer(45)" class="timer-preset">45 min</button>
-                    <button onclick="setTimer(90)" class="timer-preset">90 min</button>
-                </div>
-                <div class="timer-stats">
-                    <p>Today's focus: <span id="today-focus">0</span> min | Session streak: <span id="streak-count">0</span> days 🔥</p>
-                </div>
-            </div>
+            <div id="timer-content"></div>
         </section>
 
         <!-- Quiz Section -->
@@ -111,16 +98,6 @@
                 <p>Test your knowledge with quizzes</p>
             </div>
             <div class="quiz-container">
-                <div id="quiz-difficulty" style="text-align: center; margin-bottom: 2rem;">
-                    <h3>Select Difficulty</h3>
-                    <button onclick="startQuizWithDifficulty('all')" class="btn btn-primary">All Questions</button>
-                    <button onclick="startQuizWithDifficulty('easy')" class="btn btn-easy">Easy Only</button>
-                    <button onclick="startQuizWithDifficulty('medium')" class="btn btn-medium">Medium Only</button>
-                    <button onclick="startQuizWithDifficulty('hard')" class="btn btn-hard">Hard Only</button>
-                </div>
-                <div id="quiz-timer" style="text-align: center; font-size: 1.5rem; font-weight: bold; color: #e74c3c; margin-bottom: 1rem; display: none;">
-                    ⏱️ Time: <span id="timer-display">0:00</span>
-                </div>
                 <div id="quiz-content"></div>
             </div>
         </section>
@@ -132,11 +109,20 @@
                 <p>Work through problem solutions</p>
             </div>
             <div class="problems-container">
-                <div class="problems-sidebar">
-                    <button class="problem-btn active" data-category="kinematics" onclick="loadProblems('kinematics')">Kinematics</button>
-                    <button class="problem-btn" data-category="forces" onclick="loadProblems('forces')">Forces</button>
-                    <button class="problem-btn" data-category="energy" onclick="loadProblems('energy')">Energy</button>
-                    <button class="problem-btn" data-category="momentum" onclick="loadProblems('momentum')">Momentum</button>
+                <div class="problems-sidebar" id="problems-menu">
+                    <button class="problem-btn active" data-category="kinematics" onclick="ContentManager.loadProblems('kinematics')">Kinematics</button>
+                    <button class="problem-btn" data-category="forces" onclick="ContentManager.loadProblems('forces')">Forces</button>
+                    <button class="problem-btn" data-category="energy" onclick="ContentManager.loadProblems('energy')">Energy</button>
+                    <button class="problem-btn" data-category="momentum" onclick="ContentManager.loadProblems('momentum')">Momentum</button>
+                    <button class="problem-btn" data-category="waves" onclick="ContentManager.loadProblems('waves')">Waves</button>
+                    <button class="problem-btn" data-category="circular" onclick="ContentManager.loadProblems('circular')">Circular Motion</button>
+                    <button class="problem-btn" data-category="fluids" onclick="ContentManager.loadProblems('fluids')">Fluids</button>
+                    <button class="problem-btn" data-category="thermodynamics" onclick="ContentManager.loadProblems('thermodynamics')">Thermodynamics</button>
+                    <button class="problem-btn" data-category="electrostatics" onclick="ContentManager.loadProblems('electrostatics')">Electrostatics</button>
+                    <button class="problem-btn" data-category="magnetism" onclick="ContentManager.loadProblems('magnetism')">Magnetism</button>
+                    <button class="problem-btn" data-category="optics" onclick="ContentManager.loadProblems('optics')">Optics</button>
+                    <button class="problem-btn" data-category="modern" onclick="ContentManager.loadProblems('modern')">Modern Physics</button>
+                    <button class="problem-btn" data-category="relativity" onclick="ContentManager.loadProblems('relativity')">Relativity</button>
                 </div>
                 <div id="problems-content" class="problems-content"></div>
             </div>
@@ -146,42 +132,18 @@
         <section id="resources" class="section" style="display: none;">
             <div class="section-header">
                 <h2>📄 Study Resources</h2>
-                <p>Use compressed PDFs for faster loading and GitHub-safe file sizes</p>
+                <p>Additional learning materials and references</p>
             </div>
-            <div class="resources-grid">
-                <article class="resource-card">
-                    <h3>PHYS I Notes (Web Optimized)</h3>
-                    <p>Compressed for fast opening and GitHub-safe size limits.</p>
-                    <a class="btn btn-primary" href="PHYS I Notes.web.pdf" target="_blank" rel="noopener">Open PDF</a>
-                </article>
-                <article class="resource-card">
-                    <h3>PHYS Work (Web Optimized)</h3>
-                    <p>Optimized copy ready for publishing in this repository.</p>
-                    <a class="btn btn-primary" href="PHYS Work.web.pdf" target="_blank" rel="noopener">Open PDF</a>
-                </article>
-                <article class="resource-card">
-                    <h3>Quick Access</h3>
-                    <p>If you need the highest-quality originals locally, keep them outside git and open from your computer.</p>
-                    <a class="btn btn-secondary" href="README.md" target="_blank" rel="noopener">View Project Notes</a>
-                </article>
-            </div>
+            <div id="resources-content"></div>
         </section>
 
         <!-- Practice Exams Section -->
         <section id="exams" class="section" style="display: none;">
             <div class="section-header">
                 <h2>🧪 Practice Exams</h2>
-                <p>One full final exam that mixes topics and grades automatically</p>
+                <p>Full practice exams with automatic grading</p>
             </div>
-            <div class="exam-shell">
-                <div id="exam-menu" class="exam-menu">
-                    <button type="button" onclick="startPracticeExam()" class="exam-choice exam-choice-primary">
-                        <strong>Start Final Exam</strong>
-                        <span>25 questions • mixed topics</span>
-                    </button>
-                </div>
-                <div id="exam-content" class="exam-content"></div>
-            </div>
+            <div id="exam-content"></div>
         </section>
 
         <!-- Dashboard Section -->
@@ -190,54 +152,16 @@
                 <h2>📈 Dashboard</h2>
                 <p>Quick summary of your study progress</p>
             </div>
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>Average Quiz Score</h3>
-                    <div class="dashboard-value" id="dashboard-avg-score">0%</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3>Practice Exams Taken</h3>
-                    <div class="dashboard-value" id="dashboard-exam-count">0</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3>Study Streak</h3>
-                    <div class="dashboard-value" id="dashboard-streak">0 days</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3>Problems Solved</h3>
-                    <div class="dashboard-value" id="dashboard-problems">0</div>
-                </div>
-            </div>
+            <div id="dashboard-content"></div>
         </section>
 
         <!-- Team Section -->
         <section id="team" class="section" style="display: none;">
             <div class="section-header">
-                <h2>👥 Team</h2>
-                <p>Who worked on what in this project</p>
+                <h2>👥 About</h2>
+                <p>Information about this project</p>
             </div>
-            <div class="team-grid">
-                <article class="team-card">
-                    <div class="team-name">Kaleb Harris</div>
-                    <div class="team-role">Project Lead</div>
-                    <p class="team-desc">Core site structure, exam flow, and overall coordination.</p>
-                </article>
-                <article class="team-card">
-                    <div class="team-name">Kyle Mccrackin</div>
-                    <div class="team-role">Content Support</div>
-                    <p class="team-desc">Study content organization and topic coverage.</p>
-                </article>
-                <article class="team-card">
-                    <div class="team-name">Tyler Rankins</div>
-                    <div class="team-role">Design Support</div>
-                    <p class="team-desc">Layout polish, visual style, and presentation details.</p>
-                </article>
-                <article class="team-card">
-                    <div class="team-name">Luke Prez</div>
-                    <div class="team-role">Feature Support</div>
-                    <p class="team-desc">Study tools, progress tracking, and feature ideas.</p>
-                </article>
-            </div>
+            <div id="team-content"></div>
         </section>
 
         <!-- Progress Section -->
@@ -246,87 +170,7 @@
                 <h2>📊 Your Progress</h2>
                 <p>Track your learning journey and achievements</p>
             </div>
-            <div class="progress-container">
-                <div class="progress-stat">
-                    <h3>Notes Reviewed</h3>
-                    <div class="stat-value" id="notes-reviewed">0</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div class="progress-stat">
-                    <h3>Cards Studied</h3>
-                    <div class="stat-value" id="cards-studied">0</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div class="progress-stat">
-                    <h3>Quiz Average</h3>
-                    <div class="stat-value" id="quiz-avg">0%</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div class="progress-stat">
-                    <h3>Problems Solved</h3>
-                    <div class="stat-value" id="problems-solved">0</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="achievements-section">
-                <h3>🏆 Achievements</h3>
-                <div id="achievements-list" class="achievements-grid">
-                    <div class="achievement" data-achievement="first-quiz">
-                        <div class="achievement-icon">🎯</div>
-                        <div class="achievement-text">
-                            <strong>Quiz Master</strong>
-                            <p>Complete first quiz</p>
-                        </div>
-                    </div>
-                    <div class="achievement" data-achievement="perfect-score">
-                        <div class="achievement-icon">⭐</div>
-                        <div class="achievement-text">
-                            <strong>Perfect Score</strong>
-                            <p>Score 100% on quiz</p>
-                        </div>
-                    </div>
-                    <div class="achievement" data-achievement="study-streak">
-                        <div class="achievement-icon">🔥</div>
-                        <div class="achievement-text">
-                            <strong>On Fire</strong>
-                            <p>3 day study streak</p>
-                        </div>
-                    </div>
-                    <div class="achievement" data-achievement="card-master">
-                        <div class="achievement-icon">🃏</div>
-                        <div class="achievement-text">
-                            <strong>Card Master</strong>
-                            <p>Study 50 flashcards</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="shortcuts-section">
-                <h3>⌨️ Keyboard Shortcuts</h3>
-                <div class="shortcuts-grid">
-                    <div class="shortcut">
-                        <kbd>←</kbd> <kbd>→</kbd> <span>Navigate flashcards</span>
-                    </div>
-                    <div class="shortcut">
-                        <kbd>Space</kbd> <span>Flip flashcard</span>
-                    </div>
-                    <div class="shortcut">
-                        <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <span>Select quiz answer</span>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="resetProgress()" class="btn btn-danger">Reset All Progress</button>
+            <div id="progress-content"></div>
         </section>
     </main>
 

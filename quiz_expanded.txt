@@ -1,0 +1,28 @@
+QUIZ EXPANDED - Use this as reference for replacement
+
+This file contains the 120+ quiz questions to replace in data.js
+
+Organization:
+- Kinematics: 12 questions
+- Forces: 12 questions  
+- Energy: 12 questions
+- Momentum: 12 questions
+- Waves: 12 questions
+- Circular Motion: 10 questions
+- Fluids: 10 questions
+- Thermodynamics: 10 questions
+- Electrostatics: 10 questions
+- Magnetism: 8 questions
+- Optics: 8 questions
+- Modern Physics: 8 questions
+- Relativity: 7 questions
+
+Total: 131 questions
+
+The format for each question:
+{
+    question: "...",
+    options: [...],
+    correct: 0,
+    difficulty: "easy|medium|hard"
+}
