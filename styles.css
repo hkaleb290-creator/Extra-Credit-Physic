@@ -48,6 +48,232 @@ body.dark-mode .problem-btn {
 
 body.dark-mode .quiz-option {
     background: #0f192a;
+
+/* ============================================
+   RAILGUN INTRO SEQUENCE
+   ============================================ */
+
+@keyframes pulse-coil {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 136, 201, 0.4); }
+    50% { box-shadow: 0 0 40px rgba(0, 136, 201, 0.8), 0 0 80px rgba(0, 136, 201, 0.4); }
+}
+
+@keyframes charge-fill {
+    0% { width: 0%; }
+    85% { width: 90%; }
+    100% { width: 100%; }
+}
+
+@keyframes barrel-glow {
+    0%, 70% { box-shadow: inset 0 0 20px rgba(0, 136, 201, 0.3), 0 0 20px rgba(0, 136, 201, 0.5); }
+    90% { box-shadow: inset 0 0 40px rgba(0, 136, 201, 0.8), 0 0 60px rgba(0, 136, 201, 0.9), 0 0 100px rgba(0, 191, 255, 0.6); }
+    100% { box-shadow: inset 0 0 60px rgba(0, 200, 255, 1), 0 0 120px rgba(0, 191, 255, 1); }
+}
+
+@keyframes energy-pulse {
+    0%, 50% { opacity: 0; }
+    60% { opacity: 0.3; }
+    100% { opacity: 0; }
+}
+
+@keyframes energy-bolt {
+    0% { width: 0; opacity: 1; }
+    85% { width: 100%; opacity: 1; }
+    100% { width: 100%; opacity: 0; }
+}
+
+@keyframes fire-blast-expand {
+    0% { transform: scale(0) translate(-50%, -50%); opacity: 1; }
+    100% { transform: scale(2.5) translate(-50%, -50%); opacity: 0; }
+}
+
+@keyframes intro-fadeout {
+    0% { opacity: 1; backdrop-filter: blur(0px); }
+    90% { opacity: 1; backdrop-filter: blur(5px); }
+    100% { opacity: 0; backdrop-filter: blur(10px); pointer-events: none; }
+}
+
+.railgun-intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #081f2e 0%, #0f2b3c 50%, #081f2e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: intro-fadeout 3.5s ease-out 2.5s forwards;
+}
+
+.railgun-intro.hidden {
+    pointer-events: none;
+}
+
+.railgun-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+/* Coils */
+.railgun-coils {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+}
+
+.coil {
+    position: absolute;
+    border: 3px solid #0088c9;
+    border-radius: 50%;
+    animation: pulse-coil 1s ease-in-out infinite;
+}
+
+.coil-1 {
+    width: 60px;
+    height: 60px;
+    top: 70px;
+    left: 70px;
+    animation-delay: 0s;
+}
+
+.coil-2 {
+    width: 100px;
+    height: 100px;
+    top: 50px;
+    left: 50px;
+    animation-delay: 0.2s;
+}
+
+.coil-3 {
+    width: 140px;
+    height: 140px;
+    top: 30px;
+    left: 30px;
+    animation-delay: 0.4s;
+}
+
+/* Barrel */
+.railgun-barrel {
+    position: absolute;
+    top: 50%;
+    right: -80px;
+    transform: translateY(-50%);
+    width: 150px;
+    height: 80px;
+}
+
+.barrel-glow {
+    width: 100%;
+    height: 100%;
+    border-radius: 40px;
+    background: linear-gradient(90deg, rgba(0, 136, 201, 0.3), rgba(0, 191, 255, 0.5));
+    border: 2px solid #0088c9;
+    animation: barrel-glow 3s ease-out forwards;
+    box-shadow: inset 0 0 20px rgba(0, 136, 201, 0.3), 0 0 20px rgba(0, 136, 201, 0.5);
+}
+
+/* Charge Indicator */
+.charge-indicator {
+    position: absolute;
+    bottom: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 240px;
+    text-align: center;
+}
+
+.charge-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(20, 50, 70, 0.8);
+    border: 2px solid #0088c9;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: inset 0 0 10px rgba(0, 136, 201, 0.3);
+}
+
+.charge-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0088c9, #00bfff);
+    border-radius: 4px;
+    animation: charge-fill 3s ease-out forwards;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
+}
+
+.charge-text {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #0088c9;
+    font-family: 'Space Grotesk', monospace;
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.6);
+    animation: energy-pulse 3s ease-out forwards;
+}
+
+/* Energy Field */
+.energy-field {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.energy-line {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, #00bfff, transparent);
+    animation: energy-bolt 2.5s ease-out forwards;
+}
+
+.energy-1 {
+    width: 0;
+    height: 8px;
+    top: 40%;
+    left: 50%;
+    animation-delay: 1s;
+}
+
+.energy-2 {
+    width: 0;
+    height: 6px;
+    top: 50%;
+    left: 50%;
+    animation-delay: 1.3s;
+}
+
+.energy-3 {
+    width: 0;
+    height: 8px;
+    top: 60%;
+    left: 50%;
+    animation-delay: 1.6s;
+}
+
+/* Fire Blast */
+.fire-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.fire-blast {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(0, 191, 255, 0.8), rgba(0, 136, 201, 0.4), transparent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: fire-blast-expand 0.8s ease-out 2.8s forwards;
+    filter: blur(20px);
+}
     border-color: rgba(255, 255, 255, 0.15);
     color: #e4f1ff;
 }

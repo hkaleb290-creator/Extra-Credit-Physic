@@ -929,6 +929,9 @@ const ExamManager = {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize railgun intro
+    initRailgunIntro();
+    
     AppState.load();
     UI.updateDarkModeButton();
     UI.showSection('notes');
@@ -936,6 +939,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listeners
     document.getElementById('dark-mode-toggle')?.addEventListener('click', () => AppState.toggleDarkMode());
 });
+
+// Railgun Intro Sequence
+function initRailgunIntro() {
+    const intro = document.getElementById('railgun-intro');
+    if (!intro) return;
+    
+    // Auto-fade out and hide after animation
+    setTimeout(() => {
+        intro.classList.add('hidden');
+        // Remove from DOM after animation completes
+        setTimeout(() => {
+            intro.style.display = 'none';
+        }, 500);
+    }, 6000); // 6 seconds total (3s animation + 2.5s delay + 0.5s for safety)
+}
 
 // Global function for nav links
 function showSection(sectionId) {
