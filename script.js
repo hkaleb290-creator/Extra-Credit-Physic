@@ -683,7 +683,7 @@ ContentManager.loadEngr216 = function() {
         html += '<div>' + src.problems.map((p, idx) => {
             const solutionText = p.solution || 'Solution placeholder — replace with worked solution.';
             const displaySolution = p.solution ? `<pre style="background: var(--bg-secondary); padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word;">${escapeHtml(solutionText)}</pre>` : `<em style="color: var(--muted);">No solution provided yet.</em>`;
-            return `<div class="problem-item"><h4>Problem ${idx+1}: ${p.title || 'Untitled'}</h4><p>${(p.statement||'').replace(/\n/g,'<br>')}</p><button class="solution-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';">${this.nextElementSibling && this.nextElementSibling.style.display === 'block' ? 'Hide Solution' : 'Show Solution'}</button><div style="display:none;">${displaySolution}</div></div>`;
+            return `<div class="problem-item"><h4>Problem ${idx+1}: ${p.title || 'Untitled'}</h4><p>${(p.statement||'').replace(/\n/g,'<br>')}</p><button class="solution-btn" onclick="const div = this.nextElementSibling; div.style.display = div.style.display === 'none' ? 'block' : 'none'; this.textContent = div.style.display === 'none' ? 'Show Solution' : 'Hide Solution';">Show Solution</button><div style="display:none;">${displaySolution}</div></div>`;
         }).join('') + '</div>';
     } else {
         html += '<h3>Problems</h3><p style="color:var(--muted);">Placeholder: add your 22 problems here under `physicsData.engr216.problems` in <strong>data.js</strong>.</p>';
