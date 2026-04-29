@@ -567,18 +567,18 @@ const physicsData = {
 };
 // FORMULA SHEET - All key equations by topic
 physicsData.formulas = {
-    kinematics: ["v = v0 + at", "s = v0t + ½at²", "v² = v0² + 2as", "s = (v0 + v)t/2"],
-    forces: ["F = ma", "f = µN", "F_g = mg"],
-    energy: ["W = F·d", "KE = ½mv²", "PE = mgh", "E = KE + PE"],
-    momentum: ["p = mv", "Impulse = F·?t"],
+    kinematics: ["v = v0 + at", "s = v0t + ï¿½atï¿½", "vï¿½ = v0ï¿½ + 2as", "s = (v0 + v)t/2"],
+    forces: ["F = ma", "f = ï¿½N", "F_g = mg"],
+    energy: ["W = Fï¿½d", "KE = ï¿½mvï¿½", "PE = mgh", "E = KE + PE"],
+    momentum: ["p = mv", "Impulse = Fï¿½?t"],
     waves: ["v = f?", "T = 1/f"],
-    circular: ["a_c = v²/r", "F_c = mv²/r", "F_g = G(m1m2)/r²"],
+    circular: ["a_c = vï¿½/r", "F_c = mvï¿½/r", "F_g = G(m1m2)/rï¿½"],
     fluids: ["P = F/A", "P = ?gh", "F_b = ?Vg"],
     thermodynamics: ["Q = mc?T", "PV = nRT"],
-    electrostatics: ["F = kq1q2/r²", "E = kQ/r²", "V = kQ/r"],
+    electrostatics: ["F = kq1q2/rï¿½", "E = kQ/rï¿½", "V = kQ/r"],
     magnetism: ["F = qvB", "e = -dF/dt"],
     optics: ["n1 sin ?1 = n2 sin ?2", "1/f = 1/s_o + 1/s_i"],
-    shm: ["T = 2pv(m/k)", "x = A cos(?t)", "E = ½kA²"]
+    shm: ["T = 2pv(m/k)", "x = A cos(?t)", "E = ï¿½kAï¿½"]
 };
 
 // VIDEO RECOMMENDATIONS

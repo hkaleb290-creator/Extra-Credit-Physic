@@ -87,7 +87,6 @@ const AppState = {
 // ============================================
 // UI MODULE
 // ============================================
-
 const UI = {
     showSection(sectionId) {
         // Hide all sections
@@ -121,10 +120,10 @@ const UI = {
             'dashboard': () => this.updateDashboard(),
             'resources': () => this.loadResources(),
             'team': () => this.loadTeam(),
-            'progress': () => this.updateProgressDisplay()
-              'formulas': () => this.loadFormulas(),
-              'apps': () => this.loadApplications(),
-              'tools': () => this.loadTools()
+                        'progress': () => this.updateProgressDisplay(),
+                        'formulas': () => this.loadFormulas(),
+                        'apps': () => this.loadApplications(),
+                        'tools': () => this.loadTools()
         };
         
         if (handlers[sectionId]) handlers[sectionId]();
@@ -260,7 +259,7 @@ const UI = {
                 <p style="color: var(--muted); font-size: 0.9rem;">Last updated: April 2026</p>
             </div>
         `;
-    }
+    },
 
     loadFormulas() {
         const content = document.getElementById('formulas-content');
@@ -337,8 +336,7 @@ const UI = {
 // ============================================
 // CONTENT MANAGER MODULE
 // ============================================
-
-
+/*
     loadFormulas() {
         const content = document.getElementById('formulas-content');
         if (!content) return;
@@ -409,6 +407,7 @@ const UI = {
         
         content.innerHTML = html;
     }
+*/
 
 // ============================================
 // CONTENT MANAGER MODULE  
@@ -465,7 +464,6 @@ const ContentManager = {
                 .map(id => `<button class="problem-btn ${id === sectionId ? 'active' : ''}" onclick="ContentManager.loadProblems('${id}')">${physicsData.notes[id].title}</button>`)
                 .join('');
         }
-        
         // Render problems
         const problems = physicsData.problems[sectionId];
         const html = problems.map((prob, idx) => `
@@ -851,6 +849,16 @@ function showSection(sectionId) {
 function toggleDarkMode() {
     AppState.toggleDarkMode();
 }
+
+window.AppState = AppState;
+window.UI = UI;
+window.ContentManager = ContentManager;
+window.Flashcard = Flashcard;
+window.QuizManager = QuizManager;
+window.TimerManager = TimerManager;
+window.ExamManager = ExamManager;
+window.showSection = showSection;
+window.toggleDarkMode = toggleDarkMode;
 
 
 

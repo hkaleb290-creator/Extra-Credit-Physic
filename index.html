@@ -26,15 +26,15 @@
                     <li><a href="#" onclick="showSection('dashboard')" class="nav-link">Dashboard</a></li>
                     <li><a href="#" onclick="showSection('team')" class="nav-link">Team</a></li>
                     <li><a href="#" onclick="showSection('progress')" class="nav-link">Progress</a></li>
-                                    <li><a href="#" onclick="showSection('formulas')" class="nav-link">?? Formulas</a></li>
-                    <li><a href="#" onclick="showSection('apps')" class="nav-link">?? Apps & Labs</a></li>
-                    <li><a href="#" onclick="showSection('tools')" class="nav-link">??? Tools</a></li></ul>
+                    <li><a href="#" onclick="showSection('formulas')" class="nav-link">📋 Formulas</a></li>
+                    <li><a href="#" onclick="showSection('apps')" class="nav-link">🔬 Apps & Labs</a></li>
+                    <li><a href="#" onclick="showSection('tools')" class="nav-link">🛠️ Tools</a></li>
+                </ul>
             </div>
         </div>
     </nav>
 
     <main>
-        <!-- Notes Section -->
         <section id="notes" class="section">
             <div class="section-header">
                 <h2>📚 Study Notes</h2>
@@ -42,26 +42,25 @@
             </div>
             <div class="notes-container">
                 <div class="notes-sidebar" id="notes-menu">
-                    <button class="note-btn active" data-topic="kinematics" onclick="ContentManager.loadNotes('kinematics')">Kinematics & Motion</button>
-                    <button class="note-btn" data-topic="forces" onclick="ContentManager.loadNotes('forces')">Forces & Newton's Laws</button>
-                    <button class="note-btn" data-topic="energy" onclick="ContentManager.loadNotes('energy')">Energy & Work</button>
-                    <button class="note-btn" data-topic="momentum" onclick="ContentManager.loadNotes('momentum')">Momentum & Collisions</button>
-                    <button class="note-btn" data-topic="waves" onclick="ContentManager.loadNotes('waves')">Waves & Sound</button>
-                    <button class="note-btn" data-topic="circular" onclick="ContentManager.loadNotes('circular')">Circular Motion & Gravity</button>
-                    <button class="note-btn" data-topic="fluids" onclick="ContentManager.loadNotes('fluids')">Fluids & Pressure</button>
-                    <button class="note-btn" data-topic="thermodynamics" onclick="ContentManager.loadNotes('thermodynamics')">Thermodynamics & Heat</button>
-                    <button class="note-btn" data-topic="electrostatics" onclick="ContentManager.loadNotes('electrostatics')">Electrostatics & Charge</button>
-                    <button class="note-btn" data-topic="magnetism" onclick="ContentManager.loadNotes('magnetism')">Magnetism & EM Effects</button>
-                    <button class="note-btn" data-topic="optics" onclick="ContentManager.loadNotes('optics')">Optics & Light</button>
-                    <button class="note-btn" data-topic="modern" onclick="ContentManager.loadNotes('modern')">Modern Physics & Quantum</button>
-                    <button class="note-btn" data-topic="relativity" onclick="ContentManager.loadNotes('relativity')">Relativity & Space-Time</button>
-                    <button class="note-btn" data-topic="shm" onclick="ContentManager.loadNotes('shm')">SHM & Oscillations</button>
+                    <button class="note-btn active" onclick="ContentManager.loadNotes('kinematics')">Kinematics & Motion</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('forces')">Forces & Newton's Laws</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('energy')">Energy & Work</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('momentum')">Momentum & Collisions</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('waves')">Waves & Sound</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('circular')">Circular Motion & Gravity</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('fluids')">Fluids & Pressure</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('thermodynamics')">Thermodynamics & Heat</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('electrostatics')">Electrostatics & Charge</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('magnetism')">Magnetism & EM Effects</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('optics')">Optics & Light</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('modern')">Modern Physics & Quantum</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('relativity')">Relativity & Space-Time</button>
+                    <button class="note-btn" onclick="ContentManager.loadNotes('shm')">SHM & Oscillations</button>
                 </div>
                 <div id="notes-content" class="notes-content"></div>
             </div>
         </section>
 
-        <!-- Flashcards Section -->
         <section id="flashcards" class="section" style="display: none;">
             <div class="section-header">
                 <h2>🃏 Flashcards</h2>
@@ -85,135 +84,50 @@
             </div>
         </section>
 
-        <!-- Study Timer Section -->
         <section id="timer" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>⏱️ Study Timer</h2>
-                <p>Pomodoro-style focused study sessions</p>
-            </div>
+            <div class="section-header"><h2>⏱️ Study Timer</h2><p>Pomodoro-style focused study sessions</p></div>
             <div id="timer-content"></div>
         </section>
 
-        <!-- Quiz Section -->
         <section id="quiz" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>❓ Quiz Mode</h2>
-                <p>Test your knowledge with quizzes</p>
-            </div>
-            <div class="quiz-container">
-                <div id="quiz-content"></div>
-            </div>
+            <div class="section-header"><h2>❓ Quiz Mode</h2><p>Test your knowledge with quizzes</p></div>
+            <div class="quiz-container"><div id="quiz-content"></div></div>
         </section>
 
-        <!-- Problems Section -->
         <section id="problems" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>📝 Practice Problems</h2>
-                <p>Work through problem solutions</p>
-            </div>
+            <div class="section-header"><h2>📝 Practice Problems</h2><p>Work through problem solutions</p></div>
             <div class="problems-container">
                 <div class="problems-sidebar" id="problems-menu">
-                    <button class="problem-btn active" data-category="kinematics" onclick="ContentManager.loadProblems('kinematics')">Kinematics</button>
-                    <button class="problem-btn" data-category="forces" onclick="ContentManager.loadProblems('forces')">Forces</button>
-                    <button class="problem-btn" data-category="energy" onclick="ContentManager.loadProblems('energy')">Energy</button>
-                    <button class="problem-btn" data-category="momentum" onclick="ContentManager.loadProblems('momentum')">Momentum</button>
-                    <button class="problem-btn" data-category="waves" onclick="ContentManager.loadProblems('waves')">Waves</button>
-                    <button class="problem-btn" data-category="circular" onclick="ContentManager.loadProblems('circular')">Circular Motion</button>
-                    <button class="problem-btn" data-category="fluids" onclick="ContentManager.loadProblems('fluids')">Fluids</button>
-                    <button class="problem-btn" data-category="thermodynamics" onclick="ContentManager.loadProblems('thermodynamics')">Thermodynamics</button>
-                    <button class="problem-btn" data-category="electrostatics" onclick="ContentManager.loadProblems('electrostatics')">Electrostatics</button>
-                    <button class="problem-btn" data-category="magnetism" onclick="ContentManager.loadProblems('magnetism')">Magnetism</button>
-                    <button class="problem-btn" data-category="optics" onclick="ContentManager.loadProblems('optics')">Optics</button>
-                    <button class="problem-btn" data-category="modern" onclick="ContentManager.loadProblems('modern')">Modern Physics</button>
-                    <button class="problem-btn" data-category="relativity" onclick="ContentManager.loadProblems('relativity')">Relativity</button>
-                    <button class="problem-btn" data-category="shm" onclick="ContentManager.loadProblems('shm')">SHM & Oscillations</button>
+                    <button class="problem-btn active" onclick="ContentManager.loadProblems('kinematics')">Kinematics</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('forces')">Forces</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('energy')">Energy</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('momentum')">Momentum</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('waves')">Waves</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('circular')">Circular Motion</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('fluids')">Fluids</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('thermodynamics')">Thermodynamics</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('electrostatics')">Electrostatics</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('magnetism')">Magnetism</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('optics')">Optics</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('modern')">Modern Physics</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('relativity')">Relativity</button>
+                    <button class="problem-btn" onclick="ContentManager.loadProblems('shm')">SHM & Oscillations</button>
                 </div>
                 <div id="problems-content" class="problems-content"></div>
             </div>
         </section>
 
-        <!-- Resources Section -->
-        <section id="resources" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>📄 Study Resources</h2>
-                <p>Additional learning materials and references</p>
-            </div>
-            <div id="resources-content"></div>
-        </section>
-
-        <!-- Practice Exams Section -->
-        <section id="exams" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>🧪 Practice Exams</h2>
-                <p>Full practice exams with automatic grading</p>
-            </div>
-            <div id="exam-content"></div>
-        </section>
-
-        <!-- Dashboard Section -->
-        <section id="dashboard" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>📈 Dashboard</h2>
-                <p>Quick summary of your study progress</p>
-            </div>
-            <div id="dashboard-content"></div>
-        </section>
-
-        <!-- Team Section -->
-        <section id="team" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>👥 About</h2>
-                <p>Information about this project</p>
-            </div>
-            <div id="team-content"></div>
-        </section>
-
-        <!-- Progress Section -->
-        <section id="progress" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>📊 Your Progress</h2>
-                <p>Track your learning journey and achievements</p>
-            </div>
-            <div id="progress-content"></div>
-        </section>
+        <section id="resources" class="section" style="display: none;"><div class="section-header"><h2>📄 Study Resources</h2><p>Additional learning materials and references</p></div><div id="resources-content"></div></section>
+        <section id="exams" class="section" style="display: none;"><div class="section-header"><h2>🧪 Practice Exams</h2><p>Full practice exams with automatic grading</p></div><div id="exam-content"></div></section>
+        <section id="dashboard" class="section" style="display: none;"><div class="section-header"><h2>📈 Dashboard</h2><p>Quick summary of your study progress</p></div><div id="dashboard-content"></div></section>
+        <section id="team" class="section" style="display: none;"><div class="section-header"><h2>👥 About</h2><p>Information about this project</p></div><div id="team-content"></div></section>
+        <section id="progress" class="section" style="display: none;"><div class="section-header"><h2>📊 Your Progress</h2><p>Track your learning journey and achievements</p></div><div id="progress-content"></div></section>
+        <section id="formulas" class="section" style="display: none;"><div class="section-header"><h2>📋 Formula Sheet</h2><p>Quick reference of all essential equations</p></div><div id="formulas-content"></div></section>
+        <section id="apps" class="section" style="display: none;"><div class="section-header"><h2>🔬 Real-World Applications</h2><p>Physics in everyday life and modern technology</p></div><div id="apps-content"></div></section>
+        <section id="tools" class="section" style="display: none;"><div class="section-header"><h2>🛠️ Study Tools & Resources</h2><p>Advanced learning tools and interactive simulations</p></div><div id="tools-content"></div></section>
     </main>
 
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
-
-
-        <!-- Formulas Section -->
-        <section id="formulas" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>?? Formula Sheet</h2>
-                <p>Quick reference of all essential equations</p>
-            </div>
-            <div id="formulas-content"></div>
-        </section>
-
-        <!-- Apps & Real-World Applications -->
-        <section id="apps" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>?? Real-World Applications</h2>
-                <p>Physics in everyday life and modern technology</p>
-            </div>
-            <div id="apps-content"></div>
-        </section>
-
-        <!-- Tools Section (Concept Maps, Study Planner, etc) -->
-        <section id="tools" class="section" style="display: none;">
-            <div class="section-header">
-                <h2>??? Study Tools & Resources</h2>
-                <p>Advanced learning tools and interactive simulations</p>
-            </div>
-            <div id="tools-content"></div>
-        </section>
-        < / m a i n > 
- 
-         < s c r i p t   s r c = " d a t a . j s " > < / s c r i p t > 
-         < s c r i p t   s r c = " s c r i p t . j s " > < / s c r i p t > 
- < / b o d y > 
- < / h t m l >  
- 
