@@ -143,11 +143,10 @@ const UI = {
     },
     
     updateDashboard() {
-        const content = document.getElementById('dashboard-content');
-        if (!content) return;
-        
         const p = AppState.progress;
         const quizAvg = p.quizScores.length ? (p.quizScores.reduce((a, b) => a + b) / p.quizScores.length).toFixed(1) : '0';
+        const content = document.getElementById('dashboard-content');
+        if (!content) return;
         
         content.innerHTML = `
             <div class="dashboard-grid">
@@ -178,23 +177,123 @@ const UI = {
             </div>
             <div style="margin-top: 2rem;">
                 <h3>Achievements 🏆</h3>
-                <div class="achievements-list" id="achievements-list"></div>
-                <button onclick="AppState.progress.quizScores = []; AppState.progress.cardsStudied = 0; AppState.progress.problemsSolved = 0; AppState.save(); UI.updateDashboard();" class="reset-btn">
+                <div class="achievements-list" id="dashboard-achievements-list"></div>
+                <button onclick="AppState.progress.quizScores = []; AppState.progress.cardsStudied = 0; AppState.progress.problemsSolved = 0; AppState.save(); UI.refreshProgressViews();" class="reset-btn">
                     Reset Progress
                 </button>
             </div>
         `;
         
-        this.updateAchievements();
+        this.updateAchievements('dashboard-achievements-list');
     },
     
     updateProgressDisplay() {
+        const content = document.getElementById('progress-content');
+        if (!content) return;
+
+        const p = AppState.progress;
+        const quizAvg = p.quizScores.length ? (p.quizScores.reduce((a, b) => a + b) / p.quizScores.length).toFixed(1) : '0';
+        const notesRatio = Math.min(p.notesReviewed, 20);
+        const cardsRatio = Math.min(p.cardsStudied, 50);
+        const quizRatio = Math.min(p.quizScores.length, 10);
+        const problemsRatio = Math.min(p.problemsSolved, 10);
+        const streakRatio = Math.min(p.streak, 7);
+        const focusRatio = Math.min(p.todayFocus, 100);
+        const lastStudy = p.lastStudyDate ? new Date(p.lastStudyDate).toLocaleDateString() : 'Not yet recorded';
+
+        content.innerHTML = `
+            <div class="progress-hero">
+                <div>
+                    <h3>Study Momentum</h3>
+                    <p>Your current pace, streak, and recent activity at a glance.</p>
+                </div>
+                <div class="progress-hero-stats">
+                    <div><strong>${p.streak}</strong><span>day streak</span></div>
+                    <div><strong>${Math.round(p.totalQuizTime / 60)}m</strong><span>study time</span></div>
+                    <div><strong>${quizAvg}%</strong><span>quiz average</span></div>
+                </div>
+            </div>
+            <div class="progress-tracks">
+                <div class="progress-track">
+                    <div class="progress-track-head">
+                        <h4>Notes reviewed</h4>
+                        <span>${p.notesReviewed}/20</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${notesRatio * 5}%"></div></div>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-track-head">
+                        <h4>Flashcards studied</h4>
+                        <span>${p.cardsStudied}/50</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${cardsRatio * 2}%"></div></div>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-track-head">
+                        <h4>Quizzes completed</h4>
+                        <span>${p.quizScores.length}/10</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${quizRatio * 10}%"></div></div>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-track-head">
+                        <h4>Problems solved</h4>
+                        <span>${p.problemsSolved}/10</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${problemsRatio * 10}%"></div></div>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-track-head">
+                        <h4>Study streak</h4>
+                        <span>${p.streak}/7</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${streakRatio * 14.2857}%"></div></div>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-track-head">
+                        <h4>Today focus</h4>
+                        <span>${p.todayFocus}/100</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${focusRatio}%"></div></div>
+                </div>
+            </div>
+            <div class="progress-details">
+                <div class="progress-card progress-note">
+                    <h3>Recent activity</h3>
+                    <p>Last study session: <strong>${lastStudy}</strong></p>
+                    <p>Completed exams: <strong>${p.examScores.length}</strong></p>
+                    <p>Total quiz time: <strong>${Math.round(p.totalQuizTime / 60)} minutes</strong></p>
+                </div>
+                <div class="progress-card">
+                    <h3>Next milestones</h3>
+                    <ul class="progress-milestones">
+                        <li>${p.notesReviewed < 20 ? `${20 - p.notesReviewed} more notes reviews` : 'Notes milestone complete'}</li>
+                        <li>${p.cardsStudied < 50 ? `${50 - p.cardsStudied} more flashcards` : 'Flashcard milestone complete'}</li>
+                        <li>${p.quizScores.length < 5 ? `${5 - p.quizScores.length} more quizzes for your first badge` : 'Quiz badge unlocked'}</li>
+                        <li>${p.streak < 7 ? `${7 - p.streak} more day(s) for a week streak` : 'Week streak unlocked'}</li>
+                    </ul>
+                </div>
+                <div class="progress-card">
+                    <h3>Achievements 🏆</h3>
+                    <div class="achievements-list" id="progress-achievements-list"></div>
+                    <button onclick="AppState.progress.quizScores = []; AppState.progress.cardsStudied = 0; AppState.progress.problemsSolved = 0; AppState.progress.notesReviewed = 0; AppState.progress.totalQuizTime = 0; AppState.progress.todayFocus = 0; AppState.progress.streak = 0; AppState.save(); UI.refreshProgressViews();" class="reset-btn">
+                        Reset Progress
+                    </button>
+                </div>
+            </div>
+        `;
+
+        this.updateAchievements('progress-achievements-list');
+    },
+
+    refreshProgressViews() {
         this.updateDashboard();
+        this.updateProgressDisplay();
     },
     
-    updateAchievements() {
+    updateAchievements(listId = 'dashboard-achievements-list') {
         const p = AppState.progress;
-        const list = document.getElementById('achievements-list');
+        const list = document.getElementById(listId);
         if (!list) return;
         
         const achievements = [];
@@ -482,16 +581,17 @@ const ContentManager = {
     loadFlashcards() {
         const container = document.getElementById('flashcard-container');
         if (!container) return;
+        container.classList.remove('flipped');
         
         const card = physicsData.flashcards[AppState.currentFlashcardIndex];
         if (!card) return;
         
         container.innerHTML = `
-            <div class="flashcard-inner" onclick="Flashcard.toggle()">
+            <div class="flashcard-inner">
                 <div class="flashcard-front">
                     <p>${card.front}</p>
                 </div>
-                <div class="flashcard-back" style="display:none;">
+                <div class="flashcard-back">
                     <p>${card.back}</p>
                 </div>
             </div>
@@ -522,12 +622,9 @@ const Flashcard = {
     },
     
     toggle() {
-        const front = document.querySelector('.flashcard-front');
-        const back = document.querySelector('.flashcard-back');
-        if (front && back) {
-            const isFront = front.style.display !== 'none';
-            front.style.display = isFront ? 'none' : 'block';
-            back.style.display = isFront ? 'block' : 'none';
+        const container = document.getElementById('flashcard-container');
+        if (container) {
+            container.classList.toggle('flipped');
         }
     },
     

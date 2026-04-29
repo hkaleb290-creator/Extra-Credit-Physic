@@ -116,6 +116,128 @@ body.dark-mode .resource-card {
     z-index: 1;
 }
 
+.progress-hero {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: end;
+    padding: 1.25rem 1.35rem;
+    background: linear-gradient(140deg, rgba(0, 136, 201, 0.12), rgba(240, 166, 32, 0.1));
+    border: 1px solid #d5e6f0;
+    border-radius: 16px;
+    margin-bottom: 1.2rem;
+}
+
+.progress-hero h3,
+.progress-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #17364d;
+    margin-bottom: 0.4rem;
+}
+
+.progress-hero p {
+    color: var(--muted);
+    margin: 0;
+}
+
+.progress-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+    min-width: min(360px, 100%);
+}
+
+.progress-hero-stats div {
+    background: #ffffff;
+    border: 1px solid #d5e6f0;
+    border-radius: 14px;
+    padding: 0.8rem;
+    text-align: center;
+}
+
+.progress-hero-stats strong {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem;
+    color: var(--brand-strong);
+}
+
+.progress-hero-stats span {
+    color: var(--muted);
+    font-size: 0.84rem;
+}
+
+.progress-tracks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.progress-track,
+.progress-card {
+    background: #f7fcff;
+    border: 1px solid #d5e6f0;
+    border-radius: 16px;
+    padding: 1rem 1.05rem;
+}
+
+.progress-track-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin-bottom: 0.7rem;
+}
+
+.progress-track-head h4 {
+    color: #17364d;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.98rem;
+}
+
+.progress-track-head span {
+    color: var(--brand-strong);
+    font-weight: 800;
+}
+
+.progress-details {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.progress-milestones {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: #264053;
+}
+
+.progress-milestones li + li {
+    margin-top: 0.45rem;
+}
+
+.progress-note p {
+    color: #264053;
+    margin-bottom: 0.45rem;
+}
+
+body.dark-mode .progress-hero,
+body.dark-mode .progress-track,
+body.dark-mode .progress-card,
+body.dark-mode .progress-hero-stats div {
+    background: #0f192a;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .progress-hero h3,
+body.dark-mode .progress-card h3,
+body.dark-mode .progress-track-head h4,
+body.dark-mode .progress-note p,
+body.dark-mode .progress-milestones {
+    color: #e4f1ff;
+}
+
 .dashboard-value {
     font-size: 2rem;
     font-weight: 800;
@@ -606,7 +728,7 @@ main {
     font-weight: 700;
     color: #ffffff;
     box-shadow: 0 8px 32px rgba(0, 136, 201, 0.2);
-    animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: opacity 0.18s ease;
 }
 
 .flashcard-front {
@@ -616,6 +738,21 @@ main {
 .flashcard-back {
     background: linear-gradient(125deg, #e99e1c, #cc4e41);
     transform: rotateY(180deg);
+}
+
+.flashcard:not(.flipped) .flashcard-back {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.flashcard.flipped .flashcard-front {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.flashcard.flipped .flashcard-back {
+    visibility: visible;
+    opacity: 1;
 }
 
 .flashcard-controls,
@@ -639,16 +776,44 @@ main {
     margin: 0 auto;
 }
 
+.quiz-question-container h3 {
+    margin-bottom: 1rem;
+    color: #17344c;
+}
+
+.quiz-options {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 0 1.25rem;
+}
+
 .quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     border: 1px solid #c7dbe7;
     border-radius: 10px;
     background: #ffffff;
     padding: 0.85rem;
-    margin-top: 0.6rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+}
+
+.quiz-option input {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.quiz-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.quiz-controls button {
+    flex: 1 1 140px;
 }
 
 .quiz-option::before {
