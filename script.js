@@ -943,16 +943,20 @@ document.addEventListener('DOMContentLoaded', () => {
 // Railgun Intro Sequence
 function initRailgunIntro() {
     const intro = document.getElementById('railgun-intro');
+    const navbar = document.querySelector('nav.navbar');
+    const main = document.querySelector('main');
+    
     if (!intro) return;
     
-    // Auto-fade out and hide after animation
+    // After railgun sequence completes, reveal content
     setTimeout(() => {
+        intro.classList.remove('active');
         intro.classList.add('hidden');
-        // Remove from DOM after animation completes
-        setTimeout(() => {
-            intro.style.display = 'none';
-        }, 500);
-    }, 6000); // 6 seconds total (3s animation + 2.5s delay + 0.5s for safety)
+        
+        // Show navbar and main content
+        if (navbar) navbar.style.display = '';
+        if (main) main.style.display = '';
+    }, 3500); // Railgun animation finishes at 3.5s
 }
 
 // Global function for nav links
