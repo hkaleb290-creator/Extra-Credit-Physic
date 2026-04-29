@@ -10,33 +10,68 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- RAILGUN LOADING INTRO -->
+    <!-- ROCKET LAUNCH SIMULATOR -->
     <div id="railgun-intro" class="railgun-intro active">
-        <div class="railgun-container">
-            <div class="railgun-coils">
-                <div class="coil coil-1"></div>
-                <div class="coil coil-2"></div>
-                <div class="coil coil-3"></div>
+        <canvas id="railgun-canvas"></canvas>
+        <button class="skip-launch-btn" type="button" onclick="skipLaunchIntro()">Skip Launch</button>
+        
+        <div class="railgun-overlay">
+            <div class="mission-banner">
+                <div class="mission-kicker">ARTEMIS II</div>
+                <div class="mission-title">MISSION: LUNAR RETURN</div>
+                <div class="mission-subtitle">SLS CORE STAGE · ORION CREW MODULE · TELEMETRY LOCKED</div>
             </div>
+
+            <div class="overlay-top"></div>
             
-            <div class="railgun-barrel">
-                <div class="barrel-glow"></div>
-                <div class="charge-indicator">
-                    <div class="charge-bar">
-                        <div class="charge-fill"></div>
-                    </div>
-                    <div class="charge-text">RAILGUN CALIBRATING...</div>
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-name">COUNTDOWN</span>
+                    <span class="stat-value" id="charge-display">T-10</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-name">ALTITUDE</span>
+                    <span class="stat-value" id="velocity-display">0 m</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-name">THRUST</span>
+                    <span class="stat-value" id="field-display">0 kN</span>
                 </div>
             </div>
 
-            <div class="energy-field">
-                <div class="energy-line energy-1"></div>
-                <div class="energy-line energy-2"></div>
-                <div class="energy-line energy-3"></div>
+            <div class="telemetry-panel">
+                <div class="telemetry-header">FLIGHT TELEMETRY</div>
+                <div class="telemetry-grid">
+                    <div class="telemetry-item">
+                        <span class="telemetry-label">VELOCITY</span>
+                        <span class="telemetry-value" id="speed-display">0 m/s</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="telemetry-label">APOGEE</span>
+                        <span class="telemetry-value" id="apogee-display">0 km</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="telemetry-label">G-FORCE</span>
+                        <span class="telemetry-value" id="gforce-display">1.0 G</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="telemetry-label">FUEL</span>
+                        <span class="telemetry-value" id="fuel-display">100%</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="fire-overlay">
-                <div class="fire-blast"></div>
+            <div class="stage-panel">
+                <div class="stage-header">STAGING</div>
+                <div class="stage-track">
+                    <div class="stage-step active" id="stage-1">BOOSTERS</div>
+                    <div class="stage-step" id="stage-2">CORE SEP</div>
+                    <div class="stage-step" id="stage-3">TLI BURN</div>
+                </div>
+            </div>
+            
+            <div class="status-bar">
+                <span id="status-display">IGNITION SEQUENCE</span>
             </div>
         </div>
     </div>

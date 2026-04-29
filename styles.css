@@ -48,58 +48,26 @@ body.dark-mode .problem-btn {
 
 body.dark-mode .quiz-option {
     background: #0f192a;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e4f1ff;
+}
 
 /* ============================================
-   RAILGUN INTRO SEQUENCE
+   ROCKET LAUNCH SIMULATOR
    ============================================ */
-
-@keyframes pulse-coil {
-    0%, 100% { box-shadow: 0 0 10px rgba(0, 136, 201, 0.4); }
-    50% { box-shadow: 0 0 40px rgba(0, 136, 201, 0.8), 0 0 80px rgba(0, 136, 201, 0.4); }
-}
-
-@keyframes charge-fill {
-    0% { width: 0%; }
-    85% { width: 90%; }
-    100% { width: 100%; }
-}
-
-@keyframes barrel-glow {
-    0%, 70% { box-shadow: inset 0 0 20px rgba(0, 136, 201, 0.3), 0 0 20px rgba(0, 136, 201, 0.5); }
-    90% { box-shadow: inset 0 0 40px rgba(0, 136, 201, 0.8), 0 0 60px rgba(0, 136, 201, 0.9), 0 0 100px rgba(0, 191, 255, 0.6); }
-    100% { box-shadow: inset 0 0 60px rgba(0, 200, 255, 1), 0 0 120px rgba(0, 191, 255, 1); }
-}
-
-@keyframes energy-pulse {
-    0%, 50% { opacity: 0; }
-    60% { opacity: 0.3; }
-    100% { opacity: 0; }
-}
-
-@keyframes energy-bolt {
-    0% { width: 0; opacity: 1; }
-    85% { width: 100%; opacity: 1; }
-    100% { width: 100%; opacity: 0; }
-}
-
-@keyframes fire-blast-expand {
-    0% { transform: scale(0) translate(-50%, -50%); opacity: 1; }
-    100% { transform: scale(2.5) translate(-50%, -50%); opacity: 0; }
-}
 
 .railgun-intro {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #081f2e 0%, #0f2b3c 50%, #081f2e 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    inset: 0;
     z-index: 99999;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 110%, rgba(255, 138, 76, 0.35), transparent 25%),
+        radial-gradient(circle at 50% 0%, rgba(81, 171, 255, 0.12), transparent 28%),
+        linear-gradient(180deg, #07111e 0%, #0a1626 46%, #05080f 100%);
     opacity: 1;
-    transition: opacity 0.6s ease-out;
+    transition: opacity 0.7s ease-out;
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 .railgun-intro.active {
@@ -110,171 +78,262 @@ body.dark-mode .quiz-option {
 .railgun-intro.hidden {
     opacity: 0;
     pointer-events: none;
+    display: none;
 }
 
-.railgun-container {
-    position: relative;
-    width: 300px;
-    height: 300px;
-}
-
-/* Coils */
-.railgun-coils {
+.skip-launch-btn {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-}
-
-.coil {
-    position: absolute;
-    border: 3px solid #0088c9;
-    border-radius: 50%;
-    animation: pulse-coil 1s ease-in-out infinite;
-}
-
-.coil-1 {
-    width: 60px;
-    height: 60px;
-    top: 70px;
-    left: 70px;
-    animation-delay: 0s;
-}
-
-.coil-2 {
-    width: 100px;
-    height: 100px;
-    top: 50px;
-    left: 50px;
-    animation-delay: 0.2s;
-}
-
-.coil-3 {
-    width: 140px;
-    height: 140px;
-    top: 30px;
-    left: 30px;
-    animation-delay: 0.4s;
-}
-
-/* Barrel */
-.railgun-barrel {
-    position: absolute;
-    top: 50%;
-    right: -80px;
-    transform: translateY(-50%);
-    width: 150px;
-    height: 80px;
-}
-
-.barrel-glow {
-    width: 100%;
-    height: 100%;
-    border-radius: 40px;
-    background: linear-gradient(90deg, rgba(0, 136, 201, 0.3), rgba(0, 191, 255, 0.5));
-    border: 2px solid #0088c9;
-    animation: barrel-glow 3s ease-out forwards;
-    box-shadow: inset 0 0 20px rgba(0, 136, 201, 0.3), 0 0 20px rgba(0, 136, 201, 0.5);
-}
-
-/* Charge Indicator */
-.charge-indicator {
-    position: absolute;
-    bottom: -70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 240px;
-    text-align: center;
-}
-
-.charge-bar {
-    width: 100%;
-    height: 12px;
-    background: rgba(20, 50, 70, 0.8);
-    border: 2px solid #0088c9;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 12px;
-    box-shadow: inset 0 0 10px rgba(0, 136, 201, 0.3);
-}
-
-.charge-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #0088c9, #00bfff);
-    border-radius: 4px;
-    animation: charge-fill 3s ease-out forwards;
-    box-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
-}
-
-.charge-text {
-    font-size: 12px;
+    top: clamp(18px, 3vw, 34px);
+    right: clamp(18px, 3vw, 34px);
+    z-index: 5;
+    border: 1px solid rgba(159, 205, 255, 0.24);
+    border-radius: 999px;
+    padding: 0.75rem 1rem;
+    background: rgba(7, 13, 24, 0.7);
+    color: #eef6ff;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 2px;
-    color: #0088c9;
-    font-family: 'Space Grotesk', monospace;
-    text-shadow: 0 0 10px rgba(0, 191, 255, 0.6);
-    animation: energy-pulse 3s ease-out forwards;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-/* Energy Field */
-.energy-field {
+.skip-launch-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(159, 205, 255, 0.48);
+    background: rgba(11, 20, 34, 0.86);
+}
+
+.skip-launch-btn:focus-visible {
+    outline: 2px solid rgba(159, 205, 255, 0.85);
+    outline-offset: 3px;
+}
+
+#railgun-canvas {
     position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
 }
 
-.energy-line {
+.railgun-overlay {
     position: absolute;
-    background: linear-gradient(90deg, transparent, #00bfff, transparent);
-    animation: energy-bolt 2.5s ease-out forwards;
-}
-
-.energy-1 {
-    width: 0;
-    height: 8px;
-    top: 40%;
-    left: 50%;
-    animation-delay: 1s;
-}
-
-.energy-2 {
-    width: 0;
-    height: 6px;
-    top: 50%;
-    left: 50%;
-    animation-delay: 1.3s;
-}
-
-.energy-3 {
-    width: 0;
-    height: 8px;
-    top: 60%;
-    left: 50%;
-    animation-delay: 1.6s;
-}
-
-/* Fire Blast */
-.fire-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(24px, 4vw, 64px);
     pointer-events: none;
 }
 
-.fire-blast {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(0, 191, 255, 0.8), rgba(0, 136, 201, 0.4), transparent);
-    border-radius: 50%;
-    opacity: 0;
-    animation: fire-blast-expand 0.8s ease-out 2.8s forwards;
-    filter: blur(20px);
+.mission-banner {
+    display: grid;
+    gap: 0.4rem;
+    align-self: flex-start;
+    max-width: 520px;
+    padding: 0.2rem 0 0.5rem;
 }
+
+.mission-kicker {
+    color: #9ecaff;
+    font-size: 0.72rem;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    opacity: 0.78;
+}
+
+.mission-title {
+    color: #f5fbff;
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1.35rem, 2.4vw, 2.35rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-shadow: 0 0 24px rgba(161, 203, 255, 0.35);
+}
+
+.mission-subtitle {
+    color: rgba(215, 231, 248, 0.72);
+    font-size: 0.82rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+}
+
+.overlay-top {
+    position: relative;
+    height: 120px;
+}
+
+.overlay-top::before,
+.overlay-top::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.45);
+    animation: scanline 2.4s ease-out forwards;
+}
+
+.overlay-top::before {
+    top: 28px;
+    width: 220px;
+}
+
+.overlay-top::after {
+    top: 50px;
+    width: 150px;
+    opacity: 0.72;
+    animation-delay: 0.35s;
+}
+
+@keyframes scanline {
+    0% { width: 0; opacity: 0.15; }
+    100% { width: 220px; opacity: 0.75; }
+}
+
+.stats-panel {
+    display: flex;
+    gap: clamp(24px, 6vw, 84px);
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 110px;
+}
+
+.stat-name {
+    color: #8fc7ff;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.82;
+}
+
+.stat-value {
+    color: #ffffff;
+    font-family: 'Sora', sans-serif;
+    font-weight: 800;
+    font-size: clamp(22px, 3vw, 34px);
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 18px rgba(130, 191, 255, 0.55);
+}
+
+.status-bar {
+    color: #ffdca8;
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(255, 197, 119, 0.55);
+    animation: blink 1.1s steps(2, end) infinite;
+}
+
+#status-display {
+    display: inline-block;
+}
+
+.telemetry-panel {
+    align-self: flex-end;
+    width: min(100%, 430px);
+    padding: 1rem 1.05rem;
+    border: 1px solid rgba(143, 199, 255, 0.16);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(8, 16, 28, 0.38), rgba(5, 9, 16, 0.74));
+    box-shadow: 0 18px 44px rgba(4, 8, 16, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+}
+
+.telemetry-header,
+.stage-header {
+    color: #9ecaff;
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    opacity: 0.92;
+}
+
+.telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 1rem;
+    margin-top: 0.9rem;
+}
+
+.telemetry-item {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.2rem 0;
+}
+
+.telemetry-label {
+    color: rgba(183, 212, 242, 0.7);
+    font-size: 0.68rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+}
+
+.telemetry-value {
+    color: #ffffff;
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 700;
+    text-shadow: 0 0 12px rgba(130, 191, 255, 0.35);
+}
+
+.stage-panel {
+    align-self: flex-end;
+    width: min(100%, 430px);
+    padding: 1rem 1.05rem 0.95rem;
+    border: 1px solid rgba(143, 199, 255, 0.16);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(10, 18, 31, 0.45), rgba(5, 9, 16, 0.82));
+    box-shadow: 0 18px 44px rgba(4, 8, 16, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+}
+
+.stage-track {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 0.9rem;
+}
+
+.stage-step {
+    position: relative;
+    padding: 0.75rem 0.7rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(143, 199, 255, 0.12);
+    color: rgba(224, 237, 249, 0.7);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.stage-step.active {
+    color: #ffffff;
+    border-color: rgba(255, 204, 136, 0.55);
+    background: linear-gradient(180deg, rgba(255, 184, 94, 0.25), rgba(255, 130, 59, 0.12));
+    box-shadow: 0 0 24px rgba(255, 166, 92, 0.18);
+}
+
+@keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.55; }
+}
+
+body.dark-mode .quiz-option {
+    background: #0f192a;
     border-color: rgba(255, 255, 255, 0.15);
     color: #e4f1ff;
 }

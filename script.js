@@ -929,8 +929,8 @@ const ExamManager = {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize railgun intro
-    initRailgunIntro();
+    // Initialize rocket launch simulation
+    initRocketLaunchSim();
     
     AppState.load();
     UI.updateDarkModeButton();
@@ -940,23 +940,540 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('dark-mode-toggle')?.addEventListener('click', () => AppState.toggleDarkMode());
 });
 
-// Railgun Intro Sequence
-function initRailgunIntro() {
+// ============================================
+// ROCKET LAUNCH SIMULATION
+// ============================================
+
+const RocketLaunchSim = {
+    time: 0,
+    countdown: 14,
+    altitude: 0,
+    velocity: 0,
+    acceleration: 0,
+    thrust: 0,
+    mass: 18000,
+    maxThrust: 1800000,
+    launchAt: 14,
+    moonAt: 42,
+    stage: 1,
+
+    calculateThrust() {
+        if (this.time < this.launchAt) {
+            return 0;
+        }
+
+        const launchElapsed = this.time - this.launchAt;
+
+        if (launchElapsed < 2.1) {
+            const ramp = Math.min(1, launchElapsed / 2.1);
+            return this.maxThrust * (0.24 + 0.76 * ramp);
+        }
+
+        const altitudeFalloff = Math.max(0.55, 1 - this.altitude / 14000);
+        return this.maxThrust * altitudeFalloff;
+    },
+
+    update(deltaTime) {
+        const dt = deltaTime / 1000;
+        this.thrust = this.calculateThrust();
+        this.countdown = Math.max(0, this.launchAt - this.time);
+
+        if (this.time < this.launchAt) {
+            this.stage = 1;
+        } else if (this.time < this.launchAt + 8) {
+            this.stage = 2;
+        } else if (this.time < this.moonAt) {
+            this.stage = 3;
+        } else {
+            this.stage = 4;
+        }
+
+        if (this.time < this.launchAt) {
+            this.altitude = 0;
+            this.velocity = 0;
+            this.acceleration = 0;
+        } else {
+            const gravity = 9.81;
+            const drag = 0.00002 * this.velocity * this.velocity;
+            this.acceleration = (this.thrust / this.mass) - gravity - drag;
+            this.velocity = Math.max(0, this.velocity + this.acceleration * dt);
+            this.altitude += this.velocity * dt;
+        }
+
+        this.time += dt;
+    }
+};
+
+function initRocketLaunchSim() {
+    const canvas = document.getElementById('railgun-canvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Set canvas size
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
     const intro = document.getElementById('railgun-intro');
     const navbar = document.querySelector('nav.navbar');
     const main = document.querySelector('main');
     
-    if (!intro) return;
+    let lastTime = Date.now();
+
+    function drawStars(w, h) {
+        const stars = [
+            [0.12, 0.18, 1.5], [0.22, 0.1, 1], [0.33, 0.26, 1.2], [0.5, 0.16, 1],
+            [0.72, 0.12, 1.4], [0.82, 0.22, 1], [0.91, 0.18, 1.2], [0.65, 0.32, 1]
+        ];
+
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        for (const [sx, sy, size] of stars) {
+            const twinkle = 0.65 + Math.sin(RocketLaunchSim.time * 3 + sx * 10) * 0.25;
+            ctx.globalAlpha = twinkle;
+            ctx.beginPath();
+            ctx.arc(w * sx, h * sy, size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    function drawRocketScene() {
+        const w = canvas.width / dpr;
+        const h = canvas.height / dpr;
+        const skyGlow = Math.min(1, RocketLaunchSim.time / 7.5);
+        const moonProgress = RocketLaunchSim.time <= RocketLaunchSim.launchAt
+            ? 0
+            : Math.min(1, (RocketLaunchSim.time - RocketLaunchSim.launchAt) / (RocketLaunchSim.moonAt - RocketLaunchSim.launchAt));
+        const moonX = w * 0.78;
+        const moonY = h * 0.18;
+        const moonRadius = Math.min(w, h) * 0.08;
+
+        ctx.fillStyle = '#08111d';
+        ctx.fillRect(0, 0, w, h);
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, h);
+        gradient.addColorStop(0, 'rgba(15, 34, 60, 0.9)');
+        gradient.addColorStop(0.55, 'rgba(11, 22, 37, 0.95)');
+        gradient.addColorStop(1, 'rgba(4, 8, 13, 1)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = `rgba(105, 172, 255, ${0.08 + skyGlow * 0.08})`;
+        ctx.fillRect(0, 0, w, h * 0.5);
+
+        drawStars(w, h);
+
+        // Moon target and trajectory guidance
+        const moonGlow = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.2, moonX, moonY, moonRadius * 1.8);
+        moonGlow.addColorStop(0, 'rgba(245, 241, 214, 0.95)');
+        moonGlow.addColorStop(0.45, 'rgba(214, 220, 228, 0.5)');
+        moonGlow.addColorStop(1, 'rgba(214, 220, 228, 0)');
+        ctx.fillStyle = moonGlow;
+        ctx.beginPath();
+        ctx.arc(moonX, moonY, moonRadius * 1.35, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#dfe4e8';
+        ctx.beginPath();
+        ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(170, 176, 183, 0.42)';
+        for (let i = 0; i < 6; i++) {
+            const craterAngle = i * 1.12;
+            const craterX = moonX + Math.cos(craterAngle) * moonRadius * 0.32;
+            const craterY = moonY + Math.sin(craterAngle * 1.3) * moonRadius * 0.26;
+            ctx.beginPath();
+            ctx.arc(craterX, craterY, moonRadius * (0.08 + i * 0.008), 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        const horizonY = h * 0.8;
+        const padX = w * 0.5;
+        const padY = h * 0.8;
+        const launchRise = RocketLaunchSim.time < RocketLaunchSim.launchAt
+            ? 0
+            : Math.min(h * 0.72, RocketLaunchSim.altitude * 0.11);
+        const rocketBaseY = padY + 12 - launchRise;
+        const rocketY = rocketBaseY - 250;
+
+        let rocketScreenX = padX;
+        let rocketScreenY = rocketBaseY;
+        let rocketTilt = 0;
+
+        if (RocketLaunchSim.time >= RocketLaunchSim.moonAt) {
+            const cruiseProgress = Math.min(1, (RocketLaunchSim.time - RocketLaunchSim.moonAt) / 7.5);
+            rocketScreenX = padX + (moonX - padX) * 0.55 + cruiseProgress * (moonX - padX) * 0.2;
+            rocketScreenY = h * 0.32 + (moonY - h * 0.32) * 0.22;
+            rocketTilt = -0.18;
+        } else if (RocketLaunchSim.time >= RocketLaunchSim.launchAt) {
+            rocketScreenX = padX + Math.sin((RocketLaunchSim.time - RocketLaunchSim.launchAt) * 0.75) * 16;
+            rocketScreenY = rocketBaseY;
+            rocketTilt = -Math.min(0.22, (RocketLaunchSim.time - RocketLaunchSim.launchAt) * 0.02);
+        }
+
+        const rocketWidth = 64;
+        const bodyHeight = 176 + 20;
+        const capsuleHeight = 40;
+
+        // Distant haze and ground
+        const horizon = ctx.createLinearGradient(0, horizonY - 80, 0, h);
+        horizon.addColorStop(0, 'rgba(65, 97, 135, 0)');
+        horizon.addColorStop(0.4, 'rgba(65, 97, 135, 0.18)');
+        horizon.addColorStop(1, 'rgba(7, 11, 19, 1)');
+        ctx.fillStyle = horizon;
+        ctx.fillRect(0, horizonY - 60, w, h - horizonY + 60);
+
+        // Ground pad
+        ctx.fillStyle = 'rgba(8, 12, 20, 0.9)';
+        ctx.fillRect(0, horizonY, w, h - horizonY);
+        ctx.strokeStyle = 'rgba(160, 194, 255, 0.18)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, horizonY + 1);
+        ctx.lineTo(w, horizonY + 1);
+        ctx.stroke();
+
+        // Launch tower
+        const towerHeight = 310;
+        const towerX = padX - 130;
+        const towerTop = padY - towerHeight;
+        ctx.strokeStyle = 'rgba(159, 187, 219, 0.55)';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(towerX, padY);
+        ctx.lineTo(towerX, towerTop);
+        ctx.moveTo(towerX + 34, padY);
+        ctx.lineTo(towerX + 34, towerTop + 28);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(159, 187, 219, 0.24)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 6; i++) {
+            const y = padY - i * 39;
+            ctx.beginPath();
+            ctx.moveTo(towerX, y);
+            ctx.lineTo(towerX + 34, y - 18);
+            ctx.stroke();
+        }
+
+        // Service arm and pad lighting
+        const armRetract = RocketLaunchSim.time < RocketLaunchSim.launchAt - 2
+            ? 0
+            : Math.min(1, (RocketLaunchSim.time - (RocketLaunchSim.launchAt - 2)) / 1.8);
+
+        ctx.strokeStyle = 'rgba(164, 196, 225, 0.28)';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(towerX + 34, towerTop + 68);
+        ctx.lineTo(padX - 54 + armRetract * 70, towerTop + 92 - armRetract * 30);
+        ctx.stroke();
+
+        const padGlow = ctx.createRadialGradient(padX, padY + 18, 10, padX, padY + 18, 260);
+        padGlow.addColorStop(0, 'rgba(255, 183, 92, 0.44)');
+        padGlow.addColorStop(0.35, 'rgba(255, 114, 46, 0.2)');
+        padGlow.addColorStop(1, 'rgba(255, 114, 46, 0)');
+        ctx.fillStyle = padGlow;
+        ctx.beginPath();
+        ctx.arc(padX, padY + 18, 260, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (RocketLaunchSim.time >= RocketLaunchSim.launchAt) {
+            ctx.setLineDash([12, 10]);
+            ctx.strokeStyle = 'rgba(159, 187, 219, 0.18)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padX, padY + 12);
+            ctx.quadraticCurveTo(w * 0.62, h * 0.48, moonX - moonRadius * 0.95, moonY + moonRadius * 0.2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Rocket exhaust and smoke
+        const launchProgress = Math.max(0, RocketLaunchSim.time - RocketLaunchSim.launchAt);
+        const padVibration = RocketLaunchSim.time < RocketLaunchSim.launchAt
+            ? 0.5 + Math.sin(RocketLaunchSim.time * 11) * 0.12
+            : 1;
+        const exhaustStrength = RocketLaunchSim.time < RocketLaunchSim.launchAt
+            ? 0.08 + RocketLaunchSim.time * 0.08
+            : Math.min(1, 0.55 + launchProgress * 0.3);
+        const flameLength = RocketLaunchSim.time < RocketLaunchSim.launchAt
+            ? 28 + RocketLaunchSim.time * 2.2
+            : 150 + Math.min(260, RocketLaunchSim.velocity * 0.62);
+        const plumeWidth = RocketLaunchSim.time < RocketLaunchSim.launchAt ? 30 : 38;
+
+        ctx.save();
+        ctx.translate(padX, rocketBaseY + 8);
+        ctx.globalAlpha = 0.95;
+        const exhaust = ctx.createLinearGradient(0, 8, 0, flameLength);
+        exhaust.addColorStop(0, `rgba(255, 250, 214, ${0.98 * exhaustStrength})`);
+        exhaust.addColorStop(0.16, `rgba(255, 230, 150, ${0.9 * exhaustStrength})`);
+        exhaust.addColorStop(0.42, `rgba(255, 156, 72, ${0.82 * exhaustStrength})`);
+        exhaust.addColorStop(0.7, `rgba(255, 106, 38, ${0.45 * exhaustStrength})`);
+        exhaust.addColorStop(1, 'rgba(255, 85, 34, 0)');
+        ctx.fillStyle = exhaust;
+        ctx.beginPath();
+        ctx.moveTo(-plumeWidth, 12);
+        ctx.lineTo(plumeWidth, 12);
+        ctx.lineTo(0, 12 + flameLength);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        if (RocketLaunchSim.time < RocketLaunchSim.launchAt + 2.2) {
+            for (let i = 0; i < 12; i++) {
+                const drift = RocketLaunchSim.time * 28 + i * 22;
+                const smokeX = padX + Math.sin(i * 1.7) * 26;
+                const smokeY = padY + 10 + drift * 0.18 - launchProgress * 28;
+                const smokeSize = 10 + i * 1.4 + launchProgress * 2.4;
+                ctx.fillStyle = `rgba(182, 196, 210, ${Math.max(0, 0.18 - i * 0.012)})`;
+                ctx.beginPath();
+                ctx.arc(smokeX, smokeY, smokeSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Artemis II stack: Orion crew module on top of the SLS core and boosters
+        const bodyY = rocketY + 26;
+        const coreHeight = 176;
+        const coreWidth = 64;
+        const boosterHeight = 214;
+        const boosterWidth = 22;
+        const boosterGap = 18;
+        const capsuleY = rocketY + 6;
+
+        ctx.save();
+        ctx.translate(rocketScreenX, rocketScreenY);
+        ctx.rotate(rocketTilt);
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.28)';
+        ctx.shadowBlur = 28;
+
+        const coreGradient = ctx.createLinearGradient(0, 0, coreWidth, 0);
+        coreGradient.addColorStop(0, '#fbaf4a');
+        coreGradient.addColorStop(0.5, '#f0962f');
+        coreGradient.addColorStop(1, '#c66012');
+
+        const boosterGradient = ctx.createLinearGradient(0, 0, boosterWidth, 0);
+        boosterGradient.addColorStop(0, '#eef5ff');
+        boosterGradient.addColorStop(0.55, '#d9e7f6');
+        boosterGradient.addColorStop(1, '#b0bfd0');
+
+        // Twin solid boosters
+        ctx.fillStyle = boosterGradient;
+        ctx.beginPath();
+        ctx.roundRect(-coreWidth / 2 - boosterGap - boosterWidth, 8, boosterWidth, boosterHeight, 10);
+        ctx.roundRect(coreWidth / 2 + boosterGap, 8, boosterWidth, boosterHeight, 10);
+        ctx.fill();
+
+        // Core stage
+        ctx.fillStyle = coreGradient;
+        ctx.beginPath();
+        ctx.roundRect(-coreWidth / 2, 0, coreWidth, coreHeight + 20, 18);
+        ctx.fill();
+
+        // Upper adapter / interstage
+        ctx.fillStyle = 'rgba(245, 245, 245, 0.95)';
+        ctx.beginPath();
+        ctx.roundRect(-34, -12, 68, 34, 14);
+        ctx.fill();
+
+        // Orion service module
+        ctx.fillStyle = '#e7edf5';
+        ctx.beginPath();
+        ctx.roundRect(-28, -12, 56, 40, 16);
+        ctx.fill();
+
+        // Orion crew module cap
+        ctx.beginPath();
+        ctx.moveTo(0, -26);
+        ctx.lineTo(28, 8);
+        ctx.lineTo(-28, 8);
+        ctx.closePath();
+        ctx.fillStyle = '#f6fbff';
+        ctx.fill();
+
+        // Orion windows
+        ctx.fillStyle = 'rgba(20, 48, 84, 0.96)';
+        ctx.beginPath();
+        ctx.arc(0, 10, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(80, 146, 255, 0.95)';
+        ctx.fillRect(-28, 44, 56, 8);
+
+        // Booster smoke collars
+        ctx.fillStyle = 'rgba(219, 232, 246, 0.92)';
+        ctx.beginPath();
+        ctx.roundRect(-coreWidth / 2 - boosterGap - boosterWidth, 0, boosterWidth, 26, 10);
+        ctx.roundRect(coreWidth / 2 + boosterGap, 0, boosterWidth, 26, 10);
+        ctx.fill();
+
+        // Engine nozzle
+        ctx.fillStyle = '#6f7d8f';
+        ctx.beginPath();
+        ctx.moveTo(-18, coreHeight + 22);
+        ctx.lineTo(18, coreHeight + 22);
+        ctx.lineTo(10, coreHeight + 52);
+        ctx.lineTo(-10, coreHeight + 52);
+        ctx.closePath();
+        ctx.fill();
+
+        // Small lower fins / structural detail
+        ctx.fillStyle = '#9aaabc';
+        ctx.beginPath();
+        ctx.moveTo(-20, coreHeight + 2);
+        ctx.lineTo(-44, coreHeight + 34);
+        ctx.lineTo(-10, coreHeight + 18);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(20, coreHeight + 2);
+        ctx.lineTo(44, coreHeight + 34);
+        ctx.lineTo(10, coreHeight + 18);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.restore();
+
+        // Motion trail
+        if (RocketLaunchSim.time >= RocketLaunchSim.launchAt) {
+            ctx.fillStyle = 'rgba(255, 191, 117, 0.18)';
+            ctx.beginPath();
+            ctx.arc(rocketScreenX, rocketScreenY + 18, 170 + Math.min(160, RocketLaunchSim.velocity * 0.18), 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = 'rgba(255, 191, 117, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(padX, padY + 12);
+            ctx.lineTo(rocketScreenX, rocketScreenY + 26);
+            ctx.stroke();
+        }
+
+        // Flame particles
+        if (RocketLaunchSim.time >= RocketLaunchSim.launchAt - 0.1) {
+            const particleCount = RocketLaunchSim.time < RocketLaunchSim.launchAt ? 8 : 18;
+            for (let i = 0; i < particleCount; i++) {
+                const spread = (i / particleCount - 0.5) * 36;
+                const particleY = (RocketLaunchSim.time < RocketLaunchSim.launchAt ? padY + 12 : rocketScreenY + 54) + Math.sin(RocketLaunchSim.time * 20 + i) * 8;
+                const particleSize = 2 + (i % 3);
+                ctx.fillStyle = `rgba(255, ${180 - i * 6}, ${90 - i * 3}, ${0.75 - i * 0.02})`;
+                ctx.beginPath();
+                ctx.arc((RocketLaunchSim.time < RocketLaunchSim.launchAt ? padX : rocketScreenX) + spread, particleY + i * 5, particleSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        ctx.shadowColor = 'transparent';
+    }
     
-    // After railgun sequence completes, reveal content
-    setTimeout(() => {
+    function updateHUD() {
+        const chargeDisplay = document.getElementById('charge-display');
+        const statusDisplay = document.getElementById('status-display');
+        const velocityDisplay = document.getElementById('velocity-display');
+        const fieldDisplay = document.getElementById('field-display');
+        
+        if (chargeDisplay) {
+            chargeDisplay.textContent = RocketLaunchSim.time < RocketLaunchSim.launchAt
+                ? `T-${Math.ceil(RocketLaunchSim.countdown)}`
+                : `T+${Math.floor(RocketLaunchSim.time - RocketLaunchSim.launchAt)}`;
+        }
+        
+        if (velocityDisplay) {
+            velocityDisplay.textContent = `${Math.floor(RocketLaunchSim.altitude).toLocaleString()} m`;
+        }
+        
+        if (fieldDisplay) {
+            fieldDisplay.textContent = `${Math.round(RocketLaunchSim.thrust / 1000).toLocaleString()} kN`;
+        }
+
+        const speedDisplay = document.getElementById('speed-display');
+        const apogeeDisplay = document.getElementById('apogee-display');
+        const gforceDisplay = document.getElementById('gforce-display');
+        const fuelDisplay = document.getElementById('fuel-display');
+        const stage1 = document.getElementById('stage-1');
+        const stage2 = document.getElementById('stage-2');
+        const stage3 = document.getElementById('stage-3');
+
+        if (speedDisplay) {
+            speedDisplay.textContent = `${Math.floor(RocketLaunchSim.velocity).toLocaleString()} m/s`;
+        }
+
+        if (apogeeDisplay) {
+            apogeeDisplay.textContent = `${(RocketLaunchSim.altitude / 1000).toFixed(1)} km`;
+        }
+
+        if (gforceDisplay) {
+            const gForce = 1 + Math.max(0, RocketLaunchSim.acceleration) / 9.81;
+            gforceDisplay.textContent = `${gForce.toFixed(1)} G`;
+        }
+
+        if (fuelDisplay) {
+            const fuelElapsed = Math.max(0, RocketLaunchSim.time - RocketLaunchSim.launchAt);
+            const fuelRemaining = RocketLaunchSim.time < RocketLaunchSim.launchAt
+                ? 100
+                : Math.max(0, 100 - fuelElapsed * 4.8);
+            fuelDisplay.textContent = `${Math.round(fuelRemaining)}%`;
+        }
+
+        if (stage1 && stage2 && stage3) {
+            stage1.classList.toggle('active', RocketLaunchSim.stage === 1);
+            stage2.classList.toggle('active', RocketLaunchSim.stage === 2);
+            stage3.classList.toggle('active', RocketLaunchSim.stage === 3);
+        }
+        
+        if (statusDisplay) {
+            if (RocketLaunchSim.time < RocketLaunchSim.launchAt - 6) {
+                statusDisplay.textContent = 'LAUNCH HOLD';
+            } else if (RocketLaunchSim.time < RocketLaunchSim.launchAt - 1.5) {
+                statusDisplay.textContent = 'FINAL COUNTDOWN';
+            } else if (RocketLaunchSim.time < RocketLaunchSim.launchAt) {
+                statusDisplay.textContent = 'FUELLING SYSTEMS';
+            } else if (RocketLaunchSim.time < RocketLaunchSim.launchAt + 2.5) {
+                statusDisplay.textContent = 'IGNITION SEQUENCE';
+            } else if (RocketLaunchSim.time < RocketLaunchSim.launchAt + 8) {
+                statusDisplay.textContent = 'LIFTOFF';
+            } else {
+                statusDisplay.textContent = 'TRANSLUNAR INJECTION';
+            }
+        }
+    }
+    
+    function animate() {
+        const now = Date.now();
+        const deltaTime = now - lastTime;
+        lastTime = now;
+        
+        RocketLaunchSim.update(deltaTime);
+        drawRocketScene();
+        updateHUD();
+        
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+}
+
+function skipLaunchIntro() {
+    const intro = document.getElementById('railgun-intro');
+    const navbar = document.querySelector('nav.navbar');
+    const main = document.querySelector('main');
+
+    if (intro) {
+        intro.style.display = 'none';
         intro.classList.remove('active');
         intro.classList.add('hidden');
-        
-        // Show navbar and main content
-        if (navbar) navbar.style.display = '';
-        if (main) main.style.display = '';
-    }, 3500); // Railgun animation finishes at 3.5s
+    }
+
+    if (navbar) navbar.style.display = '';
+    if (main) main.style.display = '';
 }
 
 // Global function for nav links
@@ -978,6 +1495,7 @@ window.TimerManager = TimerManager;
 window.ExamManager = ExamManager;
 window.showSection = showSection;
 window.toggleDarkMode = toggleDarkMode;
+window.skipLaunchIntro = skipLaunchIntro;
 
 
 
