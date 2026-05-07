@@ -344,22 +344,26 @@ const UI = {
     loadTeam() {
         const content = document.getElementById('team-content');
         if (!content) return;
-        content.innerHTML = `
-            <div class="team-container">
-                <h2>About This Study Hub</h2>
-                <p>Created to help students master physics through interactive learning tools:</p>
-                <ul>
-                    <li>📚 Comprehensive study notes for 12 physics topics</li>
-                    <li>🃏 85+ interactive flashcards for quick review</li>
-                    <li>❓ 130+ quiz questions with difficulty levels</li>
-                    <li>📝 30+ solved practice problems</li>
-                    <li>⏱️ Built-in Pomodoro timer for focused study</li>
-                    <li>📊 Progress tracking and achievement system</li>
-                </ul>
-                <h3>Version: 2.0 - Comprehensive Edition</h3>
-                <p style="color: var(--muted); font-size: 0.9rem;">Last updated: April 2026</p>
-            </div>
-        `;
+        
+        const teamMembers = [
+            { name: 'Kaleb Harris', role: 'Lead Developer' },
+            { name: 'Tyler Rankins', role: 'Developer' },
+            { name: 'Luke Prez', role: 'Developer' },
+            { name: 'Kyle McCrackin', role: 'Developer' }
+        ];
+        
+        let html = '<div class="team-container"><div class="team-grid">';
+        teamMembers.forEach(member => {
+            html += `
+                <div class="team-card">
+                    <div class="team-name">${member.name}</div>
+                    <div class="team-role">${member.role}</div>
+                </div>
+            `;
+        });
+        html += '</div></div>';
+        
+        content.innerHTML = html;
     },
 
     loadFormulas() {
