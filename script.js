@@ -346,10 +346,10 @@ const UI = {
         if (!content) return;
         
         const teamMembers = [
-            { name: 'Kaleb Harris', role: 'Lead Developer' },
-            { name: 'Tyler Rankins', role: 'Developer' },
-            { name: 'Luke Prez', role: 'Developer' },
-            { name: 'Kyle McCrackin', role: 'Developer' }
+            { name: 'Kaleb Harris', role: 'Lead Developer', contribution: 'Built the entire website architecture, frontend design, and interactive features' },
+            { name: 'Tyler Rankins', role: 'Developer', contribution: 'Contributed to physics content and problem solutions' },
+            { name: 'Luke Prez', role: 'Developer', contribution: 'Assisted with testing and feature refinement' },
+            { name: 'Kyle McCrackin', role: 'Developer', contribution: 'Helped with content organization and documentation' }
         ];
         
         let html = '<div class="team-container"><div class="team-grid">';
@@ -358,6 +358,7 @@ const UI = {
                 <div class="team-card">
                     <div class="team-name">${member.name}</div>
                     <div class="team-role">${member.role}</div>
+                    <div class="team-desc">${member.contribution}</div>
                 </div>
             `;
         });
